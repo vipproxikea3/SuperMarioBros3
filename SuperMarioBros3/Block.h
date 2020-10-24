@@ -7,9 +7,11 @@
 class CBlock : public CGameObject
 {
 	int idSprite;
+	int typeBlock;
 public:
-	CBlock(int idSprite);
+	CBlock(int idSprite, int tyleBlock = 0);
 	~CBlock();
+	int GetTypeBlock() { return this->typeBlock; }
 	virtual void Render();
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
 };

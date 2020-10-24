@@ -1,8 +1,11 @@
 #include "Block.h"
 
-CBlock::CBlock(int idSprite) {
+CBlock::CBlock(int idSprite, int typeBlock) {
 	this->idSprite = idSprite;
+	this->typeBlock = typeBlock;
 }
+
+CBlock::~CBlock() {}
 
 void CBlock::Render()
 {

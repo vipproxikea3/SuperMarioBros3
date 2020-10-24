@@ -183,7 +183,7 @@ void LoadResources()
 
 	mario->AddAnimation(599);		// die
 
-	mario->SetPosition(50.0f, 0);
+	mario->SetPosition(0.0f, 388.0f);
 	objects.push_back(mario);
 
 

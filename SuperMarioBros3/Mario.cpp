@@ -3,6 +3,7 @@
 
 #include "Mario.h"
 #include "Game.h"
+#include "Block.h"
 
 //#include "Goomba.h"
 
@@ -38,53 +39,82 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	else
 	{
-		float min_tx, min_ty, nx = 0, ny;
+		float min_tx, min_ty, nx = 0, ny = 0;
 
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
 		// block 
-		x += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
+		// nx*0.4f : need to push out a bit to avoid overlapping next frame
+		/*x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
 		if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;
+		if (ny != 0) vy = 0;*/
 
-		// Collision logic with Goombas
-		//for (UINT i = 0; i < coEventsResult.size(); i++)
-		//{
-		//	LPCOLLISIONEVENT e = coEventsResult[i];
+		/* Collision logic with Goombas*/
 
-		//	if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is Goomba 
-		//	{
-		//		CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+		for (UINT i = 0; i < coEventsResult.size(); i++)
+		{
+			LPCOLLISIONEVENT e = coEventsResult[i];
+			
+			if (dynamic_cast<CBlock*>(e->obj)) {
+				if (coEventsResult.size() == 2) {
+					if (e->ny != 0) {
+						vy = 0;
+						y += min_ty * dy + e->ny * 0.4f;
+					}
+					if (e->nx != 0) {
+						vx = 0;
+						x += min_tx * dx + e->nx * 0.4f;
+					}
+				}
 
-		//		// jump on top >> kill Goomba and deflect a bit 
-		//		if (e->ny < 0)
-		//		{
-		//			if (goomba->GetState() != GOOMBA_STATE_DIE)
-		//			{
-		//				goomba->SetState(GOOMBA_STATE_DIE);
-		//				vy = -MARIO_JUMP_DEFLECT_SPEED;
-		//			}
-		//		}
-		//		else if (e->nx != 0)
-		//		{
-		//			if (untouchable == 0)
-		//			{
-		//				if (goomba->GetState() != GOOMBA_STATE_DIE)
-		//				{
-		//					if (level > MARIO_LEVEL_SMALL)
-		//					{
-		//						level = MARIO_LEVEL_SMALL;
-		//						StartUntouchable();
-		//					}
-		//					else
-		//						SetState(MARIO_STATE_DIE);
-		//				}
-		//			}
-		//		}
-		//	}
-		//}
+				if (coEventsResult.size() == 1) {
+					if (e->ny != 0) {
+						vy = 0;
+						y += min_ty * dy + e->ny * 0.4f;
+						x += dx;
+					}
+
+					if (e->nx != 0) {
+						vx = 0;
+						x += min_tx * dx + e->nx * 0.4f;
+						y += dy;
+					}
+				}
+			}
+
+			//if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is Goomba 
+			//{
+			//	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+
+			//	// jump on top >> kill Goomba and deflect a bit 
+			//	if (e->ny < 0)
+			//	{
+			//		if (goomba->GetState() != GOOMBA_STATE_DIE)
+			//		{
+			//			goomba->SetState(GOOMBA_STATE_DIE);
+			//			vy = -MARIO_JUMP_DEFLECT_SPEED;
+			//		}
+			//	}
+			//	else if (e->nx != 0)
+			//	{
+			//		if (untouchable == 0)
+			//		{
+			//			if (goomba->GetState() != GOOMBA_STATE_DIE)
+			//			{
+			//				if (level > MARIO_LEVEL_SMALL)
+			//				{
+			//					level = MARIO_LEVEL_SMALL;
+			//					StartUntouchable();
+			//				}
+			//				else
+			//					SetState(MARIO_STATE_DIE);
+			//			}
+			//		}
+			//	}
+			//}
+		}
 	}
 
 	// clean up collision events

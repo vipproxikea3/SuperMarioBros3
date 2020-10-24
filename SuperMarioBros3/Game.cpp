@@ -290,7 +290,6 @@ void CGame::SweptAABB(
 		nx = 0.0f;
 		dy > 0 ? ny = -1.0f : ny = 1.0f;
 	}
-
 }
 
 CGame* CGame::GetInstance()
