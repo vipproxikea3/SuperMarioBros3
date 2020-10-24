@@ -8,6 +8,7 @@
 #include "Textures.h"
 #include "Map.h"
 #include "Mario.h"
+#include "Block.h"
 
 #define WINDOW_CLASS_NAME L"SuperMarioBros3"
 #define MAIN_WINDOW_TITLE L"SuperMarioBros3"
@@ -26,6 +27,8 @@ CGame* game;
 Map* map;
 
 CMario* mario;
+CBlock* block;
+vector<CBlock*> blocks;
 
 vector<LPGAMEOBJECT> objects;
 
@@ -49,7 +52,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	case DIK_A: // reset
 		mario->SetState(MARIO_STATE_IDLE);
 		mario->SetLevel(MARIO_LEVEL_BIG);
-		mario->SetPosition(0.0f, 0.0f);
+		mario->SetPosition(2256.0f, 0.0f);
 		mario->SetSpeed(0, 0);
 		break;
 	}
@@ -182,6 +185,297 @@ void LoadResources()
 
 	mario->SetPosition(50.0f, 0);
 	objects.push_back(mario);
+
+
+	// LOAD BLOCK
+	LPDIRECT3DTEXTURE9 texMap = textures->Get(ID_TEX_MAP);
+	// LOAD BLOCK GROUND
+	sprites->Add(0, 96, 160, 112, 176, texMap);
+	sprites->Add(1, 112, 160, 128, 176, texMap);
+	sprites->Add(2, 128, 160, 144, 176, texMap);
+
+	//----------
+
+	block = new CBlock(0);
+	block->SetPosition(0, 416);
+	objects.push_back(block);
+
+	block = new CBlock(0);
+	block->SetPosition(624, 400);
+	objects.push_back(block);
+
+	block = new CBlock(0);
+	block->SetPosition(1152, 416);
+	objects.push_back(block);
+
+	block = new CBlock(0);
+	block->SetPosition(1536, 416);
+	objects.push_back(block);
+
+	block = new CBlock(0);
+	block->SetPosition(1664, 416);
+	objects.push_back(block);
+
+	block = new CBlock(0);
+	block->SetPosition(2256, 416);
+	objects.push_back(block);
+
+	//----------
+
+	for (int i = 0; i < 37; i++) {
+		block = new CBlock(1);
+		block->SetPosition(16 + i * 16, 416);
+		objects.push_back(block);
+	}
+
+	for (int i = 0; i < 27; i++) {
+		block = new CBlock(1);
+		block->SetPosition(640 + i * 16, 400);
+		objects.push_back(block);
+	}
+
+	for (int i = 0; i < 20; i++) {
+		block = new CBlock(1);
+		block->SetPosition(1168 + i * 16, 416);
+		objects.push_back(block);
+	}
+
+	for (int i = 0; i < 3; i++) {
+		block = new CBlock(1);
+		block->SetPosition(1552 + i * 16, 416);
+		objects.push_back(block);
+	}
+
+	for (int i = 0; i < 34; i++) {
+		block = new CBlock(1);
+		block->SetPosition(1680 + i * 16, 416);
+		objects.push_back(block);
+	}
+
+	for (int i = 0; i < 33; i++) {
+		block = new CBlock(1);
+		block->SetPosition(2272 + i * 16, 416);
+		objects.push_back(block);
+	}
+
+	//----------
+
+	block = new CBlock(2);
+	block->SetPosition(608, 416);
+	objects.push_back(block);
+
+	block = new CBlock(2);
+	block->SetPosition(1072, 400);
+	objects.push_back(block);
+
+	block = new CBlock(2);
+	block->SetPosition(1488, 416);
+	objects.push_back(block);
+
+	block = new CBlock(2);
+	block->SetPosition(1600, 416);
+	objects.push_back(block);
+
+	block = new CBlock(2);
+	block->SetPosition(2224, 416);
+	objects.push_back(block);
+
+	block = new CBlock(2);
+	block->SetPosition(2800, 416);
+	objects.push_back(block);
+
+	// LOAD BLOCK BOX
+	sprites->Add(3, 16, 64, 32, 80, texMap);
+
+	block = new CBlock(3);
+	block->SetPosition(1600, 368);
+	objects.push_back(block);
+
+	block = new CBlock(3);
+	block->SetPosition(1664, 368);
+	objects.push_back(block);
+
+	for (int i = 0; i < 2; i++) {
+		block = new CBlock(3);
+		block->SetPosition(1504 + i * 16, 336);
+		objects.push_back(block);
+	}
+
+	for (int i = 0; i < 2; i++) {
+		block = new CBlock(3);
+		block->SetPosition(1584 + i * 16, 384);
+		objects.push_back(block);
+	}
+
+	for (int i = 0; i < 2; i++) {
+		block = new CBlock(3);
+		block->SetPosition(1664 + i * 16, 384);
+		objects.push_back(block);
+	}
+
+	for (int i = 0; i < 2; i++) {
+		block = new CBlock(3);
+		block->SetPosition(2256 + i * 16, 304);
+		objects.push_back(block);
+	}
+
+	for (int i = 0; i < 2; i++) {
+		block = new CBlock(3);
+		block->SetPosition(2256 + i * 16, 368);
+		objects.push_back(block);
+	}
+
+	for (int i = 0; i < 3; i++) {
+		block = new CBlock(3);
+		block->SetPosition(1568 + i * 16, 400);
+		objects.push_back(block);
+	}
+
+	for (int i = 0; i < 3; i++) {
+		block = new CBlock(3);
+		block->SetPosition(1664 + i * 16, 400);
+		objects.push_back(block);
+	}
+
+	// LOAD BLOCK PIPE
+	sprites->Add(4, 112, 0, 128, 16, texMap);
+	sprites->Add(5, 128, 0, 144, 16, texMap);
+	sprites->Add(6, 160, 0, 176, 16, texMap);
+	sprites->Add(7, 0, 16, 16, 32, texMap);
+
+	//----------
+
+	block = new CBlock(4);
+	block->SetPosition(352, 368);
+	objects.push_back(block);
+
+	block = new CBlock(5);
+	block->SetPosition(368, 368);
+	objects.push_back(block);
+
+	block = new CBlock(4);
+	block->SetPosition(1792, 384);
+	objects.push_back(block);
+
+	block = new CBlock(5);
+	block->SetPosition(1808, 384);
+	objects.push_back(block);
+
+	block = new CBlock(4);
+	block->SetPosition(1856, 368);
+	objects.push_back(block);
+
+	block = new CBlock(5);
+	block->SetPosition(1872, 368);
+	objects.push_back(block);
+
+	block = new CBlock(4);
+	block->SetPosition(2256, 112);
+	objects.push_back(block);
+
+	block = new CBlock(5);
+	block->SetPosition(2272, 112);
+	objects.push_back(block);
+
+	block = new CBlock(4);
+	block->SetPosition(2320, 384);
+	objects.push_back(block);
+
+	block = new CBlock(5);
+	block->SetPosition(2336, 384);
+	objects.push_back(block);
+
+	//----------
+
+	for (int i = 0; i < 2; i++) {
+		block = new CBlock(6);
+		block->SetPosition(352, 384 + i * 16);
+		objects.push_back(block);
+	}
+
+	for (int i = 0; i < 1; i++) {
+		block = new CBlock(6);
+		block->SetPosition(1792, 400 + i * 16);
+		objects.push_back(block);
+	}
+
+	for (int i = 0; i < 2; i++) {
+		block = new CBlock(6);
+		block->SetPosition(1856, 384 + i * 16);
+		objects.push_back(block);
+	}
+
+	for (int i = 0; i < 11; i++) {
+		block = new CBlock(6);
+		block->SetPosition(2256, 128 + i * 16);
+		objects.push_back(block);
+	}
+
+	for (int i = 0; i < 2; i++) {
+		block = new CBlock(6);
+		block->SetPosition(2256, 384 + i * 16);
+		objects.push_back(block);
+	}
+
+	for (int i = 0; i < 1; i++) {
+		block = new CBlock(6);
+		block->SetPosition(2320, 400 + i * 16);
+		objects.push_back(block);
+	}
+
+	//----------
+
+	for (int i = 0; i < 2; i++) {
+		block = new CBlock(7);
+		block->SetPosition(368, 384 + i * 16);
+		objects.push_back(block);
+	}
+
+	for (int i = 0; i < 1; i++) {
+		block = new CBlock(7);
+		block->SetPosition(1808, 400 + i * 16);
+		objects.push_back(block);
+	}
+
+	for (int i = 0; i < 2; i++) {
+		block = new CBlock(7);
+		block->SetPosition(1872, 384 + i * 16);
+		objects.push_back(block);
+	}
+
+	for (int i = 0; i < 11; i++) {
+		block = new CBlock(7);
+		block->SetPosition(2272, 128 + i * 16);
+		objects.push_back(block);
+	}
+
+	for (int i = 0; i < 2; i++) {
+		block = new CBlock(7);
+		block->SetPosition(2272, 384 + i * 16);
+		objects.push_back(block);
+	}
+
+	for (int i = 0; i < 1; i++) {
+		block = new CBlock(7);
+		block->SetPosition(2336, 400 + i * 16);
+		objects.push_back(block);
+	}
+
+	// LOAD BLOCK CLOUD
+	sprites->Add(8, 16, 32, 32, 48, texMap);
+
+	//----------
+
+	for (int i = 0; i < 4; i++) {
+		block = new CBlock(8);
+		block->SetPosition(1408 + i * 16, 192);
+		objects.push_back(block);
+	}
+	for (int i = 0; i < 13; i++) {
+		block = new CBlock(8);
+		block->SetPosition(1488 + i * 16, 176);
+		objects.push_back(block);
+	}
 }
 
 void Update(DWORD dt)
