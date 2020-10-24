@@ -38,6 +38,14 @@ void Map::DrawTile(int idOfTile, float x, float y) {
 	CGame::GetInstance()->Draw(x, y, TileSetImg, xOfTile, yOfTile, xOfTile + TILE_WIDTH, yOfTile + TILE_HEIGHT);
 }
 
+float Map::getMapWidth() {
+	return TotalColumnsOfMap * TILE_WIDTH;
+}
+
+float Map::getMapHeight() {
+	return TotalRowsOfMap * TILE_HEIGHT;
+}
+
 void Map::Render() {
 	float xOfTile, yOfTile;
 	int colOfTile, rowOfTile;

@@ -20,6 +20,8 @@ public:
 	~Map();
 	void LoadMapMatrix(LPCWSTR mapMatrixPath);
 	void DrawTile(int idOfTile, float x, float y);
+	float getMapWidth();
+	float getMapHeight();
 	void Render();
 };
 

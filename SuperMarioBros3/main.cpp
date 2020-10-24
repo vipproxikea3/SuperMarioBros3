@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "Textures.h"
 #include "Map.h"
+#include "Mario.h"
 
 #define WINDOW_CLASS_NAME L"SuperMarioBros3"
 #define MAIN_WINDOW_TITLE L"SuperMarioBros3"
@@ -19,9 +20,12 @@
 #define MAX_FRAME_RATE 120
 
 #define ID_TEX_MAP 0
+#define ID_TEX_MARIO 10
 
 CGame* game;
 Map* map;
+
+CMario* mario;
 
 vector<LPGAMEOBJECT> objects;
 
@@ -36,14 +40,36 @@ CSampleKeyHander* keyHandler;
 
 void CSampleKeyHander::OnKeyDown(int KeyCode)
 {
+	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
+	switch (KeyCode)
+	{
+	case DIK_SPACE:
+		mario->SetState(MARIO_STATE_JUMP);
+		break;
+	case DIK_A: // reset
+		mario->SetState(MARIO_STATE_IDLE);
+		mario->SetLevel(MARIO_LEVEL_BIG);
+		mario->SetPosition(0.0f, 0.0f);
+		mario->SetSpeed(0, 0);
+		break;
+	}
 }
 
 void CSampleKeyHander::OnKeyUp(int KeyCode)
 {
+	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
 }
 
 void CSampleKeyHander::KeyState(BYTE* states)
 {
+	// disable control key when Mario die 
+	if (mario->GetState() == MARIO_STATE_DIE) return;
+	if (game->IsKeyDown(DIK_RIGHT))
+		mario->SetState(MARIO_STATE_WALKING_RIGHT);
+	else if (game->IsKeyDown(DIK_LEFT))
+		mario->SetState(MARIO_STATE_WALKING_LEFT);
+	else
+		mario->SetState(MARIO_STATE_IDLE);
 }
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -63,13 +89,104 @@ void LoadResources()
 {
 	CTextures* textures = CTextures::GetInstance();
 	textures->Add(ID_TEX_MAP, L"Map\\map1-1_bank.png", D3DCOLOR_XRGB(255, 0, 0));
+	textures->Add(ID_TEX_MARIO, L"textures\\mario.png", D3DCOLOR_XRGB(255, 255, 255));
 
 	map = new Map(27, 176, 12, 11, 0, L"Map\\map1-1.txt");
+
+	CSprites* sprites = CSprites::GetInstance();
+	CAnimations* animations = CAnimations::GetInstance();
+
+	LPDIRECT3DTEXTURE9 texMario = textures->Get(ID_TEX_MARIO);
+
+	// big
+	sprites->Add(10001, 246, 154, 260, 181, texMario);		// idle right
+
+	sprites->Add(10002, 275, 154, 290, 181, texMario);		// walk
+	sprites->Add(10003, 304, 154, 321, 181, texMario);
+
+	sprites->Add(10011, 186, 154, 200, 181, texMario);		// idle left
+	sprites->Add(10012, 155, 154, 170, 181, texMario);		// walk
+	sprites->Add(10013, 125, 154, 140, 181, texMario);
+
+	sprites->Add(10099, 215, 120, 231, 135, texMario);		// die 
+
+	// small
+	sprites->Add(10021, 247, 0, 259, 15, texMario);			// idle small right
+	sprites->Add(10022, 275, 0, 291, 15, texMario);			// walk 
+	sprites->Add(10023, 306, 0, 320, 15, texMario);			// 
+
+	sprites->Add(10031, 187, 0, 198, 15, texMario);			// idle small left
+
+	sprites->Add(10032, 155, 0, 170, 15, texMario);			// walk
+	sprites->Add(10033, 125, 0, 139, 15, texMario);
+
+	LPANIMATION ani;
+
+	ani = new CAnimation(100);	// idle big right
+	ani->Add(10001);
+	animations->Add(400, ani);
+
+	ani = new CAnimation(100);	// idle big left
+	ani->Add(10011);
+	animations->Add(401, ani);
+
+	ani = new CAnimation(100);	// idle small right
+	ani->Add(10021);
+	animations->Add(402, ani);
+
+	ani = new CAnimation(100);	// idle small left
+	ani->Add(10031);
+	animations->Add(403, ani);
+
+	ani = new CAnimation(100);	// walk right big
+	ani->Add(10001);
+	ani->Add(10002);
+	ani->Add(10003);
+	animations->Add(500, ani);
+
+	ani = new CAnimation(100);	// // walk left big
+	ani->Add(10011);
+	ani->Add(10012);
+	ani->Add(10013);
+	animations->Add(501, ani);
+
+	ani = new CAnimation(100);	// walk right small
+	ani->Add(10021);
+	ani->Add(10022);
+	ani->Add(10023);
+	animations->Add(502, ani);
+
+	ani = new CAnimation(100);	// walk left small
+	ani->Add(10031);
+	ani->Add(10032);
+	ani->Add(10033);
+	animations->Add(503, ani);
+
+
+	ani = new CAnimation(100);		// Mario die
+	ani->Add(10099);
+	animations->Add(599, ani);
+
+	mario = new CMario();
+	mario->AddAnimation(400);		// idle right big
+	mario->AddAnimation(401);		// idle left big
+	mario->AddAnimation(402);		// idle right small
+	mario->AddAnimation(403);		// idle left small
+
+	mario->AddAnimation(500);		// walk right big
+	mario->AddAnimation(501);		// walk left big
+	mario->AddAnimation(502);		// walk right small
+	mario->AddAnimation(503);		// walk left big
+
+	mario->AddAnimation(599);		// die
+
+	mario->SetPosition(50.0f, 0);
+	objects.push_back(mario);
 }
 
 void Update(DWORD dt)
 {
-	/*vector<LPGAMEOBJECT> coObjects;
+	vector<LPGAMEOBJECT> coObjects;
 	for (int i = 1; i < objects.size(); i++)
 	{
 		coObjects.push_back(objects[i]);
@@ -78,12 +195,23 @@ void Update(DWORD dt)
 	for (int i = 0; i < objects.size(); i++)
 	{
 		objects[i]->Update(dt, &coObjects);
-	}*/
+	}
 
 
 	// Set camera position
-	//float cx, cy;
-	/*CGame::GetInstance()->SetCamPos(cx, cy);*/
+	float cx, cy;
+	mario->GetPosition(cx, cy);
+
+	cx -= SCREEN_WIDTH / 2;
+	cy -= SCREEN_HEIGHT / 2;
+
+	if (cy < 0) cy = 0;
+	if (cy > map->getMapHeight() - 202) cy = map->getMapHeight() - 202;
+
+	if (cx < 0) cx = 0;
+	if (cx > map->getMapWidth() - 305) cx = map->getMapWidth() - 305;
+
+	CGame::GetInstance()->SetCamPos(cx, cy);
 }
 
 /*
@@ -104,8 +232,8 @@ void Render()
 
 		map->Render();
 
-		/*for (int i = 0; i < objects.size(); i++)
-			objects[i]->Render();*/
+		for (int i = 0; i < objects.size(); i++)
+			objects[i]->Render();
 
 		spriteHandler->End();
 		d3ddv->EndScene();
