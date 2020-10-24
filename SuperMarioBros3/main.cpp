@@ -6,17 +6,22 @@
 #include "Game.h"
 #include "GameObject.h"
 #include "Textures.h"
+#include "Map.h"
 
 #define WINDOW_CLASS_NAME L"SuperMarioBros3"
 #define MAIN_WINDOW_TITLE L"SuperMarioBros3"
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(156, 252, 240)
+
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 240
 
 #define MAX_FRAME_RATE 120
 
+#define ID_TEX_MAP 0
+
 CGame* game;
+Map* map;
 
 vector<LPGAMEOBJECT> objects;
 
@@ -56,6 +61,10 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 void LoadResources()
 {
+	CTextures* textures = CTextures::GetInstance();
+	textures->Add(ID_TEX_MAP, L"Map\\map1-1_bank.png", D3DCOLOR_XRGB(255, 0, 0));
+
+	map = new Map(27, 176, 12, 11, 0, L"Map\\map1-1.txt");
 }
 
 void Update(DWORD dt)
@@ -73,8 +82,8 @@ void Update(DWORD dt)
 
 
 	// Set camera position
-	/*float cx, cy;
-	CGame::GetInstance()->SetCamPos(cx, cy);*/
+	//float cx, cy;
+	/*CGame::GetInstance()->SetCamPos(cx, cy);*/
 }
 
 /*
@@ -92,6 +101,8 @@ void Render()
 		d3ddv->ColorFill(bb, NULL, BACKGROUND_COLOR);
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
+
+		map->Render();
 
 		/*for (int i = 0; i < objects.size(); i++)
 			objects[i]->Render();*/
