@@ -43,6 +43,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
+		float x0 = x;
+		float y0 = y;
+
+		x = x0 + dx;
+		y = y0 + dy;
+
 		// block 
 		// nx*0.4f : need to push out a bit to avoid overlapping next frame
 		/*x += min_tx * dx + nx * 0.4f;
@@ -58,31 +64,27 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			LPCOLLISIONEVENT e = coEventsResult[i];
 			
 			if (dynamic_cast<CBlock*>(e->obj)) {
-				if (coEventsResult.size() == 2) {
+				CBlock* block = dynamic_cast<CBlock*>(e->obj);
+				if (block->GetTypeBlock() == 0) {
 					if (e->ny != 0) {
 						vy = 0;
-						y += min_ty * dy + e->ny * 0.4f;
+						y = y0 + min_ty * dy + e->ny * 0.4f;
 					}
 					if (e->nx != 0) {
 						vx = 0;
-						x += min_tx * dx + e->nx * 0.4f;
+						x = x0 + min_tx * dx + e->nx * 0.4f;
 					}
 				}
 
-				if (coEventsResult.size() == 1) {
-					if (e->ny != 0) {
+				if (block->GetTypeBlock() == 1) {
+					if (e->ny == -1) {
 						vy = 0;
-						y += min_ty * dy + e->ny * 0.4f;
-						x += dx;
-					}
-
-					if (e->nx != 0) {
-						vx = 0;
-						x += min_tx * dx + e->nx * 0.4f;
-						y += dy;
+						y = y0 + min_ty * dy + e->ny * 0.4f;
 					}
 				}
 			}
+
+			
 
 			//if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is Goomba 
 			//{
