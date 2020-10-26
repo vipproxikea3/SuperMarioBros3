@@ -13,7 +13,7 @@ class Map
 	int TotalRowsOfTileSet, TotalColumnsOfTileSet;
 	LPDIRECT3DTEXTURE9 TileSetImg;
 	int TotalRowsOfMap, TotalColumnsOfMap;
-	std::vector<int> MapData;
+	vector<int> MapData;
 
 public:
 	Map(int TotalRowsOfMap, int TotalColumnsOfMap, int TotalRowsOfTileSet, int TotalColumnsOfTileSet, int TileSetID, LPCWSTR mapMatrixPath);

@@ -13,7 +13,8 @@
 #define WINDOW_CLASS_NAME L"SuperMarioBros3"
 #define MAIN_WINDOW_TITLE L"SuperMarioBros3"
 
-#define BACKGROUND_COLOR D3DCOLOR_XRGB(156, 252, 240)
+//#define BACKGROUND_COLOR D3DCOLOR_XRGB(156, 252, 240)
+#define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 240
@@ -94,7 +95,7 @@ void LoadResources()
 	textures->Add(ID_TEX_MAP, L"Map\\map1-1_bank.png", D3DCOLOR_XRGB(255, 0, 0));
 	textures->Add(ID_TEX_MARIO, L"textures\\mario.png", D3DCOLOR_XRGB(255, 255, 255));
 
-	map = new Map(27, 176, 12, 11, 0, L"Map\\map1-1.txt");
+	map = new Map(27, 176, 12, 11, ID_TEX_MAP, L"Map\\map1-1.txt");
 
 	CSprites* sprites = CSprites::GetInstance();
 	CAnimations* animations = CAnimations::GetInstance();
