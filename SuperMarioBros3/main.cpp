@@ -9,6 +9,7 @@
 #include "Map.h"
 #include "Mario.h"
 #include "Block.h"
+#include "Goomba.h"
 
 #define WINDOW_CLASS_NAME L"SuperMarioBros3"
 #define MAIN_WINDOW_TITLE L"SuperMarioBros3"
@@ -23,12 +24,15 @@
 
 #define ID_TEX_MAP 0
 #define ID_TEX_MARIO 10
+#define ID_TEX_ENEMY 20
 
 CGame* game;
 Map* map;
 
 CMario* mario;
 CBlock* block;
+CGoomba* goomba;
+
 vector<LPGAMEOBJECT> blocks;
 
 vector<LPGAMEOBJECT> objects;
@@ -94,6 +98,7 @@ void LoadResources()
 	CTextures* textures = CTextures::GetInstance();
 	textures->Add(ID_TEX_MAP, L"Map\\map1-1_bank.png", D3DCOLOR_XRGB(255, 0, 0));
 	textures->Add(ID_TEX_MARIO, L"textures\\mario.png", D3DCOLOR_XRGB(255, 255, 255));
+	textures->Add(ID_TEX_ENEMY, L"textures\\enemies.png", D3DCOLOR_XRGB(3, 26, 110));
 
 	map = new Map(27, 176, 12, 11, ID_TEX_MAP, L"Map\\map1-1.txt");
 
@@ -186,6 +191,30 @@ void LoadResources()
 
 	mario->SetPosition(0.0f, 388.0f);
 	objects.push_back(mario);
+
+	// LOAD GOOMBA
+	LPDIRECT3DTEXTURE9 texEnemy = textures->Get(ID_TEX_ENEMY);
+	sprites->Add(30001, 5, 14, 21, 29, texEnemy);
+	sprites->Add(30002, 25, 14, 41, 29, texEnemy);
+
+	sprites->Add(30003, 45, 21, 61, 29, texEnemy); // die sprite
+
+	ani = new CAnimation(300);		// Goomba walk
+	ani->Add(30001);
+	ani->Add(30002);
+	animations->Add(701, ani);
+
+	ani = new CAnimation(1000);		// Goomba dead
+	ani->Add(30003);
+	animations->Add(702, ani);
+
+	goomba = new CGoomba();
+	goomba->AddAnimation(701);
+	goomba->AddAnimation(702);
+	goomba->SetPosition(224, 400);
+	goomba->SetState(GOOMBA_STATE_WALKING);
+	goomba->SetActiveArea(0, 352);
+	objects.push_back(goomba);
 
 
 	// LOAD BLOCK

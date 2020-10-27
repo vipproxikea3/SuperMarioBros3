@@ -4,6 +4,7 @@
 #include "Mario.h"
 #include "Game.h"
 #include "Block.h"
+#include "Goomba.h"
 
 //#include "Goomba.h"
 
@@ -57,8 +58,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;*/
 
-		/* Collision logic with Goombas*/
-
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
@@ -68,54 +67,73 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (block->GetTypeBlock() == 0) {
 					if (e->ny != 0) {
 						vy = 0;
-						y = y0 + min_ty * dy + e->ny * 0.4f;
+						y = y0 + min_ty * dy + e->ny * 0.1f;
 					}
 					if (e->nx != 0) {
 						vx = 0;
-						x = x0 + min_tx * dx + e->nx * 0.4f;
+						x = x0 + min_tx * dx + e->nx * 0.1f;
 					}
 				}
 
 				if (block->GetTypeBlock() == 1) {
 					if (e->ny == -1) {
 						vy = 0;
-						y = y0 + min_ty * dy + e->ny * 0.4f;
+						y = y0 + min_ty * dy + e->ny * 0.1f;
 					}
 				}
 			}
 
 			
 
-			//if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is Goomba 
-			//{
-			//	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+			if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is Goomba 
+			{
+				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+				if (e->ny != 0) {
+					vy = 0;
+					y = y0 + min_ty * dy + e->ny * 0.1f;
+					/*if (e->ny < 0)
+					{
+						if (goomba->GetState() != GOOMBA_STATE_DIE)
+						{
+							goomba->SetState(GOOMBA_STATE_DIE);
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+						}
+					}
+					else {
+						if (untouchable == 0)
+						{
+							if (goomba->GetState() != GOOMBA_STATE_DIE)
+							{
+								if (level > MARIO_LEVEL_SMALL)
+								{
+									level = MARIO_LEVEL_SMALL;
+									StartUntouchable();
+								}
+								else
+									SetState(MARIO_STATE_DIE);
+							}
+						}
+					}*/
+				}
 
-			//	// jump on top >> kill Goomba and deflect a bit 
-			//	if (e->ny < 0)
-			//	{
-			//		if (goomba->GetState() != GOOMBA_STATE_DIE)
-			//		{
-			//			goomba->SetState(GOOMBA_STATE_DIE);
-			//			vy = -MARIO_JUMP_DEFLECT_SPEED;
-			//		}
-			//	}
-			//	else if (e->nx != 0)
-			//	{
-			//		if (untouchable == 0)
-			//		{
-			//			if (goomba->GetState() != GOOMBA_STATE_DIE)
-			//			{
-			//				if (level > MARIO_LEVEL_SMALL)
-			//				{
-			//					level = MARIO_LEVEL_SMALL;
-			//					StartUntouchable();
-			//				}
-			//				else
-			//					SetState(MARIO_STATE_DIE);
-			//			}
-			//		}
-			//	}
-			//}
+				if (e->nx != 0) {
+					vx = 0;
+					x = x0 + min_tx * dx + e->nx * 0.4f;
+					if (untouchable == 0)
+					{
+						if (goomba->GetState() != GOOMBA_STATE_DIE)
+						{
+							if (level > MARIO_LEVEL_SMALL)
+							{
+								level = MARIO_LEVEL_SMALL;
+								StartUntouchable();
+							}
+							else
+								SetState(MARIO_STATE_DIE);
+						}
+					}
+				}
+			}
 		}
 	}
 
