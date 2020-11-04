@@ -46,7 +46,7 @@ class CMario : public CGameObject
 public:
 	CMario() : CGameObject()
 	{
-		level = MARIO_LEVEL_BIG;
+		level = MARIO_LEVEL_SMALL;
 		untouchable = 0;
 	}
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);

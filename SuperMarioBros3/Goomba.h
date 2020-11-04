@@ -14,10 +14,15 @@
 #define GOOMBA_ANI_WALKING 0
 #define GOOMBA_ANI_DIE 1
 
+#define DIE_TIME 250
+
 class CGoomba : public CGameObject
 {
 	float lLimit, rLimit;
+	DWORD die_start;
 
+	void Revival();
+	void SetRevival();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();

@@ -91,7 +91,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (e->ny != 0) {
 					vy = 0;
 					y = y0 + min_ty * dy + e->ny * 0.1f;
-					/*if (e->ny < 0)
+					if (e->ny < 0)
 					{
 						if (goomba->GetState() != GOOMBA_STATE_DIE)
 						{
@@ -113,7 +113,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 									SetState(MARIO_STATE_DIE);
 							}
 						}
-					}*/
+					}
 				}
 
 				if (e->nx != 0) {

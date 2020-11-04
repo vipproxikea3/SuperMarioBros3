@@ -1,5 +1,6 @@
 #include "Goomba.h"
 #include "Block.h"
+#include "Game.h"
 
 void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -13,6 +14,29 @@ void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& botto
 		bottom = y + GOOMBA_BBOX_HEIGHT;
 }
 
+void CGoomba::Revival() {
+	if (this->state == GOOMBA_STATE_DIE) {
+		float cam_X, cam_Y;
+		CGame::GetInstance()->GetCamPos(cam_X, cam_Y);
+
+		float screen_width, screen_heigh;
+		LPDIRECT3DSURFACE9 bb = CGame::GetInstance()->GetBackBuffer();
+
+		if (cam_X > this->x_start || cam_Y > this->y_start)
+			SetRevival();
+	}
+}
+
+void CGoomba::SetRevival() {
+	this->SetPosition(x_start, y_start);
+	this->isDisable = false;
+	this->SetState(GOOMBA_STATE_WALKING);
+	y -= (GOOMBA_BBOX_HEIGHT - GOOMBA_BBOX_HEIGHT_DIE);
+	die_start = NULL;
+}
+
+
+
 void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
@@ -22,6 +46,16 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
 	coEvents.clear();
+
+	if (y > 500) {
+		this->SetState(GOOMBA_STATE_DIE);
+	}
+
+	if (this->state == GOOMBA_STATE_DIE && GetTickCount() - die_start > DIE_TIME) {
+		this->isDisable = true;
+	}
+
+	Revival();
 
 	// turn off collision when die 
 	/*if (state != GOOMBA_STATE_DIE)*/
@@ -74,7 +108,6 @@ void CGoomba::Render()
 	}
 
 	animations[ani]->Render(x, y);
-	RenderBoundingBox();
 }
 
 void CGoomba::SetState(int state)
@@ -85,6 +118,7 @@ void CGoomba::SetState(int state)
 	case GOOMBA_STATE_DIE:
 		y += GOOMBA_BBOX_HEIGHT - GOOMBA_BBOX_HEIGHT_DIE;
 		vx = 0;
+		die_start = GetTickCount();
 		break;
 	case GOOMBA_STATE_WALKING:
 		vx = -GOOMBA_WALKING_SPEED;

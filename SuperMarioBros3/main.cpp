@@ -55,10 +55,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		mario->SetState(MARIO_STATE_JUMP);
 		break;
 	case DIK_A: // reset
-		mario->SetState(MARIO_STATE_IDLE);
-		mario->SetLevel(MARIO_LEVEL_BIG);
-		mario->SetPosition(2256.0f, 0.0f);
-		mario->SetSpeed(0, 0);
+		/*goomba->SetRevival();*/
 		break;
 	}
 }
@@ -213,9 +210,32 @@ void LoadResources()
 	goomba->AddAnimation(702);
 	goomba->SetPosition(224, 400);
 	goomba->SetState(GOOMBA_STATE_WALKING);
-	goomba->SetActiveArea(0, 352);
+	goomba->SetActiveArea(-30, 352);
 	objects.push_back(goomba);
 
+	goomba = new CGoomba();
+	goomba->AddAnimation(701);
+	goomba->AddAnimation(702);
+	goomba->SetPosition(528, 400);
+	goomba->SetState(GOOMBA_STATE_WALKING);
+	goomba->SetActiveArea(384, 623);
+	objects.push_back(goomba);
+
+	goomba = new CGoomba();
+	goomba->AddAnimation(701);
+	goomba->AddAnimation(702);
+	goomba->SetPosition(832, 384);
+	goomba->SetState(GOOMBA_STATE_WALKING);
+	goomba->SetActiveArea(672, 1087);
+	objects.push_back(goomba);
+
+	goomba = new CGoomba();
+	goomba->AddAnimation(701);
+	goomba->AddAnimation(702);
+	goomba->SetPosition(880, 384);
+	goomba->SetState(GOOMBA_STATE_WALKING);
+	goomba->SetActiveArea(672, 1087);
+	objects.push_back(goomba);
 
 	// LOAD BLOCK
 	LPDIRECT3DTEXTURE9 texMap = textures->Get(ID_TEX_MAP);
@@ -690,7 +710,8 @@ void Update(DWORD dt)
 	vector<LPGAMEOBJECT> coObjects;
 	for (int i = 1; i < objects.size(); i++)
 	{
-		coObjects.push_back(objects[i]);
+		if (!objects[i]->isDisable)
+			coObjects.push_back(objects[i]);
 	}
 	for (int i = 0; i < blocks.size(); i++)
 	{
@@ -739,8 +760,10 @@ void Render()
 		for (int i = 0; i < blocks.size(); i++)
 			blocks[i]->Render();
 
-		for (int i = 0; i < objects.size(); i++)
+		for (int i = 0; i < objects.size(); i++) {
+			if (!objects[i]->isDisable)
 			objects[i]->Render();
+		}
 
 		spriteHandler->End();
 		d3ddv->EndScene();

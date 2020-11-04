@@ -33,6 +33,9 @@ struct CCollisionEvent
 class CGameObject
 {
 public:
+	bool isDisable = false;
+	float x_start;
+	float y_start;
 
 	float x;
 	float y;
@@ -52,7 +55,7 @@ public:
 	vector<LPANIMATION> animations;
 
 public:
-	void SetPosition(float x, float y) { this->x = x, this->y = y; }
+	void SetPosition(float x, float y) { this->x = x, this->y = y, this->x_start = x, this->y_start = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 	void GetPosition(float& x, float& y) { x = this->x; y = this->y; }
 	void GetSpeed(float& vx, float& vy) { vx = this->vx; vy = this->vy; }
