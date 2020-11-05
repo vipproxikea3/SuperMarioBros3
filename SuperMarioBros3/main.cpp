@@ -15,7 +15,6 @@
 #define WINDOW_CLASS_NAME L"SuperMarioBros3"
 #define MAIN_WINDOW_TITLE L"SuperMarioBros3"
 
-//#define BACKGROUND_COLOR D3DCOLOR_XRGB(156, 252, 240)
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
 
 #define SCREEN_WIDTH 320
@@ -61,7 +60,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		}
 		break;
 	case DIK_A: // reset
-		/*goomba->SetRevival();*/
+		/*reset function*/
 		break;
 	}
 }
@@ -768,14 +767,16 @@ void Update(DWORD dt)
 	float cx, cy;
 	mario->GetPosition(cx, cy);
 
-	cx -= SCREEN_WIDTH / 2;
-	cy -= SCREEN_HEIGHT / 2;
+	CGame* game = CGame::GetInstance();
+
+	cx -= game->GetScreenWidth() / 2;
+	cy -= game->GetScreenHeight() / 2;
 
 	if (cy < 0) cy = 0;
-	if (cy > map->getMapHeight() - 202) cy = map->getMapHeight() - 202;
+	if (cy > map->getMapHeight() - game->GetScreenHeight()) cy = map->getMapHeight() - game->GetScreenHeight();
 
 	if (cx < 0) cx = 0;
-	if (cx > map->getMapWidth() - 305) cx = map->getMapWidth() - 305;
+	if (cx > map->getMapWidth() - game->GetScreenWidth()) cx = map->getMapWidth() - game->GetScreenWidth();
 
 	CGame::GetInstance()->SetCamPos(cx, cy);
 }
@@ -797,14 +798,16 @@ void Render()
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
 		map->Render();
-		for (int i = 0; i < blocks.size(); i++)
+
+		for (int i = 0; i < blocks.size(); i++) {
 			blocks[i]->Render();
+		}
 
 		coin->Render();
 
 		for (int i = 0; i < objects.size(); i++) {
 			if (!objects[i]->isDisable)
-			objects[i]->Render();
+				objects[i]->Render();
 		}
 
 		spriteHandler->End();

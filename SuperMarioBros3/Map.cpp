@@ -50,13 +50,36 @@ void Map::Render() {
 	float xOfTile, yOfTile;
 	int colOfTile, rowOfTile;
 
+	int rowBegin, rowEnd, colBegin, colEnd;
+	CGame* game = CGame::GetInstance();
+	float cx;
+	float cy;
+	float screenWidth, screenHeight;
+	game->GetCamPos(cx, cy);
+	screenWidth = game->GetScreenWidth();
+	screenHeight = game->GetScreenHeight();
+
+	bool isDraw;
+
 	for (int i = 0; i < TotalRowsOfMap * TotalColumnsOfMap; i++) {
+		isDraw = true;
+
 		rowOfTile = i / TotalColumnsOfMap;
 		colOfTile = i % TotalColumnsOfMap;
+
+		colBegin = floor(cx / TILE_WIDTH);
+		colEnd = ceil((cx + screenWidth) / TILE_WIDTH);
+
+		rowBegin = floor(cy / TILE_HEIGHT);
+		rowEnd = ceil((cy + screenHeight) / TILE_HEIGHT);
 
 		xOfTile = colOfTile * TILE_WIDTH;
 		yOfTile = rowOfTile * TILE_HEIGHT;
 
-		DrawTile(MapData[i], xOfTile, yOfTile);
+		if (colOfTile < colBegin || colOfTile > colEnd) isDraw = false;
+		if (rowOfTile < rowBegin || rowOfTile > rowEnd) isDraw = false;
+
+		if (isDraw)
+			DrawTile(MapData[i], xOfTile, yOfTile);
 	}
 }
