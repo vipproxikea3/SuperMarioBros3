@@ -1,5 +1,23 @@
 #include "Coin.h"
 
+void CCoin::showReward() {
+	this->SetState(COIN_STATE_JUMP);
+}
+
+void CCoin::Update(DWORD dt) {
+	if (this->state == COIN_STATE_JUMP) {
+		// Calculate dx, dy 
+		CGameObject::Update(dt);
+
+		// Simple fall down
+		vy += COIN_GRAVITY * dt;
+
+		y += dy;
+
+		if (y > y_start) isDisable = true;
+	}
+}
+
 void CCoin::Render()
 {
 	int ani;
@@ -7,6 +25,22 @@ void CCoin::Render()
 
 	int alpha = 255;
 	animations[ani]->Render(x, y, alpha);
+}
+
+void CCoin::SetState(int state)
+{
+	CGameObject::SetState(state);
+
+	switch (state)
+	{
+		case COIN_STATE_IDLE:
+			vy = 0;
+		break;
+	case COIN_STATE_JUMP:
+		y -= COIN_BBOX_HEIGHT;
+		vy = -COIN_JUMP_SPEED_Y;
+		break;
+	}
 }
 
 void CCoin::GetBoundingBox(float& left, float& top, float& right, float& bottom)

@@ -51,17 +51,19 @@ CSampleKeyHander* keyHandler;
 void CSampleKeyHander::OnKeyDown(int KeyCode)
 {
 	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
-	switch (KeyCode)
-	{
-	case DIK_SPACE:
-		if (mario->canJump) {
-			mario->SetState(MARIO_STATE_JUMP);
-			mario->canJump = 0;
+	if (mario->state != MARIO_STATE_DIE) {
+		switch (KeyCode)
+		{
+		case DIK_SPACE:
+			if (mario->canJump) {
+				mario->SetState(MARIO_STATE_JUMP);
+				mario->canJump = 0;
+			}
+			break;
+		case DIK_A: // reset
+			/*reset function*/
+			break;
 		}
-		break;
-	case DIK_A: // reset
-		/*reset function*/
-		break;
 	}
 }
 
@@ -757,10 +759,16 @@ void Update(DWORD dt)
 		coObjects.push_back(blocks[i]);
 	}
 
+	//
+	coObjects.push_back(coin);
+
 	for (int i = 0; i < objects.size(); i++)
 	{
 		objects[i]->Update(dt, &coObjects);
 	}
+
+	//
+	coin->Update(dt);
 
 
 	// Set camera position
@@ -803,7 +811,9 @@ void Render()
 			blocks[i]->Render();
 		}
 
-		coin->Render();
+		//
+		if (!coin->isDisable)
+			coin->Render();
 
 		for (int i = 0; i < objects.size(); i++) {
 			if (!objects[i]->isDisable)

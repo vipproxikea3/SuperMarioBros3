@@ -5,6 +5,7 @@
 #include "Game.h"
 #include "Block.h"
 #include "Goomba.h"
+#include "Coin.h"
 
 //#include "Goomba.h"
 
@@ -135,6 +136,13 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								SetState(MARIO_STATE_DIE);
 						}
 					}
+				}
+			}
+
+			if (dynamic_cast<CCoin*>(e->obj)) {
+				CCoin* coin = dynamic_cast<CCoin*>(e->obj);
+				if (coin->state == COIN_STATE_IDLE) {
+					coin->isDisable = true;
 				}
 			}
 		}
