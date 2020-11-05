@@ -61,24 +61,27 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
+
+			if (e->ny == -1)
+				canJump = 1;
 			
 			if (dynamic_cast<CBlock*>(e->obj)) {
 				CBlock* block = dynamic_cast<CBlock*>(e->obj);
 				if (block->GetTypeBlock() == 0) {
 					if (e->ny != 0) {
 						vy = 0;
-						y = y0 + min_ty * dy + e->ny * 0.1f;
+						y = y0 + min_ty * dy + e->ny * 0.4f;
 					}
 					if (e->nx != 0) {
 						vx = 0;
-						x = x0 + min_tx * dx + e->nx * 0.1f;
+						x = x0 + min_tx * dx + e->nx * 0.4f;
 					}
 				}
 
 				if (block->GetTypeBlock() == 1) {
 					if (e->ny == -1) {
 						vy = 0;
-						y = y0 + min_ty * dy + e->ny * 0.1f;
+						y = y0 + min_ty * dy + e->ny * 0.4f;
 					}
 				}
 			}
@@ -90,7 +93,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
 				if (e->ny != 0) {
 					vy = 0;
-					y = y0 + min_ty * dy + e->ny * 0.1f;
+					y = y0 + min_ty * dy + e->ny * 0.4f;
 					if (e->ny < 0)
 					{
 						if (goomba->GetState() != GOOMBA_STATE_DIE)
@@ -160,21 +163,27 @@ void CMario::Render()
 		}
 		else if (level == MARIO_LEVEL_SMALL)
 		{
-			if (vx == 0)
-			{
-				if (nx > 0) ani = MARIO_ANI_SMALL_IDLE_RIGHT;
-				else ani = MARIO_ANI_SMALL_IDLE_LEFT;
+			if (vy < 0) {
+				if (nx > 0)
+					ani = MARIO_ANI_SMALL_JUMP_RIGHT;
+				else
+					ani = MARIO_ANI_SMALL_JUMP_LEFT;
 			}
-			else if (vx > 0)
-				ani = MARIO_ANI_SMALL_WALKING_RIGHT;
-			else ani = MARIO_ANI_SMALL_WALKING_LEFT;
+			else {
+				if (vx == 0)
+				{
+					if (nx > 0) ani = MARIO_ANI_SMALL_IDLE_RIGHT;
+					else ani = MARIO_ANI_SMALL_IDLE_LEFT;
+				}
+				else if (vx > 0)
+					ani = MARIO_ANI_SMALL_WALKING_RIGHT;
+				else ani = MARIO_ANI_SMALL_WALKING_LEFT;
+			}
 		}
 
 	int alpha = 255;
 	if (untouchable) alpha = 128;
 	animations[ani]->Render(x, y, alpha);
-
-	RenderBoundingBox();
 }
 
 void CMario::SetState(int state)

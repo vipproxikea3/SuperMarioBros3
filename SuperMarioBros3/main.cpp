@@ -10,6 +10,7 @@
 #include "Mario.h"
 #include "Block.h"
 #include "Goomba.h"
+#include "Coin.h"
 
 #define WINDOW_CLASS_NAME L"SuperMarioBros3"
 #define MAIN_WINDOW_TITLE L"SuperMarioBros3"
@@ -25,6 +26,7 @@
 #define ID_TEX_MAP 0
 #define ID_TEX_MARIO 10
 #define ID_TEX_ENEMY 20
+#define ID_TEX_MISC 30
 
 CGame* game;
 Map* map;
@@ -32,6 +34,7 @@ Map* map;
 CMario* mario;
 CBlock* block;
 CGoomba* goomba;
+CCoin* coin;
 
 vector<LPGAMEOBJECT> blocks;
 
@@ -52,7 +55,10 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
-		mario->SetState(MARIO_STATE_JUMP);
+		if (mario->canJump) {
+			mario->SetState(MARIO_STATE_JUMP);
+			mario->canJump = 0;
+		}
 		break;
 	case DIK_A: // reset
 		/*goomba->SetRevival();*/
@@ -67,14 +73,16 @@ void CSampleKeyHander::OnKeyUp(int KeyCode)
 
 void CSampleKeyHander::KeyState(BYTE* states)
 {
-	// disable control key when Mario die 
-	if (mario->GetState() == MARIO_STATE_DIE) return;
-	if (game->IsKeyDown(DIK_RIGHT))
-		mario->SetState(MARIO_STATE_WALKING_RIGHT);
-	else if (game->IsKeyDown(DIK_LEFT))
-		mario->SetState(MARIO_STATE_WALKING_LEFT);
-	else
-		mario->SetState(MARIO_STATE_IDLE);
+	if (mario->state != MARIO_STATE_DIE) {
+		// disable control key when Mario die 
+		if (mario->GetState() == MARIO_STATE_DIE) return;
+		if (game->IsKeyDown(DIK_RIGHT))
+			mario->SetState(MARIO_STATE_WALKING_RIGHT);
+		else if (game->IsKeyDown(DIK_LEFT))
+			mario->SetState(MARIO_STATE_WALKING_LEFT);
+		else
+			mario->SetState(MARIO_STATE_IDLE);
+	}
 }
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -96,6 +104,7 @@ void LoadResources()
 	textures->Add(ID_TEX_MAP, L"Map\\map1-1_bank.png", D3DCOLOR_XRGB(255, 0, 0));
 	textures->Add(ID_TEX_MARIO, L"textures\\mario.png", D3DCOLOR_XRGB(255, 255, 255));
 	textures->Add(ID_TEX_ENEMY, L"textures\\enemies.png", D3DCOLOR_XRGB(3, 26, 110));
+	textures->Add(ID_TEX_MISC, L"textures\\misc.png", D3DCOLOR_XRGB(176, 224, 248));
 
 	map = new Map(27, 176, 12, 11, ID_TEX_MAP, L"Map\\map1-1.txt");
 
@@ -125,6 +134,9 @@ void LoadResources()
 
 	sprites->Add(10032, 155, 0, 170, 15, texMario);			// walk
 	sprites->Add(10033, 125, 0, 139, 15, texMario);
+
+	sprites->Add(10041, 397, 0, 410, 16, texMario);			// jum small right
+	sprites->Add(10042, 36, 0, 49, 16, texMario);			// jum small left
 
 	LPANIMATION ani;
 
@@ -156,13 +168,13 @@ void LoadResources()
 	ani->Add(10013);
 	animations->Add(501, ani);
 
-	ani = new CAnimation(100);	// walk right small
+	ani = new CAnimation(50);	// walk right small
 	ani->Add(10021);
 	ani->Add(10022);
 	ani->Add(10023);
 	animations->Add(502, ani);
 
-	ani = new CAnimation(100);	// walk left small
+	ani = new CAnimation(50);	// walk left small
 	ani->Add(10031);
 	ani->Add(10032);
 	ani->Add(10033);
@@ -172,6 +184,14 @@ void LoadResources()
 	ani = new CAnimation(100);		// Mario die
 	ani->Add(10099);
 	animations->Add(599, ani);
+
+	ani = new CAnimation(100);		// Mario small jump right
+	ani->Add(10041);
+	animations->Add(600, ani);
+
+	ani = new CAnimation(100);		// Mario small jump left
+	ani->Add(10042);
+	animations->Add(601, ani);
 
 	mario = new CMario();
 	mario->AddAnimation(400);		// idle right big
@@ -185,6 +205,9 @@ void LoadResources()
 	mario->AddAnimation(503);		// walk left big
 
 	mario->AddAnimation(599);		// die
+
+	mario->AddAnimation(600);		// small jump right
+	mario->AddAnimation(601);		// small jump left
 
 	mario->SetPosition(0.0f, 388.0f);
 	objects.push_back(mario);
@@ -236,6 +259,23 @@ void LoadResources()
 	goomba->SetState(GOOMBA_STATE_WALKING);
 	goomba->SetActiveArea(672, 1087);
 	objects.push_back(goomba);
+
+	// LOAD COIN
+	LPDIRECT3DTEXTURE9 texMisc = textures->Get(ID_TEX_MISC);
+
+	sprites->Add(50001, 303, 99, 313, 115, texMisc);
+	sprites->Add(50002, 321, 99, 331, 115, texMisc);
+	sprites->Add(50003, 339, 99, 349, 115, texMisc);
+
+	ani = new CAnimation(100);		// Coin idle
+	ani->Add(50001);
+	ani->Add(50002);
+	ani->Add(50003);
+	animations->Add(800, ani);
+
+	coin = new CCoin();
+	coin->AddAnimation(800);
+	coin->SetPosition(176, 352);
 
 	// LOAD BLOCK
 	LPDIRECT3DTEXTURE9 texMap = textures->Get(ID_TEX_MAP);
@@ -759,6 +799,8 @@ void Render()
 		map->Render();
 		for (int i = 0; i < blocks.size(); i++)
 			blocks[i]->Render();
+
+		coin->Render();
 
 		for (int i = 0; i < objects.size(); i++) {
 			if (!objects[i]->isDisable)

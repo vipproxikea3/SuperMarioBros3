@@ -26,6 +26,9 @@
 
 #define MARIO_ANI_DIE				8
 
+#define MARIO_ANI_SMALL_JUMP_RIGHT			9
+#define MARIO_ANI_SMALL_JUMP_LEFT			10
+
 #define	MARIO_LEVEL_SMALL	1
 #define	MARIO_LEVEL_BIG		2
 
@@ -49,6 +52,7 @@ public:
 		level = MARIO_LEVEL_SMALL;
 		untouchable = 0;
 	}
+	bool canJump = 0;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
 	void SetState(int state);
