@@ -4,7 +4,7 @@ void CCoin::showReward() {
 	this->SetState(COIN_STATE_JUMP);
 }
 
-void CCoin::Update(DWORD dt) {
+void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	if (this->state == COIN_STATE_JUMP) {
 		// Calculate dx, dy 
 		CGameObject::Update(dt);
@@ -37,7 +37,6 @@ void CCoin::SetState(int state)
 			vy = 0;
 		break;
 	case COIN_STATE_JUMP:
-		y -= COIN_BBOX_HEIGHT;
 		vy = -COIN_JUMP_SPEED_Y;
 		break;
 	}

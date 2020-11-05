@@ -6,6 +6,7 @@
 #include "Block.h"
 #include "Goomba.h"
 #include "Coin.h"
+#include "BrickReward.h"
 
 //#include "Goomba.h"
 
@@ -41,23 +42,16 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	else
 	{
-		float min_tx, min_ty, nx = 0, ny = 0;
+		float min_tx, min_ty, nx = 0, ny;
 
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
 		float x0 = x;
 		float y0 = y;
 
+
 		x = x0 + dx;
 		y = y0 + dy;
-
-		// block 
-		// nx*0.4f : need to push out a bit to avoid overlapping next frame
-		/*x += min_tx * dx + nx * 0.4f;
-		y += min_ty * dy + ny * 0.4f;
-
-		if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;*/
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
@@ -66,30 +60,23 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (e->ny == -1)
 				canJump = 1;
 			
+
+			// BLOCK
 			if (dynamic_cast<CBlock*>(e->obj)) {
 				CBlock* block = dynamic_cast<CBlock*>(e->obj);
-				if (block->GetTypeBlock() == 0) {
-					if (e->ny != 0) {
-						vy = 0;
-						y = y0 + min_ty * dy + e->ny * 0.4f;
-					}
-					if (e->nx != 0) {
-						vx = 0;
-						x = x0 + min_tx * dx + e->nx * 0.4f;
-					}
-				}
-
-				if (block->GetTypeBlock() == 1) {
-					if (e->ny == -1) {
-						vy = 0;
-						y = y0 + min_ty * dy + e->ny * 0.4f;
-					}
+				switch (block->GetTypeBlock()) {
+				case 0:
+					BasicCollision(min_tx, min_ty, nx, ny, x0, y0);
+					break;
+				case 1:
+					if (e->ny == -1)
+						BasicCollision(min_tx, min_ty, nx, ny, x0, y0);
+					break;
 				}
 			}
-
 			
-
-			if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is Goomba 
+			// GOOMBA
+			if (dynamic_cast<CGoomba*>(e->obj))
 			{
 				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
 				if (e->ny != 0) {
@@ -141,8 +128,16 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			if (dynamic_cast<CCoin*>(e->obj)) {
 				CCoin* coin = dynamic_cast<CCoin*>(e->obj);
-				if (coin->state == COIN_STATE_IDLE) {
+				if (coin->GetState() == COIN_STATE_IDLE) {
 					coin->isDisable = true;
+				}
+			}
+
+			if (dynamic_cast<CBrickReward*>(e->obj)) {
+				CBrickReward* brickReward = dynamic_cast<CBrickReward*>(e->obj);
+				BasicCollision(min_tx, min_ty, nx, ny, x0, y0);
+				if (e->ny == 1 && brickReward->GetState() == BRICKREWARD_STATE_IDLE) {
+					brickReward->SetState(BRICKREWARD_STATE_JUMP);
 				}
 			}
 		}
@@ -150,6 +145,22 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+}
+
+void CMario::BasicCollision(float min_tx, float min_ty, float nx, float ny, float x0, float y0)
+{
+	if (nx != 0)
+	{
+		this->vx = 0;
+		this->x = x0 + min_tx * this->dx + nx * 0.1f;
+	}
+	if (ny != 0)
+	{
+		this->vy = 0;
+		this->y = y0 + min_ty * this->dy + ny * 0.1f;
+		/*if (ny == -1)
+			this->ny = 0;*/
+	}
 }
 
 void CMario::Render()

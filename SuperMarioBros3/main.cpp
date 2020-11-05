@@ -11,6 +11,7 @@
 #include "Block.h"
 #include "Goomba.h"
 #include "Coin.h"
+#include "BrickReward.h"
 
 #define WINDOW_CLASS_NAME L"SuperMarioBros3"
 #define MAIN_WINDOW_TITLE L"SuperMarioBros3"
@@ -34,9 +35,11 @@ CMario* mario;
 CBlock* block;
 CGoomba* goomba;
 CCoin* coin;
+CBrickReward* brickReward;
 
+vector<LPGAMEOBJECT> coins;
+vector<LPGAMEOBJECT> brickRewards;
 vector<LPGAMEOBJECT> blocks;
-
 vector<LPGAMEOBJECT> objects;
 
 class CSampleKeyHander : public CKeyEventHandler
@@ -274,9 +277,77 @@ void LoadResources()
 	ani->Add(50003);
 	animations->Add(800, ani);
 
-	coin = new CCoin();
-	coin->AddAnimation(800);
-	coin->SetPosition(176, 352);
+	for (int i = 0; i < 5; i++) {
+		coin = new CCoin();
+		coin->AddAnimation(800);
+		coin->isDisable = true;
+		coins.push_back(coin);
+	}
+
+	// LOAD BRICKREWARD
+	sprites->Add(60001, 300, 117, 316, 133, texMisc);
+	sprites->Add(60002, 318, 117, 334, 133, texMisc);
+	sprites->Add(60003, 336, 117, 352, 133, texMisc);
+	sprites->Add(60004, 354, 117, 370, 133, texMisc);
+	sprites->Add(60005, 372, 117, 388, 133, texMisc);
+
+	ani = new CAnimation(100);		// BrickReward idle
+	ani->Add(60001);
+	ani->Add(60002);
+	ani->Add(60003);
+	ani->Add(60004);
+	animations->Add(900, ani);
+
+	ani = new CAnimation(1000);		// BrickReward actived
+	ani->Add(60005);
+	animations->Add(901, ani);
+
+	brickReward = new CBrickReward();
+	brickReward->AddAnimation(900);
+	brickReward->AddAnimation(901);
+	brickReward->SetPosition(176, 352);
+	brickReward->setReward(coins[0]);
+	brickRewards.push_back(brickReward);
+
+	brickReward = new CBrickReward();
+	brickReward->AddAnimation(900);
+	brickReward->AddAnimation(901);
+	brickReward->SetPosition(192, 352);
+	brickReward->setReward(coins[1]);
+	brickRewards.push_back(brickReward);
+
+	brickReward = new CBrickReward();
+	brickReward->AddAnimation(900);
+	brickReward->AddAnimation(901);
+	brickReward->SetPosition(224, 304);
+	brickReward->setReward(coins[2]);
+	brickRewards.push_back(brickReward);
+
+	brickReward = new CBrickReward();
+	brickReward->AddAnimation(900);
+	brickReward->AddAnimation(901);
+	brickReward->SetPosition(240, 304);
+	brickRewards.push_back(brickReward);
+
+	brickReward = new CBrickReward();
+	brickReward->AddAnimation(900);
+	brickReward->AddAnimation(901);
+	brickReward->SetPosition(416, 320);
+	brickReward->setReward(coins[3]);
+	brickRewards.push_back(brickReward);
+
+	brickReward = new CBrickReward();
+	brickReward->AddAnimation(900);
+	brickReward->AddAnimation(901);
+	brickReward->SetPosition(656, 384);
+	brickRewards.push_back(brickReward);
+
+	brickReward = new CBrickReward();
+	brickReward->AddAnimation(900);
+	brickReward->AddAnimation(901);
+	brickReward->SetPosition(704, 352);
+	brickReward->setReward(coins[4]);
+	brickRewards.push_back(brickReward);
 
 	// LOAD BLOCK
 	LPDIRECT3DTEXTURE9 texMap = textures->Get(ID_TEX_MAP);
@@ -758,34 +829,38 @@ void Update(DWORD dt)
 	{
 		coObjects.push_back(blocks[i]);
 	}
+	for (int i = 0; i < brickRewards.size(); i++) {
+		coObjects.push_back(brickRewards[i]);
+	}
+	for (int i = 0; i < coins.size(); i++) {
+		if (!coins[i]->isDisable)
+			coObjects.push_back(coins[i]);
+	}
 
-	//
-	coObjects.push_back(coin);
 
+
+	for (int i = 0; i < coins.size(); i++) {
+		coins[i]->Update(dt, &coObjects);
+	}
+	for (int i = 0; i < brickRewards.size(); i++) {
+		brickRewards[i]->Update(dt);
+	}
 	for (int i = 0; i < objects.size(); i++)
 	{
 		objects[i]->Update(dt, &coObjects);
 	}
 
-	//
-	coin->Update(dt);
-
 
 	// Set camera position
 	float cx, cy;
 	mario->GetPosition(cx, cy);
-
 	CGame* game = CGame::GetInstance();
-
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
-
 	if (cy < 0) cy = 0;
 	if (cy > map->getMapHeight() - game->GetScreenHeight()) cy = map->getMapHeight() - game->GetScreenHeight();
-
 	if (cx < 0) cx = 0;
 	if (cx > map->getMapWidth() - game->GetScreenWidth()) cx = map->getMapWidth() - game->GetScreenWidth();
-
 	CGame::GetInstance()->SetCamPos(cx, cy);
 }
 
@@ -811,9 +886,14 @@ void Render()
 			blocks[i]->Render();
 		}
 
-		//
-		if (!coin->isDisable)
-			coin->Render();
+		for (int i = 0; i < coins.size(); i++) {
+			if(!coins[i]->isDisable)
+				coins[i]->Render();
+		}
+		
+		for (int i = 0; i < brickRewards.size(); i++) {
+			brickRewards[i]->Render();
+		}
 
 		for (int i = 0; i < objects.size(); i++) {
 			if (!objects[i]->isDisable)
