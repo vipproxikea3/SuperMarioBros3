@@ -62,10 +62,11 @@ class CMario : public CGameObject
 public:
 	CMario() : CGameObject()
 	{
-		level = MARIO_LEVEL_RACCOON;
+		level = MARIO_LEVEL_SMALL;
 		untouchable = 0;
 	}
 	bool canJump = 0;
+	void LvlUp();
 	void BasicCollision(float min_tx, float min_ty, float nx, float ny, float x0, float y0);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();

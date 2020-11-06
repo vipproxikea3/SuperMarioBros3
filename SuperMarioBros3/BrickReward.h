@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject.h"
 
-#define BRICKREWARD_JUMP_SPEED_Y	0.2f
+#define BRICKREWARD_JUMP_SPEED_Y	0.1f
 #define BRICKREWARD_GRAVITY			0.001f
 
 #define BRICKREWARD_STATE_IDLE		0

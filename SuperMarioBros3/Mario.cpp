@@ -7,6 +7,7 @@
 #include "Goomba.h"
 #include "Coin.h"
 #include "BrickReward.h"
+#include "SuperMushroom.h"
 
 //#include "Goomba.h"
 
@@ -152,11 +153,31 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					brickReward->SetState(BRICKREWARD_STATE_JUMP);
 				}
 			}
+
+			if (dynamic_cast<CSuperMushroom*>(e->obj)) {
+				CSuperMushroom* mushroom = dynamic_cast<CSuperMushroom*>(e->obj);
+				mushroom->isDisable = true;
+				this->LvlUp();
+			}
 		}
 	}
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+}
+
+void CMario::LvlUp() {
+	switch (this->level) {
+	case MARIO_LEVEL_SMALL:
+		this->SetLevel(MARIO_LEVEL_BIG);
+		y -= MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT;
+		break;
+	case MARIO_LEVEL_BIG:
+		this->SetLevel(MARIO_LEVEL_RACCOON);
+		break;
+	case MARIO_LEVEL_RACCOON:
+		break;
+	}
 }
 
 void CMario::BasicCollision(float min_tx, float min_ty, float nx, float ny, float x0, float y0)

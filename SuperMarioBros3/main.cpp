@@ -12,6 +12,7 @@
 #include "Goomba.h"
 #include "Coin.h"
 #include "BrickReward.h"
+#include "SuperMushroom.h"
 
 #define WINDOW_CLASS_NAME L"SuperMarioBros3"
 #define MAIN_WINDOW_TITLE L"SuperMarioBros3"
@@ -36,7 +37,9 @@ CBlock* block;
 CGoomba* goomba;
 CCoin* coin;
 CBrickReward* brickReward;
+CSuperMushroom* superMushroom;
 
+vector<LPGAMEOBJECT> superMushrooms;
 vector<LPGAMEOBJECT> coins;
 vector<LPGAMEOBJECT> brickRewards;
 vector<LPGAMEOBJECT> blocks;
@@ -376,6 +379,17 @@ void LoadResources()
 	coins[26]->SetPosition(1809, 96);
 	coins[27]->SetPosition(1841, 128);
 
+	// LOAD SUPERMUSHROOM
+	sprites->Add(40001, 300, 189, 316, 205, texMisc);
+	ani = new CAnimation(100);		// SuperMushroom idle
+	ani->Add(40001);
+	animations->Add(300, ani);
+
+	superMushroom = new CSuperMushroom();
+	superMushroom->AddAnimation(300);
+	superMushrooms.push_back(superMushroom);
+
+
 	// LOAD BRICKREWARD
 	sprites->Add(60001, 300, 117, 316, 133, texMisc);
 	sprites->Add(60002, 318, 117, 334, 133, texMisc);
@@ -419,6 +433,7 @@ void LoadResources()
 	brickReward->AddAnimation(900);
 	brickReward->AddAnimation(901);
 	brickReward->SetPosition(240, 304);
+	brickReward->setReward(superMushrooms[0]);
 	brickRewards.push_back(brickReward);
 
 	brickReward = new CBrickReward();
@@ -940,11 +955,19 @@ void Update(DWORD dt)
 		if (!coins[i]->isDisable)
 			coObjects.push_back(coins[i]);
 	}
+	for (int i = 0; i < superMushrooms.size(); i++) {
+		if (!superMushrooms[i]->isDisable)
+			coObjects.push_back(superMushrooms[i]);
+	}
+
 
 
 
 	for (int i = 0; i < coins.size(); i++) {
 		coins[i]->Update(dt, &coObjects);
+	}
+	for (int i = 0; i < superMushrooms.size(); i++) {
+		superMushroom->Update(dt, &coObjects);
 	}
 	for (int i = 0; i < brickRewards.size(); i++) {
 		brickRewards[i]->Update(dt);
@@ -989,16 +1012,17 @@ void Render()
 		for (int i = 0; i < blocks.size(); i++) {
 			blocks[i]->Render();
 		}
-
 		for (int i = 0; i < coins.size(); i++) {
 			if(!coins[i]->isDisable)
 				coins[i]->Render();
 		}
-		
+		for (int i = 0; i < superMushrooms.size(); i++) {
+			if (!superMushrooms[i]->isDisable)
+				superMushrooms[i]->Render();
+		}
 		for (int i = 0; i < brickRewards.size(); i++) {
 			brickRewards[i]->Render();
 		}
-
 		for (int i = 0; i < objects.size(); i++) {
 			if (!objects[i]->isDisable)
 				objects[i]->Render();

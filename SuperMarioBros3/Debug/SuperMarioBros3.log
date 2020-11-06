@@ -1,52 +1,57 @@
-﻿  main.cpp
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(493,25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(499,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(505,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(511,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(517,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(523,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(566,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(572,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(578,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(584,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(590,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(596,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(602,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(658,31): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(664,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(670,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(676,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(682,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(688,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(696,31): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(702,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(708,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(714,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(720,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(726,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(737,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(742,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(758,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(771,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(784,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(797,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(815,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(828,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(841,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(854,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(867,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(885,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(898,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(916,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(927,20): warning C4018: '<': signed/unsigned mismatch
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(932,20): warning C4018: '<': signed/unsigned mismatch
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(936,20): warning C4018: '<': signed/unsigned mismatch
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(939,20): warning C4018: '<': signed/unsigned mismatch
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(946,20): warning C4018: '<': signed/unsigned mismatch
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(949,20): warning C4018: '<': signed/unsigned mismatch
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(952,20): warning C4018: '<': signed/unsigned mismatch
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(989,21): warning C4018: '<': signed/unsigned mismatch
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(993,21): warning C4018: '<': signed/unsigned mismatch
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(998,21): warning C4018: '<': signed/unsigned mismatch
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(1002,21): warning C4018: '<': signed/unsigned mismatch
+﻿  Mario.cpp
+  main.cpp
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(508,25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(514,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(520,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(526,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(532,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(538,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(581,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(587,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(593,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(599,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(605,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(611,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(617,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(673,31): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(679,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(685,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(691,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(697,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(703,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(711,31): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(717,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(723,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(729,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(735,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(741,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(752,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(757,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(773,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(786,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(799,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(812,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(830,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(843,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(856,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(869,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(882,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(900,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(913,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(931,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(942,20): warning C4018: '<': signed/unsigned mismatch
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(947,20): warning C4018: '<': signed/unsigned mismatch
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(951,20): warning C4018: '<': signed/unsigned mismatch
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(954,20): warning C4018: '<': signed/unsigned mismatch
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(958,20): warning C4018: '<': signed/unsigned mismatch
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(966,20): warning C4018: '<': signed/unsigned mismatch
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(969,20): warning C4018: '<': signed/unsigned mismatch
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(972,20): warning C4018: '<': signed/unsigned mismatch
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(975,20): warning C4018: '<': signed/unsigned mismatch
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(1012,21): warning C4018: '<': signed/unsigned mismatch
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(1015,21): warning C4018: '<': signed/unsigned mismatch
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(1019,21): warning C4018: '<': signed/unsigned mismatch
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(1023,21): warning C4018: '<': signed/unsigned mismatch
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\main.cpp(1026,21): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
   SuperMarioBros3.vcxproj -> D:\DATA\UIT\Deadline\Game\SuperMarioBros3\Debug\SuperMarioBros3.exe

@@ -1,17 +1,30 @@
 #include "BrickReward.h"
 #include "GameObject.h"
 #include "Coin.h"
+#include "SuperMushroom.h"
 
 void CBrickReward::setReward(CGameObject* GObj) {
 	this->reward = GObj;
-	GObj->SetPosition(x + 2.0f, y - 16.0f);
 	GObj->isDisable = true;
+
+	if (dynamic_cast<CCoin*>(this->reward)) {
+		GObj->SetPosition(x + 2.0f, y - 16.0f);
+	}
+
+	if (dynamic_cast<CSuperMushroom*>(this->reward)) {
+		GObj->SetPosition(x, y - 16.0f);
+	}
 }
 
 void CBrickReward::showReward() {
 	if (dynamic_cast<CCoin*>(this->reward)) {
 		CCoin* coin = dynamic_cast<CCoin*>(this->reward);
 		coin->showReward();
+	}
+
+	if (dynamic_cast<CSuperMushroom*>(this->reward)) {
+		CSuperMushroom* mushroom = dynamic_cast<CSuperMushroom*>(this->reward);
+		mushroom->SetState(SUPERMUSHROOM_STATE_WALKING_LEFT);
 	}
 }
 
