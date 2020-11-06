@@ -58,9 +58,8 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	Revival();
 
-	// turn off collision when die 
-	/*if (state != GOOMBA_STATE_DIE)*/
-		CalcPotentialCollisions(coObjects, coEvents);
+	
+	CalcPotentialCollisions(coObjects, coEvents);
 
 	x += dx;
 	if (x <= lLimit) {
@@ -85,19 +84,20 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		float y0 = y;
 		y = y0 + dy;
 
-		for (UINT i = 0; i < coEventsResult.size(); i++) {
-			LPCOLLISIONEVENT e = coEventsResult[i];
+		if (!this->isDisable)
+			for (UINT i = 0; i < coEventsResult.size(); i++) {
+				LPCOLLISIONEVENT e = coEventsResult[i];
 
-			if (dynamic_cast<CBlock*>(e->obj)) {
-				CBlock* block = dynamic_cast<CBlock*>(e->obj);
-				if (block->GetTypeBlock() == 0) {
-					if (e->ny != 0) {
-						vy = 0;
-						y = y0 + min_ty * dy + e->ny * 0.1f;
+				if (dynamic_cast<CBlock*>(e->obj)) {
+					CBlock* block = dynamic_cast<CBlock*>(e->obj);
+					if (block->GetTypeBlock() == 0) {
+						if (e->ny != 0) {
+							vy = 0;
+							y = y0 + min_ty * dy + e->ny * 0.1f;
+						}
 					}
 				}
 			}
-		}
 	}
 }
 

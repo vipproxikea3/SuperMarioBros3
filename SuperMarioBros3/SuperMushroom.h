@@ -2,7 +2,7 @@
 #include "GameObject.h"
 
 #define SUPERMUSHROOM_WALKING_SPEED				0.02f 
-#define SUPERMUSHROOM_GRAVITY					0.001f
+#define SUPERMUSHROOM_GRAVITY					0.0008f
 
 #define SUPERMUSHROOM_STATE_IDLE				0
 #define SUPERMUSHROOM_STATE_WALKING_RIGHT		100
@@ -21,6 +21,7 @@ public:
 	{
 		this->SetState(SUPERMUSHROOM_STATE_IDLE);
 	}
+	void showReward();
 	void BasicCollision(float min_tx, float min_ty, float nx, float ny, float x0, float y0);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();

@@ -13,21 +13,23 @@
 #include "Coin.h"
 #include "BrickReward.h"
 #include "SuperMushroom.h"
+#include "Shell.h"
 
 #define WINDOW_CLASS_NAME L"SuperMarioBros3"
 #define MAIN_WINDOW_TITLE L"SuperMarioBros3"
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
 
-#define SCREEN_WIDTH 320
+#define SCREEN_WIDTH 620
 #define SCREEN_HEIGHT 240
 
 #define MAX_FRAME_RATE 120
 
-#define ID_TEX_MAP 0
-#define ID_TEX_MARIO 10
-#define ID_TEX_ENEMY 20
-#define ID_TEX_MISC 30
+#define ID_TEX_MAP		0
+#define ID_TEX_MARIO	10
+#define ID_TEX_ENEMY	20
+#define ID_TEX_ENEMY_2	30
+#define ID_TEX_MISC		40
 
 CGame* game;
 Map* map;
@@ -38,6 +40,7 @@ CGoomba* goomba;
 CCoin* coin;
 CBrickReward* brickReward;
 CSuperMushroom* superMushroom;
+CShell* shell;
 
 vector<LPGAMEOBJECT> superMushrooms;
 vector<LPGAMEOBJECT> coins;
@@ -111,6 +114,7 @@ void LoadResources()
 	textures->Add(ID_TEX_MAP, L"Map\\map1-1_bank.png", D3DCOLOR_XRGB(255, 0, 0));
 	textures->Add(ID_TEX_MARIO, L"textures\\mario.png", D3DCOLOR_XRGB(255, 255, 255));
 	textures->Add(ID_TEX_ENEMY, L"textures\\enemies.png", D3DCOLOR_XRGB(3, 26, 110));
+	textures->Add(ID_TEX_ENEMY_2, L"textures\\enemies-2.png", D3DCOLOR_XRGB(0, 128, 128));
 	textures->Add(ID_TEX_MISC, L"textures\\misc.png", D3DCOLOR_XRGB(176, 224, 248));
 
 	map = new Map(27, 176, 12, 11, ID_TEX_MAP, L"Map\\map1-1.txt");
@@ -280,8 +284,33 @@ void LoadResources()
 	mario->AddAnimation(604);		// big jump raccoon
 	mario->AddAnimation(605);		// big jump raccoon
 
-	mario->SetPosition(0.0f, 388.0f);
+	/*mario->SetPosition(0.0f, 388.0f);*/
+	mario->SetPosition(465.0f, 300.0f);
 	objects.push_back(mario);
+
+	// LOAD SHELL
+	LPDIRECT3DTEXTURE9 texEnemy_2 = textures->Get(ID_TEX_ENEMY_2);
+	sprites->Add(20001, 239, 202, 255, 218, texEnemy_2);
+	sprites->Add(20002, 256, 202, 272, 218, texEnemy_2);
+	sprites->Add(20003, 273, 202, 289, 218, texEnemy_2);
+	sprites->Add(20004, 290, 202, 306, 218, texEnemy_2);
+
+	ani = new CAnimation(1000);	// shell idle
+	ani->Add(20001);
+	animations->Add(201, ani);
+
+	ani = new CAnimation(100);	// shell walking
+	ani->Add(20001);
+	ani->Add(20002);
+	ani->Add(20003);
+	ani->Add(20004);
+	animations->Add(202, ani);
+
+	shell = new CShell();
+	shell->AddAnimation(201);	// shell idle
+	shell->AddAnimation(202);	// shell walking
+	shell->SetPosition(575, 360);
+	objects.push_back(shell);
 
 	// LOAD GOOMBA
 	LPDIRECT3DTEXTURE9 texEnemy = textures->Get(ID_TEX_ENEMY);
@@ -385,10 +414,12 @@ void LoadResources()
 	ani->Add(40001);
 	animations->Add(300, ani);
 
-	superMushroom = new CSuperMushroom();
-	superMushroom->AddAnimation(300);
-	superMushrooms.push_back(superMushroom);
-
+	for (int i = 0; i < 3; i++) {
+		superMushroom = new CSuperMushroom();
+		superMushroom->AddAnimation(300);
+		superMushrooms.push_back(superMushroom);
+		objects.push_back(superMushroom);
+	}
 
 	// LOAD BRICKREWARD
 	sprites->Add(60001, 300, 117, 316, 133, texMisc);
@@ -433,7 +464,7 @@ void LoadResources()
 	brickReward->AddAnimation(900);
 	brickReward->AddAnimation(901);
 	brickReward->SetPosition(240, 304);
-	brickReward->setReward(superMushrooms[0]);
+	brickReward->setReward(superMushrooms[1]);
 	brickRewards.push_back(brickReward);
 
 	brickReward = new CBrickReward();
@@ -447,6 +478,7 @@ void LoadResources()
 	brickReward->AddAnimation(900);
 	brickReward->AddAnimation(901);
 	brickReward->SetPosition(656, 384);
+	brickReward->setReward(superMushrooms[2]);
 	brickRewards.push_back(brickReward);
 
 	brickReward = new CBrickReward();
@@ -466,6 +498,7 @@ void LoadResources()
 	brickReward->AddAnimation(900);
 	brickReward->AddAnimation(901);
 	brickReward->SetPosition(1472, 368);
+	brickReward->setReward(superMushrooms[0]);
 	brickRewards.push_back(brickReward);
 
 	// LOAD BLOCK
@@ -955,19 +988,10 @@ void Update(DWORD dt)
 		if (!coins[i]->isDisable)
 			coObjects.push_back(coins[i]);
 	}
-	for (int i = 0; i < superMushrooms.size(); i++) {
-		if (!superMushrooms[i]->isDisable)
-			coObjects.push_back(superMushrooms[i]);
-	}
-
-
 
 
 	for (int i = 0; i < coins.size(); i++) {
 		coins[i]->Update(dt, &coObjects);
-	}
-	for (int i = 0; i < superMushrooms.size(); i++) {
-		superMushroom->Update(dt, &coObjects);
 	}
 	for (int i = 0; i < brickRewards.size(); i++) {
 		brickRewards[i]->Update(dt);
@@ -1015,10 +1039,6 @@ void Render()
 		for (int i = 0; i < coins.size(); i++) {
 			if(!coins[i]->isDisable)
 				coins[i]->Render();
-		}
-		for (int i = 0; i < superMushrooms.size(); i++) {
-			if (!superMushrooms[i]->isDisable)
-				superMushrooms[i]->Render();
 		}
 		for (int i = 0; i < brickRewards.size(); i++) {
 			brickRewards[i]->Render();

@@ -8,6 +8,7 @@
 #include "Coin.h"
 #include "BrickReward.h"
 #include "SuperMushroom.h"
+#include "Shell.h"
 
 //#include "Goomba.h"
 
@@ -67,11 +68,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CBlock* block = dynamic_cast<CBlock*>(e->obj);
 				switch (block->GetTypeBlock()) {
 				case 0:
-					BasicCollision(min_tx, min_ty, nx, ny, x0, y0);
+					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 					break;
 				case 1:
 					if (e->ny == -1)
-						BasicCollision(min_tx, min_ty, nx, ny, x0, y0);
+						BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 					break;
 				}
 			}
@@ -139,6 +140,53 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 
+			// SHELL
+			if (dynamic_cast<CShell*>(e->obj)) {
+				CShell* shell = dynamic_cast<CShell*>(e->obj);
+				switch (shell->GetState()) {
+				case SHELL_STATE_IDLE:
+					break;
+				case SHELL_STATE_WALKING_RIGHT:
+					if (untouchable == 0)
+					{
+						switch (level) {
+						case MARIO_LEVEL_SMALL:
+							SetState(MARIO_STATE_DIE);
+							break;
+						case MARIO_LEVEL_BIG:
+							level = MARIO_LEVEL_SMALL;
+							StartUntouchable();
+							break;
+						case MARIO_LEVEL_RACCOON:
+							level = MARIO_LEVEL_BIG;
+							StartUntouchable();
+							break;
+						}
+					}
+					break;
+				case SHELL_STATE_WALKING_LEFT:
+					if (untouchable == 0)
+					{
+						switch (level) {
+						case MARIO_LEVEL_SMALL:
+							SetState(MARIO_STATE_DIE);
+							break;
+						case MARIO_LEVEL_BIG:
+							level = MARIO_LEVEL_SMALL;
+							StartUntouchable();
+							break;
+						case MARIO_LEVEL_RACCOON:
+							level = MARIO_LEVEL_BIG;
+							StartUntouchable();
+							break;
+						}
+					}
+					break;
+				}
+			}
+
+
+			// COIN
 			if (dynamic_cast<CCoin*>(e->obj)) {
 				CCoin* coin = dynamic_cast<CCoin*>(e->obj);
 				if (coin->GetState() == COIN_STATE_IDLE) {
@@ -146,14 +194,17 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 
+
+			// BRICKREWARD
 			if (dynamic_cast<CBrickReward*>(e->obj)) {
 				CBrickReward* brickReward = dynamic_cast<CBrickReward*>(e->obj);
-				BasicCollision(min_tx, min_ty, nx, ny, x0, y0);
+				BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 				if (e->ny == 1 && brickReward->GetState() == BRICKREWARD_STATE_IDLE) {
 					brickReward->SetState(BRICKREWARD_STATE_JUMP);
 				}
 			}
 
+			// SUPERMUSHROOM
 			if (dynamic_cast<CSuperMushroom*>(e->obj)) {
 				CSuperMushroom* mushroom = dynamic_cast<CSuperMushroom*>(e->obj);
 				mushroom->isDisable = true;
@@ -170,7 +221,7 @@ void CMario::LvlUp() {
 	switch (this->level) {
 	case MARIO_LEVEL_SMALL:
 		this->SetLevel(MARIO_LEVEL_BIG);
-		y -= MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT;
+		y = y - (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT);
 		break;
 	case MARIO_LEVEL_BIG:
 		this->SetLevel(MARIO_LEVEL_RACCOON);

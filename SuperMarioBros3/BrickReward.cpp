@@ -8,15 +8,21 @@ void CBrickReward::setReward(CGameObject* GObj) {
 	GObj->isDisable = true;
 
 	if (dynamic_cast<CCoin*>(this->reward)) {
-		GObj->SetPosition(x + 2.0f, y - 16.0f);
+		CCoin* coin = dynamic_cast<CCoin*>(this->reward);
+		coin->SetPosition(x + 2.0f, y - 16.0f);
 	}
 
 	if (dynamic_cast<CSuperMushroom*>(this->reward)) {
-		GObj->SetPosition(x, y - 16.0f);
+		CSuperMushroom* mushroom = dynamic_cast<CSuperMushroom*>(this->reward);
+		mushroom->SetPosition(x, y - 16.0f);
 	}
 }
 
 void CBrickReward::showReward() {
+
+	if (this->reward != NULL)
+		this->reward->isDisable = false;
+
 	if (dynamic_cast<CCoin*>(this->reward)) {
 		CCoin* coin = dynamic_cast<CCoin*>(this->reward);
 		coin->showReward();
@@ -24,7 +30,7 @@ void CBrickReward::showReward() {
 
 	if (dynamic_cast<CSuperMushroom*>(this->reward)) {
 		CSuperMushroom* mushroom = dynamic_cast<CSuperMushroom*>(this->reward);
-		mushroom->SetState(SUPERMUSHROOM_STATE_WALKING_LEFT);
+		mushroom->showReward();
 	}
 }
 
@@ -73,8 +79,6 @@ void CBrickReward::SetState(int state)
 	case BRICKREWARD_STATE_JUMP:
 		vy = -BRICKREWARD_JUMP_SPEED_Y;
 		this->showReward();
-		if (this->reward != NULL)
-			reward->isDisable = false;
 		break;
 	}
 }

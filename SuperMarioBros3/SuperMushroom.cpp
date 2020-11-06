@@ -1,13 +1,16 @@
 #include "SuperMushroom.h"
 #include "Block.h"
 #include "BrickReward.h"
+#include "Game.h"
+
+void CSuperMushroom::showReward() {
+	this->SetState(SUPERMUSHROOM_STATE_WALKING_LEFT);
+}
 
 void CSuperMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
-
-	this->vx;
 
 	// Simple fall down
  	vy += SUPERMUSHROOM_GRAVITY * dt;
@@ -37,7 +40,7 @@ void CSuperMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		x = x0 + dx;
 		y = y0 + dy;
-
+		
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
@@ -45,15 +48,24 @@ void CSuperMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			// BLOCK
 			if (dynamic_cast<CBlock*>(e->obj)) {
 				if (e->ny == -1)
-					BasicCollision(min_tx, min_ty, nx, ny, x0, y0);
+					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 			}
 
 			// BRICKREWARD
 			if (dynamic_cast<CBrickReward*>(e->obj)) {
 				if (e->ny == -1)
-					BasicCollision(min_tx, min_ty, nx, ny, x0, y0);
+					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 			}
 		}
+	}
+
+	CGame* game = CGame::GetInstance();
+	float cx, cy;
+	game->GetCamPos(cx, cy);
+	float screenWidth = game->GetScreenWidth();
+
+	if (this->x < cx || this->x > cx + screenWidth) {
+		this->isDisable = true;
 	}
 
 	// clean up collision events
@@ -88,9 +100,11 @@ void CSuperMushroom::SetState(int state)
 		vy = 0;
 		break;
 	case SUPERMUSHROOM_STATE_WALKING_RIGHT:
+		vy = -0.2f;
 		vx = SUPERMUSHROOM_WALKING_SPEED;
 		break;
 	case SUPERMUSHROOM_STATE_WALKING_LEFT:
+		vy = -0.2f;
 		vx = -SUPERMUSHROOM_WALKING_SPEED;
 		break;
 	}
