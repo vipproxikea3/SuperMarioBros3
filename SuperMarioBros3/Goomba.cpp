@@ -16,13 +16,14 @@ void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& botto
 
 void CGoomba::Revival() {
 	if (this->state == GOOMBA_STATE_DIE) {
+		CGame* game = CGame::GetInstance();
 		float cam_X, cam_Y;
-		CGame::GetInstance()->GetCamPos(cam_X, cam_Y);
+		game->GetCamPos(cam_X, cam_Y);
 
-		float screen_width, screen_heigh;
-		LPDIRECT3DSURFACE9 bb = CGame::GetInstance()->GetBackBuffer();
+		float screen_width;
+		screen_width = game->GetScreenWidth();
 
-		if (cam_X > this->x_start || cam_Y > this->y_start)
+		if (cam_X > this->x_start || cam_X + screen_width < this->x_start)
 			SetRevival();
 	}
 }

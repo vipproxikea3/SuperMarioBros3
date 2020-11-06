@@ -60,7 +60,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		case DIK_SPACE:
 			if (mario->canJump) {
 				mario->SetState(MARIO_STATE_JUMP);
-				mario->canJump = 0;
+				mario->canJump = false;
 			}
 			break;
 		case DIK_A: // reset
@@ -117,32 +117,50 @@ void LoadResources()
 
 	LPDIRECT3DTEXTURE9 texMario = textures->Get(ID_TEX_MARIO);
 
-	// big
-	sprites->Add(10001, 246, 154, 260, 181, texMario);		// idle right
+	sprites->Add(10099, 215, 120, 231, 135, texMario);		// die 
 
+	// big
+	sprites->Add(10001, 246, 154, 260, 181, texMario);		// idle big right
 	sprites->Add(10002, 275, 154, 290, 181, texMario);		// walk
 	sprites->Add(10003, 304, 154, 321, 181, texMario);
+	sprites->Add(10004, 395, 275, 411, 301, texMario);		// jum big right
 
-	sprites->Add(10011, 186, 154, 200, 181, texMario);		// idle left
+	sprites->Add(10011, 186, 154, 200, 181, texMario);		// idle big left
 	sprites->Add(10012, 155, 154, 170, 181, texMario);		// walk
 	sprites->Add(10013, 125, 154, 140, 181, texMario);
-
-	sprites->Add(10099, 215, 120, 231, 135, texMario);		// die 
+	sprites->Add(10014, 35, 275, 51, 301, texMario);		// jum big left
 
 	// small
 	sprites->Add(10021, 247, 0, 259, 15, texMario);			// idle small right
 	sprites->Add(10022, 275, 0, 291, 15, texMario);			// walk 
-	sprites->Add(10023, 306, 0, 320, 15, texMario);			// 
+	sprites->Add(10023, 306, 0, 320, 15, texMario);			//
+	sprites->Add(10024, 397, 0, 410, 16, texMario);			// jum small right
 
 	sprites->Add(10031, 187, 0, 198, 15, texMario);			// idle small left
-
 	sprites->Add(10032, 155, 0, 170, 15, texMario);			// walk
 	sprites->Add(10033, 125, 0, 139, 15, texMario);
+	sprites->Add(10034, 36, 0, 49, 16, texMario);			// jum small left
 
-	sprites->Add(10041, 397, 0, 410, 16, texMario);			// jum small right
-	sprites->Add(10042, 36, 0, 49, 16, texMario);			// jum small left
+	// raccoon
+	sprites->Add(10041, 243, 634, 264, 662, texMario);		// idle raccoon right
+	sprites->Add(10042, 272, 634, 293, 662, texMario);		// walk 
+	sprites->Add(10043, 303, 634, 324, 662, texMario);		//
+	sprites->Add(10044, 303, 714, 324, 741, texMario);		// jum raccoon right
+
+	sprites->Add(10051, 182, 634, 203, 662, texMario);		// idle raccoon left
+	sprites->Add(10052, 153, 634, 174, 662, texMario);		// walk
+	sprites->Add(10053, 122, 634, 143, 662, texMario);
+	sprites->Add(10054, 122, 714, 143, 741, texMario);		// jum raccoon left
+
+	
 
 	LPANIMATION ani;
+
+	ani = new CAnimation(100);		// Mario die
+	ani->Add(10099);
+	animations->Add(599, ani);
+
+
 
 	ani = new CAnimation(100);	// idle big right
 	ani->Add(10001);
@@ -160,58 +178,104 @@ void LoadResources()
 	ani->Add(10031);
 	animations->Add(403, ani);
 
-	ani = new CAnimation(100);	// walk right big
+	ani = new CAnimation(100);	// idle raccoon right
+	ani->Add(10041);
+	animations->Add(404, ani);
+
+	ani = new CAnimation(100);	// idle raccoon left
+	ani->Add(10051);
+	animations->Add(405, ani);
+
+
+
+	ani = new CAnimation(100);	// walk big right
 	ani->Add(10001);
 	ani->Add(10002);
 	ani->Add(10003);
 	animations->Add(500, ani);
 
-	ani = new CAnimation(100);	// // walk left big
+	ani = new CAnimation(100);	// walk big left
 	ani->Add(10011);
 	ani->Add(10012);
 	ani->Add(10013);
 	animations->Add(501, ani);
 
-	ani = new CAnimation(50);	// walk right small
+	ani = new CAnimation(50);	// walk small right
 	ani->Add(10021);
 	ani->Add(10022);
 	ani->Add(10023);
 	animations->Add(502, ani);
 
-	ani = new CAnimation(50);	// walk left small
+	ani = new CAnimation(50);	// walk small left
 	ani->Add(10031);
 	ani->Add(10032);
 	ani->Add(10033);
 	animations->Add(503, ani);
 
-
-	ani = new CAnimation(100);		// Mario die
-	ani->Add(10099);
-	animations->Add(599, ani);
-
-	ani = new CAnimation(100);		// Mario small jump right
+	ani = new CAnimation(100);	// walk raccoon right
 	ani->Add(10041);
+	ani->Add(10042);
+	ani->Add(10043);
+	animations->Add(504, ani);
+
+	ani = new CAnimation(100);	// walk raccoon left
+	ani->Add(10051);
+	ani->Add(10052);
+	ani->Add(10053);
+	animations->Add(505, ani);
+	
+
+
+	ani = new CAnimation(100);		// jump big right
+	ani->Add(10004);
 	animations->Add(600, ani);
 
-	ani = new CAnimation(100);		// Mario small jump left
-	ani->Add(10042);
+	ani = new CAnimation(100);		// jump big left
+	ani->Add(10014);
 	animations->Add(601, ani);
 
-	mario = new CMario();
-	mario->AddAnimation(400);		// idle right big
-	mario->AddAnimation(401);		// idle left big
-	mario->AddAnimation(402);		// idle right small
-	mario->AddAnimation(403);		// idle left small
+	ani = new CAnimation(100);		// jump small right
+	ani->Add(10024);
+	animations->Add(602, ani);
 
-	mario->AddAnimation(500);		// walk right big
-	mario->AddAnimation(501);		// walk left big
-	mario->AddAnimation(502);		// walk right small
-	mario->AddAnimation(503);		// walk left big
+	ani = new CAnimation(100);		// jump small left
+	ani->Add(10034);
+	animations->Add(603, ani);
+
+	ani = new CAnimation(100);		// jump raccoon right
+	ani->Add(10044);
+	animations->Add(604, ani);
+
+	ani = new CAnimation(100);		// jump raccoon left
+	ani->Add(10054);
+	animations->Add(605, ani);
+
+	
+
+	mario = new CMario();
 
 	mario->AddAnimation(599);		// die
 
-	mario->AddAnimation(600);		// small jump right
-	mario->AddAnimation(601);		// small jump left
+	mario->AddAnimation(402);		// idle right small
+	mario->AddAnimation(403);		// idle left small
+	mario->AddAnimation(502);		// walk right small
+	mario->AddAnimation(503);		// walk left small
+	mario->AddAnimation(602);		// small jump right
+	mario->AddAnimation(603);		// small jump left
+
+	mario->AddAnimation(400);		// idle right big
+	mario->AddAnimation(401);		// idle left big
+	mario->AddAnimation(500);		// walk right big
+	mario->AddAnimation(501);		// walk left big
+	mario->AddAnimation(600);		// big jump right
+	mario->AddAnimation(601);		// big jump left
+
+	mario->AddAnimation(404);		// idle right raccoon
+	mario->AddAnimation(405);		// idle left raccoon
+	mario->AddAnimation(504);		// walk right raccoon
+	mario->AddAnimation(505);		// walk left raccoon
+	mario->AddAnimation(604);		// big jump raccoon
+	mario->AddAnimation(605);		// big jump raccoon
 
 	mario->SetPosition(0.0f, 388.0f);
 	objects.push_back(mario);
@@ -277,12 +341,40 @@ void LoadResources()
 	ani->Add(50003);
 	animations->Add(800, ani);
 
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 28; i++) {
 		coin = new CCoin();
 		coin->AddAnimation(800);
-		coin->isDisable = true;
 		coins.push_back(coin);
 	}
+
+	coins[5]->SetPosition(1073, 320);
+	coins[6]->SetPosition(1105, 288);
+	coins[7]->SetPosition(1137, 256);
+	coins[8]->SetPosition(1169, 224);
+	coins[9]->SetPosition(1201, 192);
+
+	coins[10]->SetPosition(1329, 80);
+	coins[11]->SetPosition(1345, 80);
+	coins[12]->SetPosition(1361, 80);
+
+	coins[13]->SetPosition(1473, 112);
+	coins[14]->SetPosition(1489, 112);
+
+	coins[15]->SetPosition(1537, 128);
+	coins[16]->SetPosition(1553, 128);
+	coins[17]->SetPosition(1569, 128);
+	coins[18]->SetPosition(1585, 128);
+
+	coins[19]->SetPosition(1617, 112);
+	coins[20]->SetPosition(1633, 112);
+	coins[21]->SetPosition(1649, 112);
+	coins[22]->SetPosition(1665, 112);
+
+	coins[23]->SetPosition(1697, 144);
+	coins[24]->SetPosition(1729, 112);
+	coins[25]->SetPosition(1761, 128);
+	coins[26]->SetPosition(1809, 96);
+	coins[27]->SetPosition(1841, 128);
 
 	// LOAD BRICKREWARD
 	sprites->Add(60001, 300, 117, 316, 133, texMisc);
@@ -347,6 +439,18 @@ void LoadResources()
 	brickReward->AddAnimation(901);
 	brickReward->SetPosition(704, 352);
 	brickReward->setReward(coins[4]);
+	brickRewards.push_back(brickReward);
+
+	brickReward = new CBrickReward();
+	brickReward->AddAnimation(900);
+	brickReward->AddAnimation(901);
+	brickReward->SetPosition(1440, 128);
+	brickRewards.push_back(brickReward);
+
+	brickReward = new CBrickReward();
+	brickReward->AddAnimation(900);
+	brickReward->AddAnimation(901);
+	brickReward->SetPosition(1472, 368);
 	brickRewards.push_back(brickReward);
 
 	// LOAD BLOCK

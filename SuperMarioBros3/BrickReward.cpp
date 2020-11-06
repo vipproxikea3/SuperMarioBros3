@@ -5,6 +5,7 @@
 void CBrickReward::setReward(CGameObject* GObj) {
 	this->reward = GObj;
 	GObj->SetPosition(x + 2.0f, y - 16.0f);
+	GObj->isDisable = true;
 }
 
 void CBrickReward::showReward() {
@@ -15,15 +16,18 @@ void CBrickReward::showReward() {
 }
 
 void CBrickReward::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
-	CGameObject::Update(dt);
+	if (this->GetState() == BRICKREWARD_STATE_JUMP) {
+		CGameObject::Update(dt);
 
-	// Simple fall down
-	vy += BRICKREWARD_GRAVITY * dt;
-	y += dy;
+		// Simple fall down
+		vy += BRICKREWARD_GRAVITY * dt;
+		y += dy;
 
-	if (y > y_start) {
-		y = y_start;
-		vy = 0;
+		if (y > y_start) {
+			y = y_start;
+			vy = 0;
+			this->SetState(BRICKREWARD_STATE_ACTIVED);
+		}
 	}
 }
 
@@ -47,6 +51,11 @@ void CBrickReward::SetState(int state)
 	{
 	case BRICKREWARD_STATE_IDLE:
 		vy = 0;
+		y = y_start;
+		break;
+	case BRICKREWARD_STATE_ACTIVED:
+		vy = 0;
+		y = y_start;
 		break;
 	case BRICKREWARD_STATE_JUMP:
 		vy = -BRICKREWARD_JUMP_SPEED_Y;

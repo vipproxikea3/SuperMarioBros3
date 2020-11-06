@@ -95,13 +95,19 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						{
 							if (goomba->GetState() != GOOMBA_STATE_DIE)
 							{
-								if (level > MARIO_LEVEL_SMALL)
-								{
+								switch (level) {
+								case MARIO_LEVEL_SMALL:
+									SetState(MARIO_STATE_DIE);
+									break;
+								case MARIO_LEVEL_BIG:
 									level = MARIO_LEVEL_SMALL;
 									StartUntouchable();
+									break;
+								case MARIO_LEVEL_RACCOON:
+									level = MARIO_LEVEL_BIG;
+									StartUntouchable();
+									break;
 								}
-								else
-									SetState(MARIO_STATE_DIE);
 							}
 						}
 					}
@@ -114,13 +120,19 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						if (goomba->GetState() != GOOMBA_STATE_DIE)
 						{
-							if (level > MARIO_LEVEL_SMALL)
-							{
+							switch (level) {
+							case MARIO_LEVEL_SMALL:
+								SetState(MARIO_STATE_DIE);
+								break;
+							case MARIO_LEVEL_BIG:
 								level = MARIO_LEVEL_SMALL;
 								StartUntouchable();
+								break;
+							case MARIO_LEVEL_RACCOON:
+								level = MARIO_LEVEL_BIG;
+								StartUntouchable();
+								break;
 							}
-							else
-								SetState(MARIO_STATE_DIE);
 						}
 					}
 				}
@@ -158,8 +170,6 @@ void CMario::BasicCollision(float min_tx, float min_ty, float nx, float ny, floa
 	{
 		this->vy = 0;
 		this->y = y0 + min_ty * this->dy + ny * 0.1f;
-		/*if (ny == -1)
-			this->ny = 0;*/
 	}
 }
 
@@ -169,19 +179,9 @@ void CMario::Render()
 	if (state == MARIO_STATE_DIE)
 		ani = MARIO_ANI_DIE;
 	else
-		if (level == MARIO_LEVEL_BIG)
-		{
-			if (vx == 0)
-			{
-				if (nx > 0) ani = MARIO_ANI_BIG_IDLE_RIGHT;
-				else ani = MARIO_ANI_BIG_IDLE_LEFT;
-			}
-			else if (vx > 0)
-				ani = MARIO_ANI_BIG_WALKING_RIGHT;
-			else ani = MARIO_ANI_BIG_WALKING_LEFT;
-		}
-		else if (level == MARIO_LEVEL_SMALL)
-		{
+	{
+		switch (level) {
+		case MARIO_LEVEL_SMALL:
 			if (vy < 0) {
 				if (nx > 0)
 					ani = MARIO_ANI_SMALL_JUMP_RIGHT;
@@ -198,7 +198,45 @@ void CMario::Render()
 					ani = MARIO_ANI_SMALL_WALKING_RIGHT;
 				else ani = MARIO_ANI_SMALL_WALKING_LEFT;
 			}
+			break;
+		case MARIO_LEVEL_BIG:
+			if (vy < 0) {
+				if (nx > 0)
+					ani = MARIO_ANI_BIG_JUMP_RIGHT;
+				else
+					ani = MARIO_ANI_BIG_JUMP_LEFT;
+			}
+			else {
+				if (vx == 0)
+				{
+					if (nx > 0) ani = MARIO_ANI_BIG_IDLE_RIGHT;
+					else ani = MARIO_ANI_BIG_IDLE_LEFT;
+				}
+				else if (vx > 0)
+					ani = MARIO_ANI_BIG_WALKING_RIGHT;
+				else ani = MARIO_ANI_BIG_WALKING_LEFT;
+			}
+			break;
+		case MARIO_LEVEL_RACCOON:
+			if (vy < 0) {
+				if (nx > 0)
+					ani = MARIO_ANI_RACCOON_JUMP_RIGHT;
+				else
+					ani = MARIO_ANI_RACCOON_JUMP_LEFT;
+			}
+			else {
+				if (vx == 0)
+				{
+					if (nx > 0) ani = MARIO_ANI_RACCOON_IDLE_RIGHT;
+					else ani = MARIO_ANI_RACCOON_IDLE_LEFT;
+				}
+				else if (vx > 0)
+					ani = MARIO_ANI_RACCOON_WALKING_RIGHT;
+				else ani = MARIO_ANI_RACCOON_WALKING_LEFT;
+			}
+			break;
 		}
+	}
 
 	int alpha = 255;
 	if (untouchable) alpha = 128;
@@ -220,7 +258,10 @@ void CMario::SetState(int state)
 		nx = -1;
 		break;
 	case MARIO_STATE_JUMP:
-		vy = -MARIO_JUMP_SPEED_Y;
+		if (level == MARIO_LEVEL_SMALL)
+			vy = -MARIO_JUMP_SPEED_Y_WEAK;
+		else
+			vy = -MARIO_JUMP_SPEED_Y_STRONG;
 	case MARIO_STATE_IDLE:
 		vx = 0;
 		break;
@@ -234,16 +275,26 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 {
 	left = x;
 	top = y;
-
-	if (level == MARIO_LEVEL_BIG)
-	{
-		right = x + MARIO_BIG_BBOX_WIDTH;
-		bottom = y + MARIO_BIG_BBOX_HEIGHT;
-	}
-	else
-	{
+	
+	switch (level) {
+	case MARIO_LEVEL_SMALL:
 		right = x + MARIO_SMALL_BBOX_WIDTH;
 		bottom = y + MARIO_SMALL_BBOX_HEIGHT;
+		break;
+	case MARIO_LEVEL_BIG:
+		right = x + MARIO_BIG_BBOX_WIDTH;
+		bottom = y + MARIO_BIG_BBOX_HEIGHT;
+		break;
+	case MARIO_LEVEL_RACCOON:
+		right = x + MARIO_RACCOON_BBOX_WIDTH;
+		bottom = y + MARIO_RACCOON_BBOX_HEIGHT;
+
+		if (nx == 1) {
+			left = x + 6.0f;
+			right = left + MARIO_RACCOON_BBOX_WIDTH;
+		}
+
+		break;
 	}
 }
 
