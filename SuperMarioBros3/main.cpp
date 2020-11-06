@@ -14,16 +14,17 @@
 #include "BrickReward.h"
 #include "SuperMushroom.h"
 #include "Shell.h"
+#include "Koopa.h"
 
 #define WINDOW_CLASS_NAME L"SuperMarioBros3"
 #define MAIN_WINDOW_TITLE L"SuperMarioBros3"
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
 
-#define SCREEN_WIDTH 620
-#define SCREEN_HEIGHT 240
+#define SCREEN_WIDTH	320
+#define SCREEN_HEIGHT	240
 
-#define MAX_FRAME_RATE 120
+#define MAX_FRAME_RATE	120
 
 #define ID_TEX_MAP		0
 #define ID_TEX_MARIO	10
@@ -41,6 +42,7 @@ CCoin* coin;
 CBrickReward* brickReward;
 CSuperMushroom* superMushroom;
 CShell* shell;
+CKoopa* koopa;
 
 vector<LPGAMEOBJECT> superMushrooms;
 vector<LPGAMEOBJECT> coins;
@@ -311,6 +313,30 @@ void LoadResources()
 	shell->AddAnimation(202);	// shell walking
 	shell->SetPosition(575, 360);
 	objects.push_back(shell);
+
+	// LOAD KOOPA
+	sprites->Add(70001, 170, 191, 186, 218, texEnemy_2); // koopa walking right
+	sprites->Add(70002, 187, 191, 203, 218, texEnemy_2);
+	sprites->Add(70003, 205, 191, 221, 218, texEnemy_2); // koopa walking left
+	sprites->Add(70004, 222, 191, 238, 218, texEnemy_2);
+
+	ani = new CAnimation(100);	// koopa walking right
+	ani->Add(70001);
+	ani->Add(70002);
+	animations->Add(101, ani);
+
+	ani = new CAnimation(100);	// koopa walking left
+	ani->Add(70003);
+	ani->Add(70004);
+	animations->Add(102, ani);
+
+	koopa = new CKoopa();
+	koopa->AddAnimation(101);
+	koopa->AddAnimation(102);
+	koopa->SetPosition(577, 357);
+	koopa->setAactiveArea(512, 607);
+	koopa->setMyShell(shell);
+	objects.push_back(koopa);
 
 	// LOAD GOOMBA
 	LPDIRECT3DTEXTURE9 texEnemy = textures->Get(ID_TEX_ENEMY);

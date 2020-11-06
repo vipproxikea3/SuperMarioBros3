@@ -19,7 +19,7 @@ class CShell : public CGameObject
 public:
 	CShell() : CGameObject()
 	{
-		this->SetState(SHELL_STATE_WALKING_RIGHT);
+		this->SetState(SHELL_STATE_IDLE);
 	}
 	void BasicCollision(float min_tx, float min_ty, float nx, float ny, float x0, float y0);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);

@@ -9,6 +9,7 @@
 #include "BrickReward.h"
 #include "SuperMushroom.h"
 #include "Shell.h"
+#include "Koopa.h"
 
 //#include "Goomba.h"
 
@@ -140,11 +141,90 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 
+			// KOOMBA
+			if (dynamic_cast<CKoopa*>(e->obj))
+			{
+				CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
+				BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+				if (e->ny != 0) {
+					if (e->ny < 0)
+					{
+						if (koopa->GetState() != KOOPA_STATE_DIE)
+						{
+							koopa->SetState(KOOPA_STATE_DIE);
+							koopa->showShell();
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+						}
+					}
+					else {
+						if (untouchable == 0)
+						{
+							if (koopa->GetState() != KOOPA_STATE_DIE)
+							{
+								switch (level) {
+								case MARIO_LEVEL_SMALL:
+									SetState(MARIO_STATE_DIE);
+									break;
+								case MARIO_LEVEL_BIG:
+									level = MARIO_LEVEL_SMALL;
+									StartUntouchable();
+									break;
+								case MARIO_LEVEL_RACCOON:
+									level = MARIO_LEVEL_BIG;
+									StartUntouchable();
+									break;
+								}
+							}
+						}
+					}
+				}
+
+				if (e->nx != 0) {
+					if (untouchable == 0)
+					{
+						if (koopa->GetState() != GOOMBA_STATE_DIE)
+						{
+							switch (level) {
+							case MARIO_LEVEL_SMALL:
+								SetState(MARIO_STATE_DIE);
+								break;
+							case MARIO_LEVEL_BIG:
+								level = MARIO_LEVEL_SMALL;
+								StartUntouchable();
+								break;
+							case MARIO_LEVEL_RACCOON:
+								level = MARIO_LEVEL_BIG;
+								StartUntouchable();
+								break;
+							}
+						}
+					}
+				}
+			}
+
 			// SHELL
 			if (dynamic_cast<CShell*>(e->obj)) {
 				CShell* shell = dynamic_cast<CShell*>(e->obj);
 				switch (shell->GetState()) {
 				case SHELL_STATE_IDLE:
+					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+					vy = -MARIO_JUMP_DEFLECT_SPEED;
+					if (e->nx != 0) {
+						if (e->nx < 0) {
+							shell->SetState(SHELL_STATE_WALKING_RIGHT);
+						}
+						else {
+							shell->SetState(SHELL_STATE_WALKING_LEFT);
+						}
+					}
+					if (e->ny == -1) {
+						if (this->x < shell->x + (SHELL_SMALL_BBOX_WIDTH / 2)) {
+							shell->SetState(SHELL_STATE_WALKING_RIGHT);
+						}
+						else {
+							shell->SetState(SHELL_STATE_WALKING_LEFT);
+						}
+					}
 					break;
 				case SHELL_STATE_WALKING_RIGHT:
 					if (untouchable == 0)
