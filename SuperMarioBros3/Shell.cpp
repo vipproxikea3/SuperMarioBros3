@@ -46,39 +46,38 @@ void CShell::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				// BLOCK
 				if (dynamic_cast<CBlock*>(e->obj)) {
 					CBlock* block = dynamic_cast<CBlock*>(e->obj);
-					switch (block->GetTypeBlock()) {
-					case 0:
-						BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
-						if (e->nx != 0)
-							switch (this->nx)
-							{
-							case -1:
-								this->SetState(SHELL_STATE_WALKING_RIGHT);
-								break;
-							case 1:
-								this->SetState(SHELL_STATE_WALKING_LEFT);
-								break;
-							}
-					case 1:
-						if (e->ny == -1)
-							BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
-						break;
+
+					if (e->nx == -1 && block->isBlockLeft()) {
+						this->vx = -vx;
+						this->x = x0 + min_tx * this->dx + nx * 0.4f;
+					}
+
+					if (e->nx == 1 && block->isBlockRight()) {
+						this->vx = -vx;
+						this->x = x0 + min_tx * this->dx + nx * 0.4f;
+					}
+
+					if (e->ny == -1 && block->isBlockTop()) {
+						this->vy = 0;
+						this->y = y0 + min_ty * this->dy + ny * 0.4f;
+					}
+
+					if (e->ny == 1 && block->isBlockBottom()) {
+						this->vy = 0;
+						this->y = y0 + min_ty * this->dy + ny * 0.4f;
 					}
 				}
 
 				// BRICKREWARD
 				if (dynamic_cast<CBrickReward*>(e->obj)) {
 					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
-					if (e->nx != 0)
-						switch (this->nx)
-						{
-						case -1:
-							this->SetState(SHELL_STATE_WALKING_RIGHT);
-							break;
-						case 1:
-							this->SetState(SHELL_STATE_WALKING_LEFT);
-							break;
-						}
+					if (e->nx != 0) {
+						if (e->nx == -1)
+							vx = -SHELL_WALKING_SPEED;
+						else
+							vx = SHELL_WALKING_SPEED;
+					}
+						
 					
 					CBrickReward* brick = dynamic_cast<CBrickReward*>(e->obj);
 					if (e->nx != 0 && brick->GetState() == BRICKREWARD_STATE_IDLE) {
@@ -90,7 +89,9 @@ void CShell::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (dynamic_cast<CGoomba*>(e->obj))
 				{
 					CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-					goomba->SetState(GOOMBA_STATE_DIE);
+					if (goomba->GetState() != GOOMBA_STATE_DIE) {
+						goomba->SetState(GOOMBA_STATE_DIE);
+					}
 				}
 			}
 	}
@@ -144,15 +145,10 @@ void CShell::SetState(int state)
 		vx = 0;
 		vy = 0;
 		break;
-	case SHELL_STATE_WALKING_RIGHT:
+	case SHELL_STATE_WALKING:
 		vy = 0;
 		nx = 1;
 		vx = SHELL_WALKING_SPEED;
-		break;
-	case SHELL_STATE_WALKING_LEFT:
-		vy = 0;
-		nx = -1;
-		vx = -SHELL_WALKING_SPEED;
 		break;
 	}
 }

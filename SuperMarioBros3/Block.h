@@ -7,11 +7,19 @@
 class CBlock : public CGameObject
 {
 	int idSprite;
-	int typeBlock;
+	bool bL = true;
+	bool bT = true;
+	bool bR = true;
+	bool bB = true;
 public:
-	CBlock(int idSprite, int tyleBlock = 0);
+	CBlock(int idSprite);
 	~CBlock();
-	int GetTypeBlock() { return this->typeBlock; }
+	bool isBlockLeft() { return bL; }
+	bool isBlockTop() { return bT; }
+	bool isBlockRight() { return bR; }
+	bool isBlockBottom() { return bB; }
+	void SetBlockSide(bool bL, bool bT, bool bR, bool bB);
+	void SetBlockSideByIdSprite(int idSprite);
 	virtual void Render();
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
 };

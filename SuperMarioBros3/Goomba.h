@@ -18,7 +18,8 @@
 
 class CGoomba : public CGameObject
 {
-	float lLimit, rLimit;
+	float lLimit = -999999;
+	float rLimit = 999999;
 	DWORD die_start;
 
 	void Revival();
@@ -28,7 +29,7 @@ class CGoomba : public CGameObject
 	virtual void Render();
 public:
 	virtual void SetState(int state);
-	void SetActiveArea(float l = -9999, float r = 9999) {
+	void SetActiveArea(float l, float r) {
 	    this->lLimit = l;
 		this->rLimit = r;
 	}

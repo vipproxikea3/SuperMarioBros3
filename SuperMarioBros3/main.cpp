@@ -366,7 +366,7 @@ void LoadResources()
 	goomba->AddAnimation(702);
 	goomba->SetPosition(528, 400);
 	goomba->SetState(GOOMBA_STATE_WALKING);
-	goomba->SetActiveArea(384, 623);
+	goomba->SetActiveArea(384, 624);
 	objects.push_back(goomba);
 
 	goomba = new CGoomba();
@@ -806,12 +806,12 @@ void LoadResources()
 	//----------
 
 	for (int i = 0; i < 4; i++) {
-		block = new CBlock(8, 1);
+		block = new CBlock(8);
 		block->SetPosition(1408 + i * 16, 192);
 		blocks.push_back(block);
 	}
 	for (int i = 0; i < 13; i++) {
-		block = new CBlock(8, 1);
+		block = new CBlock(8);
 		block->SetPosition(1488 + i * 16, 176);
 		blocks.push_back(block);
 	}
@@ -823,54 +823,54 @@ void LoadResources()
 	sprites->Add(11, 160, 32, 176, 48, texMap);
 
 	//----------
-	block = new CBlock(9, 1);
+	block = new CBlock(9);
 	block->SetPosition(400, 368);
 	blocks.push_back(block);
 	for (int i = 0; i < 3; i++) {
-		block = new CBlock(10, 1);
+		block = new CBlock(10);
 		block->SetPosition(416 + i * 16, 368);
 		blocks.push_back(block);
 	}
-	block = new CBlock(11, 1);
+	block = new CBlock(11);
 	block->SetPosition(464, 368);
 	blocks.push_back(block);
 
 	//----------
-	block = new CBlock(9, 1);
+	block = new CBlock(9);
 	block->SetPosition(512, 384);
 	blocks.push_back(block);
 	for (int i = 0; i < 4; i++) {
-		block = new CBlock(10, 1);
+		block = new CBlock(10);
 		block->SetPosition(528 + i * 16, 384);
 		blocks.push_back(block);
 	}
-	block = new CBlock(11, 1);
+	block = new CBlock(11);
 	block->SetPosition(592, 384);
 	blocks.push_back(block);
 
 	//----------
-	block = new CBlock(9, 1);
+	block = new CBlock(9);
 	block->SetPosition(1264, 384);
 	blocks.push_back(block);
 	for (int i = 0; i < 5; i++) {
-		block = new CBlock(10, 1);
+		block = new CBlock(10);
 		block->SetPosition(1280 + i * 16, 384);
 		blocks.push_back(block);
 	}
-	block = new CBlock(11, 1);
+	block = new CBlock(11);
 	block->SetPosition(1360, 384);
 	blocks.push_back(block);
 
 	//----------
-	block = new CBlock(9, 1);
+	block = new CBlock(9);
 	block->SetPosition(2176, 272);
 	blocks.push_back(block);
 	for (int i = 0; i < 1; i++) {
-		block = new CBlock(10, 1);
+		block = new CBlock(10);
 		block->SetPosition(2192 + i * 16, 272);
 		blocks.push_back(block);
 	}
-	block = new CBlock(11, 1);
+	block = new CBlock(11);
 	block->SetPosition(2208, 272);
 	blocks.push_back(block);
 
@@ -880,67 +880,67 @@ void LoadResources()
 	sprites->Add(14, 48, 16, 64, 32, texMap);
 
 	//----------
-	block = new CBlock(12, 1);
+	block = new CBlock(12);
 	block->SetPosition(240, 368);
 	blocks.push_back(block);
 	for (int i = 0; i < 1; i++) {
-		block = new CBlock(13, 1);
+		block = new CBlock(13);
 		block->SetPosition(256 + i * 16, 368);
 		blocks.push_back(block);
 	}
-	block = new CBlock(14, 1);
+	block = new CBlock(14);
 	block->SetPosition(272, 368);
 	blocks.push_back(block);
 
 	//----------
-	block = new CBlock(12, 1);
+	block = new CBlock(12);
 	block->SetPosition(464, 336);
 	blocks.push_back(block);
 	for (int i = 0; i < 2; i++) {
-		block = new CBlock(13, 1);
+		block = new CBlock(13);
 		block->SetPosition(480 + i * 16, 336);
 		blocks.push_back(block);
 	}
-	block = new CBlock(14, 1);
+	block = new CBlock(14);
 	block->SetPosition(512, 336);
 	blocks.push_back(block);
 
 	//----------
-	block = new CBlock(12, 1);
+	block = new CBlock(12);
 	block->SetPosition(1296, 352);
 	blocks.push_back(block);
 	for (int i = 0; i < 5; i++) {
-		block = new CBlock(13, 1);
+		block = new CBlock(13);
 		block->SetPosition(1312 + i * 16, 352);
 		blocks.push_back(block);
 	}
-	block = new CBlock(14, 1);
+	block = new CBlock(14);
 	block->SetPosition(1392, 352);
 	blocks.push_back(block);
 
 	//----------
-	block = new CBlock(12, 1);
+	block = new CBlock(12);
 	block->SetPosition(1312, 144);
 	blocks.push_back(block);
 	for (int i = 0; i < 2; i++) {
-		block = new CBlock(13, 1);
+		block = new CBlock(13);
 		block->SetPosition(1328 + i * 16, 144);
 		blocks.push_back(block);
 	}
-	block = new CBlock(14, 1);
+	block = new CBlock(14);
 	block->SetPosition(1360, 144);
 	blocks.push_back(block);
 
 	//----------
-	block = new CBlock(12, 1);
+	block = new CBlock(12);
 	block->SetPosition(2144, 368);
 	blocks.push_back(block);
 	for (int i = 0; i < 2; i++) {
-		block = new CBlock(13, 1);
+		block = new CBlock(13);
 		block->SetPosition(2160 + i * 16, 368);
 		blocks.push_back(block);
 	}
-	block = new CBlock(14, 1);
+	block = new CBlock(14);
 	block->SetPosition(2176, 368);
 	blocks.push_back(block);
 
@@ -950,28 +950,28 @@ void LoadResources()
 	sprites->Add(17, 144, 64, 160, 80, texMap);
 
 	//----------
-	block = new CBlock(15, 1);
+	block = new CBlock(15);
 	block->SetPosition(272, 336);
 	blocks.push_back(block);
 	for (int i = 0; i < 1; i++) {
-		block = new CBlock(16, 1);
+		block = new CBlock(16);
 		block->SetPosition(288 + i * 16, 336);
 		blocks.push_back(block);
 	}
-	block = new CBlock(17, 1);
+	block = new CBlock(17);
 	block->SetPosition(304, 336);
 	blocks.push_back(block);
 
 	//----------
-	block = new CBlock(15, 1);
+	block = new CBlock(15);
 	block->SetPosition(1328, 320);
 	blocks.push_back(block);
 	for (int i = 0; i < 5; i++) {
-		block = new CBlock(16, 1);
+		block = new CBlock(16);
 		block->SetPosition(1344 + i * 16, 320);
 		blocks.push_back(block);
 	}
-	block = new CBlock(17, 1);
+	block = new CBlock(17);
 	block->SetPosition(1424, 320);
 	blocks.push_back(block);
 
@@ -981,15 +981,15 @@ void LoadResources()
 	sprites->Add(20, 160, 48, 176, 64, texMap);
 
 	//----------
-	block = new CBlock(18, 1);
+	block = new CBlock(18);
 	block->SetPosition(512, 304);
 	blocks.push_back(block);
 	for (int i = 0; i < 2; i++) {
-		block = new CBlock(19, 1);
+		block = new CBlock(19);
 		block->SetPosition(528 + i * 16, 304);
 		blocks.push_back(block);
 	}
-	block = new CBlock(20, 1);
+	block = new CBlock(20);
 	block->SetPosition(560, 304);
 	blocks.push_back(block);
 }

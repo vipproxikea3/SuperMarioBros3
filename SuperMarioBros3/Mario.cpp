@@ -67,7 +67,28 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			// BLOCK
 			if (dynamic_cast<CBlock*>(e->obj)) {
 				CBlock* block = dynamic_cast<CBlock*>(e->obj);
-				switch (block->GetTypeBlock()) {
+
+				if (e->nx == -1 && block->isBlockLeft()) {
+					this->vx = 0;
+					this->x = x0 + min_tx * this->dx + nx * 0.4f;
+				}
+
+				if (e->nx == 1 && block->isBlockRight()) {
+					this->vx = 0;
+					this->x = x0 + min_tx * this->dx + nx * 0.4f;
+				}
+
+				if (e->ny == -1 && block->isBlockTop()) {
+					this->vy = 0;
+					this->y = y0 + min_ty * this->dy + ny * 0.4f;
+				}
+
+				if (e->ny == 1 && block->isBlockBottom()) {
+					this->vy = 0;
+					this->y = y0 + min_ty * this->dy + ny * 0.4f;
+				}
+
+				/*switch (block->GetTypeBlock()) {
 				case 0:
 					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 					break;
@@ -75,7 +96,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (e->ny == -1)
 						BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 					break;
-				}
+				}*/
 			}
 			
 			// GOOMBA
@@ -211,40 +232,26 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					vy = -MARIO_JUMP_DEFLECT_SPEED;
 					if (e->nx != 0) {
 						if (e->nx < 0) {
-							shell->SetState(SHELL_STATE_WALKING_RIGHT);
+							shell->SetState(SHELL_STATE_WALKING);
+							shell->SetSpeed(SHELL_WALKING_SPEED, 0);
 						}
 						else {
-							shell->SetState(SHELL_STATE_WALKING_LEFT);
+							shell->SetState(SHELL_STATE_WALKING);
+							shell->SetSpeed(-SHELL_WALKING_SPEED, 0);
 						}
 					}
 					if (e->ny == -1) {
 						if (this->x < shell->x + (SHELL_SMALL_BBOX_WIDTH / 2)) {
-							shell->SetState(SHELL_STATE_WALKING_RIGHT);
+							shell->SetState(SHELL_STATE_WALKING);
+							shell->SetSpeed(SHELL_WALKING_SPEED, 0);
 						}
 						else {
-							shell->SetState(SHELL_STATE_WALKING_LEFT);
+							shell->SetState(SHELL_STATE_WALKING);
+							shell->SetSpeed(-SHELL_WALKING_SPEED, 0);
 						}
 					}
 					break;
-				case SHELL_STATE_WALKING_RIGHT:
-					if (untouchable == 0)
-					{
-						switch (level) {
-						case MARIO_LEVEL_SMALL:
-							SetState(MARIO_STATE_DIE);
-							break;
-						case MARIO_LEVEL_BIG:
-							level = MARIO_LEVEL_SMALL;
-							StartUntouchable();
-							break;
-						case MARIO_LEVEL_RACCOON:
-							level = MARIO_LEVEL_BIG;
-							StartUntouchable();
-							break;
-						}
-					}
-					break;
-				case SHELL_STATE_WALKING_LEFT:
+				case SHELL_STATE_WALKING:
 					if (untouchable == 0)
 					{
 						switch (level) {
@@ -267,12 +274,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 
 			// COIN
-			if (dynamic_cast<CCoin*>(e->obj)) {
+			/*if (dynamic_cast<CCoin*>(e->obj)) {
 				CCoin* coin = dynamic_cast<CCoin*>(e->obj);
 				if (coin->GetState() == COIN_STATE_IDLE) {
 					coin->isDisable = true;
 				}
-			}
+			}*/
 
 
 			// BRICKREWARD
@@ -285,11 +292,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 
 			// SUPERMUSHROOM
-			if (dynamic_cast<CSuperMushroom*>(e->obj)) {
+			/*if (dynamic_cast<CSuperMushroom*>(e->obj)) {
 				CSuperMushroom* mushroom = dynamic_cast<CSuperMushroom*>(e->obj);
 				mushroom->isDisable = true;
 				this->LvlUp();
-			}
+			}*/
 		}
 	}
 
@@ -316,12 +323,12 @@ void CMario::BasicCollision(float min_tx, float min_ty, float nx, float ny, floa
 	if (nx != 0)
 	{
 		this->vx = 0;
-		this->x = x0 + min_tx * this->dx + nx * 0.1f;
+		this->x = x0 + min_tx * this->dx + nx * 0.4f;
 	}
 	if (ny != 0)
 	{
 		this->vy = 0;
-		this->y = y0 + min_ty * this->dy + ny * 0.1f;
+		this->y = y0 + min_ty * this->dy + ny * 0.4f;
 	}
 }
 
