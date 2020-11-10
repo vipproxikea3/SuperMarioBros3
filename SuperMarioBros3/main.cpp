@@ -10,9 +10,9 @@
 #include "Mario.h"
 #include "Block.h"
 #include "Goomba.h"
-#include "Coin.h"
+//#include "Coin.h"
 #include "BrickReward.h"
-#include "SuperMushroom.h"
+//#include "SuperMushroom.h"
 #include "Shell.h"
 #include "Koopa.h"
 
@@ -38,14 +38,14 @@ Map* map;
 CMario* mario;
 CBlock* block;
 CGoomba* goomba;
-CCoin* coin;
+//CCoin* coin;
 CBrickReward* brickReward;
-CSuperMushroom* superMushroom;
+//CSuperMushroom* superMushroom;
 CShell* shell;
 CKoopa* koopa;
 
-vector<LPGAMEOBJECT> superMushrooms;
-vector<LPGAMEOBJECT> coins;
+//vector<LPGAMEOBJECT> superMushrooms;
+//vector<LPGAMEOBJECT> coins;
 vector<LPGAMEOBJECT> brickRewards;
 vector<LPGAMEOBJECT> blocks;
 vector<LPGAMEOBJECT> objects;
@@ -71,8 +71,8 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 				mario->canJump = false;
 			}
 			break;
-		case DIK_A: // reset
-			/*reset function*/
+		case DIK_A:
+			mario->LvlUp();
 			break;
 		}
 	}
@@ -286,8 +286,7 @@ void LoadResources()
 	mario->AddAnimation(604);		// big jump raccoon
 	mario->AddAnimation(605);		// big jump raccoon
 
-	/*mario->SetPosition(0.0f, 388.0f);*/
-	mario->SetPosition(465.0f, 300.0f);
+	mario->SetPosition(0.0f, 388.0f);
 	objects.push_back(mario);
 
 	// LOAD SHELL
@@ -389,63 +388,63 @@ void LoadResources()
 	// LOAD COIN
 	LPDIRECT3DTEXTURE9 texMisc = textures->Get(ID_TEX_MISC);
 
-	sprites->Add(50001, 303, 99, 313, 115, texMisc);
-	sprites->Add(50002, 321, 99, 331, 115, texMisc);
-	sprites->Add(50003, 339, 99, 349, 115, texMisc);
+	//sprites->Add(50001, 303, 99, 313, 115, texMisc);
+	//sprites->Add(50002, 321, 99, 331, 115, texMisc);
+	//sprites->Add(50003, 339, 99, 349, 115, texMisc);
 
-	ani = new CAnimation(100);		// Coin idle
-	ani->Add(50001);
-	ani->Add(50002);
-	ani->Add(50003);
-	animations->Add(800, ani);
+	//ani = new CAnimation(100);		// Coin idle
+	//ani->Add(50001);
+	//ani->Add(50002);
+	//ani->Add(50003);
+	//animations->Add(800, ani);
 
-	for (int i = 0; i < 28; i++) {
-		coin = new CCoin();
-		coin->AddAnimation(800);
-		coins.push_back(coin);
-	}
+	//for (int i = 0; i < 28; i++) {
+	//	coin = new CCoin();
+	//	coin->AddAnimation(800);
+	//	coins.push_back(coin);
+	//}
 
-	coins[5]->SetPosition(1073, 320);
-	coins[6]->SetPosition(1105, 288);
-	coins[7]->SetPosition(1137, 256);
-	coins[8]->SetPosition(1169, 224);
-	coins[9]->SetPosition(1201, 192);
+	//coins[5]->SetPosition(1073, 320);
+	//coins[6]->SetPosition(1105, 288);
+	//coins[7]->SetPosition(1137, 256);
+	//coins[8]->SetPosition(1169, 224);
+	//coins[9]->SetPosition(1201, 192);
 
-	coins[10]->SetPosition(1329, 80);
-	coins[11]->SetPosition(1345, 80);
-	coins[12]->SetPosition(1361, 80);
+	//coins[10]->SetPosition(1329, 80);
+	//coins[11]->SetPosition(1345, 80);
+	//coins[12]->SetPosition(1361, 80);
 
-	coins[13]->SetPosition(1473, 112);
-	coins[14]->SetPosition(1489, 112);
+	//coins[13]->SetPosition(1473, 112);
+	//coins[14]->SetPosition(1489, 112);
 
-	coins[15]->SetPosition(1537, 128);
-	coins[16]->SetPosition(1553, 128);
-	coins[17]->SetPosition(1569, 128);
-	coins[18]->SetPosition(1585, 128);
+	//coins[15]->SetPosition(1537, 128);
+	//coins[16]->SetPosition(1553, 128);
+	//coins[17]->SetPosition(1569, 128);
+	//coins[18]->SetPosition(1585, 128);
 
-	coins[19]->SetPosition(1617, 112);
-	coins[20]->SetPosition(1633, 112);
-	coins[21]->SetPosition(1649, 112);
-	coins[22]->SetPosition(1665, 112);
+	//coins[19]->SetPosition(1617, 112);
+	//coins[20]->SetPosition(1633, 112);
+	//coins[21]->SetPosition(1649, 112);
+	//coins[22]->SetPosition(1665, 112);
 
-	coins[23]->SetPosition(1697, 144);
-	coins[24]->SetPosition(1729, 112);
-	coins[25]->SetPosition(1761, 128);
-	coins[26]->SetPosition(1809, 96);
-	coins[27]->SetPosition(1841, 128);
+	//coins[23]->SetPosition(1697, 144);
+	//coins[24]->SetPosition(1729, 112);
+	//coins[25]->SetPosition(1761, 128);
+	//coins[26]->SetPosition(1809, 96);
+	//coins[27]->SetPosition(1841, 128);
 
 	// LOAD SUPERMUSHROOM
-	sprites->Add(40001, 300, 189, 316, 205, texMisc);
-	ani = new CAnimation(100);		// SuperMushroom idle
-	ani->Add(40001);
-	animations->Add(300, ani);
+	//sprites->Add(40001, 300, 189, 316, 205, texMisc);
+	//ani = new CAnimation(100);		// SuperMushroom idle
+	//ani->Add(40001);
+	//animations->Add(300, ani);
 
-	for (int i = 0; i < 3; i++) {
-		superMushroom = new CSuperMushroom();
-		superMushroom->AddAnimation(300);
-		superMushrooms.push_back(superMushroom);
-		objects.push_back(superMushroom);
-	}
+	//for (int i = 0; i < 3; i++) {
+	//	superMushroom = new CSuperMushroom();
+	//	superMushroom->AddAnimation(300);
+	//	superMushrooms.push_back(superMushroom);
+	//	objects.push_back(superMushroom);
+	//}
 
 	// LOAD BRICKREWARD
 	sprites->Add(60001, 300, 117, 316, 133, texMisc);
@@ -469,49 +468,49 @@ void LoadResources()
 	brickReward->AddAnimation(900);
 	brickReward->AddAnimation(901);
 	brickReward->SetPosition(176, 352);
-	brickReward->setReward(coins[0]);
+	//brickReward->setReward(coins[0]);
 	brickRewards.push_back(brickReward);
 
 	brickReward = new CBrickReward();
 	brickReward->AddAnimation(900);
 	brickReward->AddAnimation(901);
 	brickReward->SetPosition(192, 352);
-	brickReward->setReward(coins[1]);
+	//brickReward->setReward(coins[1]);
 	brickRewards.push_back(brickReward);
 
 	brickReward = new CBrickReward();
 	brickReward->AddAnimation(900);
 	brickReward->AddAnimation(901);
 	brickReward->SetPosition(224, 304);
-	brickReward->setReward(coins[2]);
+	//brickReward->setReward(coins[2]);
 	brickRewards.push_back(brickReward);
 
 	brickReward = new CBrickReward();
 	brickReward->AddAnimation(900);
 	brickReward->AddAnimation(901);
 	brickReward->SetPosition(240, 304);
-	brickReward->setReward(superMushrooms[1]);
+	//brickReward->setReward(superMushrooms[1]);
 	brickRewards.push_back(brickReward);
 
 	brickReward = new CBrickReward();
 	brickReward->AddAnimation(900);
 	brickReward->AddAnimation(901);
 	brickReward->SetPosition(416, 320);
-	brickReward->setReward(coins[3]);
+	//brickReward->setReward(coins[3]);
 	brickRewards.push_back(brickReward);
 
 	brickReward = new CBrickReward();
 	brickReward->AddAnimation(900);
 	brickReward->AddAnimation(901);
 	brickReward->SetPosition(656, 384);
-	brickReward->setReward(superMushrooms[2]);
+	//brickReward->setReward(superMushrooms[2]);
 	brickRewards.push_back(brickReward);
 
 	brickReward = new CBrickReward();
 	brickReward->AddAnimation(900);
 	brickReward->AddAnimation(901);
 	brickReward->SetPosition(704, 352);
-	brickReward->setReward(coins[4]);
+	//brickReward->setReward(coins[4]);
 	brickRewards.push_back(brickReward);
 
 	brickReward = new CBrickReward();
@@ -524,7 +523,7 @@ void LoadResources()
 	brickReward->AddAnimation(900);
 	brickReward->AddAnimation(901);
 	brickReward->SetPosition(1472, 368);
-	brickReward->setReward(superMushrooms[0]);
+	//brickReward->setReward(superMushrooms[0]);
 	brickRewards.push_back(brickReward);
 
 	// LOAD BLOCK
@@ -1010,7 +1009,7 @@ void Update(DWORD dt)
 	for (int i = 0; i < brickRewards.size(); i++) {
 		coObjects.push_back(brickRewards[i]);
 	}
-	for (int i = 0; i < coins.size(); i++) {
+	/*for (int i = 0; i < coins.size(); i++) {
 		if (!coins[i]->isDisable)
 			coObjects.push_back(coins[i]);
 	}
@@ -1018,7 +1017,7 @@ void Update(DWORD dt)
 
 	for (int i = 0; i < coins.size(); i++) {
 		coins[i]->Update(dt, &coObjects);
-	}
+	}*/
 	for (int i = 0; i < brickRewards.size(); i++) {
 		brickRewards[i]->Update(dt);
 	}
@@ -1062,10 +1061,10 @@ void Render()
 		for (int i = 0; i < blocks.size(); i++) {
 			blocks[i]->Render();
 		}
-		for (int i = 0; i < coins.size(); i++) {
+		/*for (int i = 0; i < coins.size(); i++) {
 			if(!coins[i]->isDisable)
 				coins[i]->Render();
-		}
+		}*/
 		for (int i = 0; i < brickRewards.size(); i++) {
 			brickRewards[i]->Render();
 		}
