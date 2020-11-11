@@ -438,9 +438,26 @@ void CMario::Render()
 					if (nx > 0) ani = MARIO_ANI_RACCOON_IDLE_RIGHT;
 					else ani = MARIO_ANI_RACCOON_IDLE_LEFT;
 				}
-				else if (vx > 0)
-					ani = MARIO_ANI_RACCOON_WALKING_RIGHT;
-				else ani = MARIO_ANI_RACCOON_WALKING_LEFT;
+				else if (vx > 0) {
+					if (nx < 0) {
+						ani = MARIO_ANI_RACCOON_DRIFF_RIGHT;
+					}
+					else {
+						ani = MARIO_ANI_RACCOON_WALKING_RIGHT;
+						if (vx == MARIO_RUN_SPEED)
+							ani = MARIO_ANI_RACCOON_RUN_RIGHT;
+					}
+				}
+				else {
+					if (nx > 0) {
+						ani = MARIO_ANI_RACCOON_DRIFF_LEFT;
+					}
+					else {
+						ani = MARIO_ANI_RACCOON_WALKING_LEFT;
+						if (vx == -MARIO_RUN_SPEED)
+							ani = MARIO_ANI_RACCOON_RUN_LEFT;
+					}
+				}
 			}
 			break;
 		}
@@ -539,6 +556,8 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 
 		if (nx == 1) {
 			left = x + 6.0f;
+			if (this->level == MARIO_LEVEL_RACCOON && vx == MARIO_RUN_SPEED)
+				left = x + 9.0f;
 			right = left + MARIO_RACCOON_BBOX_WIDTH;
 		}
 

@@ -169,11 +169,19 @@ void LoadResources()
 	sprites->Add(10042, 272, 634, 293, 662, texMario);		// walk 
 	sprites->Add(10043, 303, 634, 324, 662, texMario);		//
 	sprites->Add(10044, 303, 714, 324, 741, texMario);		// jum raccoon right
+	sprites->Add(10045, 331, 634, 355, 662, texMario);		// run raccoon right
+	sprites->Add(10046, 361, 634, 385, 662, texMario);
+	sprites->Add(10047, 391, 634, 414, 662, texMario);
+	sprites->Add(10048, 425, 634, 441, 662, texMario);		// driff raccoon right
 
 	sprites->Add(10051, 182, 634, 203, 662, texMario);		// idle raccoon left
 	sprites->Add(10052, 153, 634, 174, 662, texMario);		// walk
 	sprites->Add(10053, 122, 634, 143, 662, texMario);
 	sprites->Add(10054, 122, 714, 143, 741, texMario);		// jum raccoon left
+	sprites->Add(10055, 91, 634, 115, 662, texMario);		// run raccoon left
+	sprites->Add(10056, 61, 634, 84, 662, texMario);
+	sprites->Add(10057, 32, 634, 53, 662, texMario);
+	sprites->Add(10058, 5, 634, 21, 662, texMario);			// driff raccoon left
 
 	
 
@@ -285,6 +293,18 @@ void LoadResources()
 	ani->Add(10017);
 	animations->Add(611, ani);
 
+	ani = new CAnimation(25);		// run raccoon right
+	ani->Add(10045);
+	ani->Add(10046);
+	ani->Add(10047);
+	animations->Add(612, ani);
+
+	ani = new CAnimation(25);		// run raccoon left
+	ani->Add(10055);
+	ani->Add(10056);
+	ani->Add(10057);
+	animations->Add(613, ani);
+
 	ani = new CAnimation(100);		// driff big right
 	ani->Add(10008);
 	animations->Add(620, ani);
@@ -293,23 +313,31 @@ void LoadResources()
 	ani->Add(10018);
 	animations->Add(621, ani);
 
+	ani = new CAnimation(100);		// driff raccon right
+	ani->Add(10048);
+	animations->Add(622, ani);
+
+	ani = new CAnimation(100);		// driff raccon left
+	ani->Add(10058);
+	animations->Add(623, ani);
+
 	
 
 	mario = new CMario();
 
 	mario->AddAnimation(599);		// die
 
-	mario->AddAnimation(402);		// idle right small
-	mario->AddAnimation(403);		// idle left small
-	mario->AddAnimation(502);		// walk right small
-	mario->AddAnimation(503);		// walk left small
+	mario->AddAnimation(402);		// small idle right
+	mario->AddAnimation(403);		// small idle left
+	mario->AddAnimation(502);		// small walk right
+	mario->AddAnimation(503);		// small walk left
 	mario->AddAnimation(602);		// small jump right
 	mario->AddAnimation(603);		// small jump left
 
-	mario->AddAnimation(400);		// idle right big
-	mario->AddAnimation(401);		// idle left big
-	mario->AddAnimation(500);		// walk right big
-	mario->AddAnimation(501);		// walk left big
+	mario->AddAnimation(400);		// big idle right
+	mario->AddAnimation(401);		// big idle left
+	mario->AddAnimation(500);		// big walk right
+	mario->AddAnimation(501);		// big walk left
 	mario->AddAnimation(600);		// big jump right
 	mario->AddAnimation(601);		// big jump left
 	mario->AddAnimation(610);		// big run right
@@ -317,12 +345,17 @@ void LoadResources()
 	mario->AddAnimation(620);		// big driff right
 	mario->AddAnimation(621);		// big driff left
 
-	mario->AddAnimation(404);		// idle right raccoon
-	mario->AddAnimation(405);		// idle left raccoon
-	mario->AddAnimation(504);		// walk right raccoon
-	mario->AddAnimation(505);		// walk left raccoon
-	mario->AddAnimation(604);		// big jump raccoon
-	mario->AddAnimation(605);		// big jump raccoon
+	mario->AddAnimation(404);		// raccoon idle right 
+	mario->AddAnimation(405);		// raccoon idle left
+	mario->AddAnimation(504);		// raccoon walk right
+	mario->AddAnimation(505);		// raccoon walk left
+	mario->AddAnimation(604);		// raccoon jump right
+	mario->AddAnimation(605);		// raccoon jump left
+	mario->AddAnimation(612);		// raccoon run right
+	mario->AddAnimation(613);		// raccoon run left
+	mario->AddAnimation(622);		// raccoon driff right
+	mario->AddAnimation(623);		// raccoon driff left
+
 
 	mario->SetPosition(0.0f, 388.0f);
 	objects.push_back(mario);
