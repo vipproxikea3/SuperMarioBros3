@@ -1,4 +1,5 @@
 #include "Koopa.h"
+#include "Block.h"
 
 void CKoopa::setMyShell(CGameObject* shell) {
 	myShell = shell;
@@ -14,17 +15,75 @@ void CKoopa::showShell() {
 void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
+	vy += KOOPA_GRAVITY * dt;
 
-	//Revival();
+	vector<LPCOLLISIONEVENT> coEvents;
+	vector<LPCOLLISIONEVENT> coEventsResult;
 
-	x += dx;
-	if (x <= limitL) {
-		x = limitL;
-		this->SetState(KOOPA_STATE_WALKING_RIGHT);
+	coEvents.clear();
+
+	if (y > 500) {
+		this->SetState(KOOPA_STATE_DIE);
 	}
-	if (x >= limitR - KOOPA_BBOX_WIDTH) {
-		x = limitR - KOOPA_BBOX_WIDTH;
-		this->SetState(KOOPA_STATE_WALKING_LEFT);
+
+	CalcPotentialCollisions(coObjects, coEvents);
+
+	if (coEvents.size() == 0)
+	{
+		y += dy;
+		x += dx;
+	}
+	else
+	{
+		float min_tx, min_ty, nx = 0, ny = 0;
+
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
+		float x0 = x;
+		float y0 = y;
+
+		x = x0 + dx;
+		y = y0 + dy;
+
+		if (!this->isDisable)
+			for (UINT i = 0; i < coEventsResult.size(); i++) {
+				LPCOLLISIONEVENT e = coEventsResult[i];
+
+				if (dynamic_cast<CBlock*>(e->obj)) {
+					CBlock* block = dynamic_cast<CBlock*>(e->obj);
+
+					if (e->nx == -1 && block->isBlockLeft()) {
+						this->vx = -vx;
+						this->x = x0 + min_tx * this->dx + nx * 0.4f;
+					}
+
+					if (e->nx == 1 && block->isBlockRight()) {
+						this->vx = -vx;
+						this->x = x0 + min_tx * this->dx + nx * 0.4f;
+					}
+
+					if (e->ny == -1 && block->isBlockTop()) {
+						this->vy = 0;
+						this->y = y0 + min_ty * this->dy + ny * 0.4f;
+					}
+
+					if (e->ny == 1 && block->isBlockBottom()) {
+						this->vy = 0;
+						this->y = y0 + min_ty * this->dy + ny * 0.4f;
+					}
+				}
+			}
+	}
+
+	// clean up collision events
+	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
+	if (this->x <= this->limitL) {
+		this->x = this->limitL;
+		this->vx = -this->vx;
+	}
+	if (this->x >= this->limitR - KOOPA_BBOX_WIDTH) {
+		this->x = this->limitR - KOOPA_BBOX_WIDTH;
+		this->vx = -this->vx;
 	}
 }
 

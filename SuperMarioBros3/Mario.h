@@ -1,7 +1,11 @@
 #pragma once
 #include "GameObject.h"
 
-#define MARIO_WALKING_SPEED		0.1f 
+#define MARIO_WALKING_SPEED_BASE		0.05f
+#define MARIO_WALKING_SPEED				0.1f
+#define MARIO_RUN_SPEED					0.15f
+#define MARIO_ACCELERATION				0.0001f
+#define MARIO_WALKING_FRICTION			0.00025f
 
 #define MARIO_JUMP_SPEED_Y_WEAK			0.35f
 #define MARIO_JUMP_SPEED_Y_STRONG		0.4f
@@ -12,8 +16,10 @@
 #define MARIO_STATE_IDLE				0
 #define MARIO_STATE_WALKING_RIGHT		100
 #define MARIO_STATE_WALKING_LEFT		200
-#define MARIO_STATE_JUMP				300
-#define MARIO_STATE_DIE					400
+#define MARIO_STATE_RUN_RIGHT			300
+#define MARIO_STATE_RUN_LEFT			400
+#define MARIO_STATE_JUMP				500
+#define MARIO_STATE_DIE					600
 
 #define MARIO_ANI_DIE					0
 
@@ -30,13 +36,17 @@
 #define MARIO_ANI_BIG_WALKING_LEFT		10
 #define MARIO_ANI_BIG_JUMP_RIGHT		11
 #define MARIO_ANI_BIG_JUMP_LEFT			12
+#define MARIO_ANI_BIG_RUN_RIGHT			13
+#define MARIO_ANI_BIG_RUN_LEFT			14
+#define MARIO_ANI_BIG_DRIFF_RIGHT		15
+#define MARIO_ANI_BIG_DRIFF_LEFT		16
 
-#define MARIO_ANI_RACCOON_IDLE_RIGHT	13
-#define MARIO_ANI_RACCOON_IDLE_LEFT		14
-#define MARIO_ANI_RACCOON_WALKING_RIGHT	15
-#define MARIO_ANI_RACCOON_WALKING_LEFT	16
-#define MARIO_ANI_RACCOON_JUMP_RIGHT	17
-#define MARIO_ANI_RACCOON_JUMP_LEFT		18
+#define MARIO_ANI_RACCOON_IDLE_RIGHT	17
+#define MARIO_ANI_RACCOON_IDLE_LEFT		18
+#define MARIO_ANI_RACCOON_WALKING_RIGHT	19
+#define MARIO_ANI_RACCOON_WALKING_LEFT	20
+#define MARIO_ANI_RACCOON_JUMP_RIGHT	21
+#define MARIO_ANI_RACCOON_JUMP_LEFT		22
 
 #define	MARIO_LEVEL_SMALL	1
 #define	MARIO_LEVEL_BIG		2
@@ -56,6 +66,10 @@
 
 class CMario : public CGameObject
 {
+	bool walkingRight = false;
+	bool walkingLeft = false;
+	bool isOnGround = true;
+	float ax;
 	int level;
 	int untouchable;
 	DWORD untouchable_start;
@@ -65,6 +79,7 @@ public:
 		level = MARIO_LEVEL_SMALL;
 		untouchable = 0;
 	}
+	void CalVx(DWORD dt);
 	bool canJump = 0;
 	void LvlUp();
 	void BasicCollision(float min_tx, float min_ty, float nx, float ny, float x0, float y0);

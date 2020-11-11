@@ -4,27 +4,27 @@
 
 
 
-void CGoomba::Revival() {
-	if (this->state == GOOMBA_STATE_DIE) {
-		CGame* game = CGame::GetInstance();
-		float cam_X, cam_Y;
-		game->GetCamPos(cam_X, cam_Y);
+//void CGoomba::Revival() {
+//	if (this->state == GOOMBA_STATE_DIE) {
+//		CGame* game = CGame::GetInstance();
+//		float cam_X, cam_Y;
+//		game->GetCamPos(cam_X, cam_Y);
+//
+//		float screen_width;
+//		screen_width = game->GetScreenWidth();
+//
+//		if (cam_X > this->x_start || cam_X + screen_width < this->x_start)
+//			SetRevival();
+//	}
+//}
 
-		float screen_width;
-		screen_width = game->GetScreenWidth();
-
-		if (cam_X > this->x_start || cam_X + screen_width < this->x_start)
-			SetRevival();
-	}
-}
-
-void CGoomba::SetRevival() {
-	this->SetPosition(x_start, y_start);
-	this->isDisable = false;
-	this->SetState(GOOMBA_STATE_WALKING);
-	y -= (GOOMBA_BBOX_HEIGHT - GOOMBA_BBOX_HEIGHT_DIE);
-	die_start = NULL;
-}
+//void CGoomba::SetRevival() {
+//	this->SetPosition(x_start, y_start);
+//	this->isDisable = false;
+//	this->SetState(GOOMBA_STATE_WALKING);
+//	y -= (GOOMBA_BBOX_HEIGHT - GOOMBA_BBOX_HEIGHT_DIE);
+//	die_start = NULL;
+//}
 
 
 
@@ -46,7 +46,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		this->isDisable = true;
 	}
 
-	Revival();
+	//Revival();
 	
 	CalcPotentialCollisions(coObjects, coEvents);
 

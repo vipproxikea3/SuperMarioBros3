@@ -1,7 +1,8 @@
 #pragma once
 #include "GameObject.h"
 
-#define KOOPA_WALKING_SPEED				0.025f 
+#define KOOPA_WALKING_SPEED				0.025f
+#define KOOPA_GRAVITY					0.0005f
 
 #define KOOPA_STATE_WALKING_RIGHT		100
 #define KOOPA_STATE_WALKING_LEFT		200

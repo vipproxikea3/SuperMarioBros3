@@ -11,15 +11,37 @@
 #include "Shell.h"
 #include "Koopa.h"
 
-//#include "Goomba.h"
+void CMario::CalVx(DWORD dt) {
+	vx += ax * dt;
+	if (this->GetState() == MARIO_STATE_RUN_RIGHT || this->GetState() == MARIO_STATE_RUN_LEFT) {
+		if (abs(vx) > MARIO_RUN_SPEED)
+			vx = nx * MARIO_RUN_SPEED;
+	} else if (abs(vx) > MARIO_WALKING_SPEED)
+		vx = nx * MARIO_WALKING_SPEED;
+
+	if (state == MARIO_STATE_IDLE)
+	{
+		if (nx > 0)
+		{
+			if (vx < 0)
+				vx = 0;
+		}
+		else
+			if (vx > 0)
+				vx = 0;
+	}
+
+}
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 
 	// Simple fall down
 	vy += MARIO_GRAVITY * dt;
+	CalVx(dt);
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -60,9 +82,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
-			if (e->ny == -1)
+			if (e->ny == -1) {
 				canJump = 1;
-			
+				isOnGround = true;
+			}
 
 			// BLOCK
 			if (dynamic_cast<CBlock*>(e->obj)) {
@@ -124,11 +147,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 									SetState(MARIO_STATE_DIE);
 									break;
 								case MARIO_LEVEL_BIG:
-									level = MARIO_LEVEL_SMALL;
+									SetLevel(MARIO_LEVEL_SMALL);
 									StartUntouchable();
 									break;
 								case MARIO_LEVEL_RACCOON:
-									level = MARIO_LEVEL_BIG;
+									SetLevel(MARIO_LEVEL_BIG);
 									StartUntouchable();
 									break;
 								}
@@ -149,11 +172,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								SetState(MARIO_STATE_DIE);
 								break;
 							case MARIO_LEVEL_BIG:
-								level = MARIO_LEVEL_SMALL;
+								SetLevel(MARIO_LEVEL_SMALL);
 								StartUntouchable();
 								break;
 							case MARIO_LEVEL_RACCOON:
-								level = MARIO_LEVEL_BIG;
+								SetLevel(MARIO_LEVEL_BIG);
 								StartUntouchable();
 								break;
 							}
@@ -166,8 +189,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (dynamic_cast<CKoopa*>(e->obj))
 			{
 				CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
-				BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+				//BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 				if (e->ny != 0) {
+					vy = 0;
+					y = y0 + min_ty * dy + e->ny * 0.4f;
 					if (e->ny < 0)
 					{
 						if (koopa->GetState() != KOOPA_STATE_DIE)
@@ -187,11 +212,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 									SetState(MARIO_STATE_DIE);
 									break;
 								case MARIO_LEVEL_BIG:
-									level = MARIO_LEVEL_SMALL;
+									SetLevel(MARIO_LEVEL_SMALL);
 									StartUntouchable();
 									break;
 								case MARIO_LEVEL_RACCOON:
-									level = MARIO_LEVEL_BIG;
+									SetLevel(MARIO_LEVEL_BIG);
 									StartUntouchable();
 									break;
 								}
@@ -201,20 +226,22 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 
 				if (e->nx != 0) {
+					vx = 0;
+					x = x0 + min_tx * dx + e->nx * 0.4f;
 					if (untouchable == 0)
 					{
-						if (koopa->GetState() != GOOMBA_STATE_DIE)
+						if (koopa->GetState() != KOOPA_STATE_DIE)
 						{
 							switch (level) {
 							case MARIO_LEVEL_SMALL:
 								SetState(MARIO_STATE_DIE);
 								break;
 							case MARIO_LEVEL_BIG:
-								level = MARIO_LEVEL_SMALL;
+								SetLevel(MARIO_LEVEL_SMALL);
 								StartUntouchable();
 								break;
 							case MARIO_LEVEL_RACCOON:
-								level = MARIO_LEVEL_BIG;
+								SetLevel(MARIO_LEVEL_BIG);
 								StartUntouchable();
 								break;
 							}
@@ -229,7 +256,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				switch (shell->GetState()) {
 				case SHELL_STATE_IDLE:
 					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
-					vy = -MARIO_JUMP_DEFLECT_SPEED;
+					
 					if (e->nx != 0) {
 						if (e->nx < 0) {
 							shell->SetState(SHELL_STATE_WALKING);
@@ -241,6 +268,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 					if (e->ny == -1) {
+						vy = -MARIO_JUMP_DEFLECT_SPEED;
 						if (this->x < shell->x + (SHELL_SMALL_BBOX_WIDTH / 2)) {
 							shell->SetState(SHELL_STATE_WALKING);
 							shell->SetSpeed(SHELL_WALKING_SPEED, 0);
@@ -252,7 +280,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					break;
 				case SHELL_STATE_WALKING:
-					if (untouchable == 0)
+					if (e->ny == -1) {
+						vy = -MARIO_JUMP_DEFLECT_SPEED;
+						shell->SetState(SHELL_STATE_IDLE);
+						shell->SetSpeed(0, 0);
+					} else if (untouchable == 0)
 					{
 						switch (level) {
 						case MARIO_LEVEL_SMALL:
@@ -371,9 +403,26 @@ void CMario::Render()
 					if (nx > 0) ani = MARIO_ANI_BIG_IDLE_RIGHT;
 					else ani = MARIO_ANI_BIG_IDLE_LEFT;
 				}
-				else if (vx > 0)
-					ani = MARIO_ANI_BIG_WALKING_RIGHT;
-				else ani = MARIO_ANI_BIG_WALKING_LEFT;
+				else if (vx > 0) {
+					if (nx < 0) {
+						ani = MARIO_ANI_BIG_DRIFF_RIGHT;
+					}
+					else {
+						ani = MARIO_ANI_BIG_WALKING_RIGHT;
+						if (vx == MARIO_RUN_SPEED)
+							ani = MARIO_ANI_BIG_RUN_RIGHT;
+					}
+				}
+				else {
+					if (nx > 0) {
+						ani = MARIO_ANI_BIG_DRIFF_LEFT;
+					}
+					else {
+						ani = MARIO_ANI_BIG_WALKING_LEFT;
+						if (vx == -MARIO_RUN_SPEED)
+							ani = MARIO_ANI_BIG_RUN_LEFT;
+					}
+				}
 			}
 			break;
 		case MARIO_LEVEL_RACCOON:
@@ -408,21 +457,61 @@ void CMario::SetState(int state)
 
 	switch (state)
 	{
+	case MARIO_STATE_RUN_RIGHT:
+		ax = MARIO_ACCELERATION;
+		if (walkingRight == false)
+		{
+			vx += MARIO_WALKING_SPEED_BASE;
+			walkingRight = true;
+			walkingLeft = false;
+		}
+		nx = 1;
+		break;
+	case MARIO_STATE_RUN_LEFT:
+		ax = -MARIO_ACCELERATION;
+		if (walkingLeft == false)
+		{
+			vx += -MARIO_WALKING_SPEED_BASE;
+			walkingLeft = true;
+			walkingRight = false;
+		}
+		nx = -1;
+		break;
 	case MARIO_STATE_WALKING_RIGHT:
-		vx = MARIO_WALKING_SPEED;
+		ax = MARIO_ACCELERATION;
+		if (walkingRight == false)
+		{
+			vx += MARIO_WALKING_SPEED_BASE;
+			walkingRight = true;
+			walkingLeft = false;
+		}
 		nx = 1;
 		break;
 	case MARIO_STATE_WALKING_LEFT:
-		vx = -MARIO_WALKING_SPEED;
+		ax = -MARIO_ACCELERATION;
+		if (walkingLeft == false)
+		{
+			vx += -MARIO_WALKING_SPEED_BASE;
+			walkingLeft = true;
+			walkingRight = false;
+		}
 		nx = -1;
 		break;
 	case MARIO_STATE_JUMP:
+		isOnGround = false;
 		if (level == MARIO_LEVEL_SMALL)
 			vy = -MARIO_JUMP_SPEED_Y_WEAK;
 		else
 			vy = -MARIO_JUMP_SPEED_Y_STRONG;
 	case MARIO_STATE_IDLE:
-		vx = 0;
+		walkingLeft = false;
+		walkingRight = false;
+		if (isOnGround == true)
+			if (vx > 0)
+				ax = -MARIO_WALKING_FRICTION;
+			else if (vx < 0)
+				ax = MARIO_WALKING_FRICTION;
+			else ax = 0;
 		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;

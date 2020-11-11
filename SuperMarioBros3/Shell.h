@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject.h"
 
-#define SHELL_WALKING_SPEED				0.125f 
+#define SHELL_WALKING_SPEED				0.15f 
 #define SHELL_GRAVITY					0.0005f
 
 #define SHELL_STATE_IDLE				0

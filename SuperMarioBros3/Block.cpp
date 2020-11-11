@@ -69,6 +69,15 @@ void CBlock::SetBlockSideByIdSprite(int idSprite) {
 	case 17:
 		SetBlockSide(0, 1, 0, 0);
 		break;
+	case 18:
+		SetBlockSide(0, 1, 0, 0);
+		break;
+	case 19:
+		SetBlockSide(0, 1, 0, 0);
+		break;
+	case 20:
+		SetBlockSide(0, 1, 0, 0);
+		break;
 	}
 }
 

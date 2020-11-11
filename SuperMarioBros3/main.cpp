@@ -88,10 +88,16 @@ void CSampleKeyHander::KeyState(BYTE* states)
 	if (mario->state != MARIO_STATE_DIE) {
 		// disable control key when Mario die 
 		if (mario->GetState() == MARIO_STATE_DIE) return;
-		if (game->IsKeyDown(DIK_RIGHT))
+		if (game->IsKeyDown(DIK_RIGHT)) {
 			mario->SetState(MARIO_STATE_WALKING_RIGHT);
-		else if (game->IsKeyDown(DIK_LEFT))
+			if (game->IsKeyDown(DIK_LSHIFT))
+				mario->SetState(MARIO_STATE_RUN_RIGHT);
+		}
+		else if (game->IsKeyDown(DIK_LEFT)) {
 			mario->SetState(MARIO_STATE_WALKING_LEFT);
+			if (game->IsKeyDown(DIK_LSHIFT))
+				mario->SetState(MARIO_STATE_RUN_LEFT);
+		}	
 		else
 			mario->SetState(MARIO_STATE_IDLE);
 	}
@@ -133,11 +139,19 @@ void LoadResources()
 	sprites->Add(10002, 275, 154, 290, 181, texMario);		// walk
 	sprites->Add(10003, 304, 154, 321, 181, texMario);
 	sprites->Add(10004, 395, 275, 411, 301, texMario);		// jum big right
+	sprites->Add(10005, 334, 154, 353, 181, texMario);		// run big right
+	sprites->Add(10006, 362, 154, 381, 181, texMario);
+	sprites->Add(10007, 392, 154, 411, 181, texMario);
+	sprites->Add(10008, 425, 154, 441, 181, texMario);		// driff big right
 
 	sprites->Add(10011, 186, 154, 200, 181, texMario);		// idle big left
 	sprites->Add(10012, 155, 154, 170, 181, texMario);		// walk
 	sprites->Add(10013, 125, 154, 140, 181, texMario);
 	sprites->Add(10014, 35, 275, 51, 301, texMario);		// jum big left
+	sprites->Add(10015, 93, 154, 112, 181, texMario);		// run big left
+	sprites->Add(10016, 65, 154, 84, 181, texMario);
+	sprites->Add(10017, 35, 154, 54, 181, texMario);
+	sprites->Add(10018, 5, 154, 21, 181, texMario);			// driff big left
 
 	// small
 	sprites->Add(10021, 247, 0, 259, 15, texMario);			// idle small right
@@ -259,6 +273,26 @@ void LoadResources()
 	ani->Add(10054);
 	animations->Add(605, ani);
 
+	ani = new CAnimation(25);		// run big right
+	ani->Add(10005);
+	ani->Add(10006);
+	ani->Add(10007);
+	animations->Add(610, ani);
+
+	ani = new CAnimation(25);		// run big left
+	ani->Add(10015);
+	ani->Add(10016);
+	ani->Add(10017);
+	animations->Add(611, ani);
+
+	ani = new CAnimation(100);		// driff big right
+	ani->Add(10008);
+	animations->Add(620, ani);
+
+	ani = new CAnimation(100);		// driff big left
+	ani->Add(10018);
+	animations->Add(621, ani);
+
 	
 
 	mario = new CMario();
@@ -278,6 +312,10 @@ void LoadResources()
 	mario->AddAnimation(501);		// walk left big
 	mario->AddAnimation(600);		// big jump right
 	mario->AddAnimation(601);		// big jump left
+	mario->AddAnimation(610);		// big run right
+	mario->AddAnimation(611);		// big run left
+	mario->AddAnimation(620);		// big driff right
+	mario->AddAnimation(621);		// big driff left
 
 	mario->AddAnimation(404);		// idle right raccoon
 	mario->AddAnimation(405);		// idle left raccoon
