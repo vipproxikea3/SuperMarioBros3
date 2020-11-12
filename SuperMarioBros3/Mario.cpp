@@ -383,11 +383,11 @@ void CMario::Shot() {
 		bullet->AddAnimation(1000);
 		bullet->AddAnimation(1001);
 		if (nx > 0) {
-			bullet->SetPosition(this->x + 17.0f, this->y + 13.0f);
+			bullet->SetPosition(this->x + 7.0f, this->y + 5.0f);
 			bullet->SetState(BULLET_STATE_WALKING_RIGHT);
 		}
 		else {
-			bullet->SetPosition(this->x - 2.0f, this->y + 13.0f);
+			bullet->SetPosition(this->x - 7.0f, this->y + 5.0f);
 			bullet->SetState(BULLET_STATE_WALKING_LEFT);
 		}
 		bullets.push_back(bullet);

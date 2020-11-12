@@ -2,10 +2,12 @@
 #include "Goomba.h"
 #include "Koopa.h"
 #include "Shell.h"
+#include "Block.h"
 
 void CMarioFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
+	vy += BULLET_GRAVITY * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -17,6 +19,7 @@ void CMarioFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (coEvents.size() == 0)
 	{
 		x += dx;
+		y += dy;
 	}
 	else
 	{
@@ -27,14 +30,48 @@ void CMarioFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		float y0 = y;
 
 		x = x0 + dx;
-		this->x = x0 + min_tx * this->dx + nx * 0.4f;
+		y = y0 + dy;
+
+		/*this->x = x0 + min_tx * this->dx + nx * 0.4f;
+		this->y = y0 + min_ty * this->dy + ny * 0.4f;*/
 
 		if (!this->isDisable)
 			for (UINT i = 0; i < coEventsResult.size(); i++) {
 				LPCOLLISIONEVENT e = coEventsResult[i];
 
+				// BLOCK
+				if (dynamic_cast<CBlock*>(e->obj)) {
+					CBlock* block = dynamic_cast<CBlock*>(e->obj);
+
+					if (e->nx == -1 && block->isBlockLeft()) {
+						this->vx = 0;
+						this->x = x0 + min_tx * this->dx + nx * 0.4f;
+						this->isDisable = true;
+					}
+
+					if (e->nx == 1 && block->isBlockRight()) {
+						this->vx = 0;
+						this->x = x0 + min_tx * this->dx + nx * 0.4f;
+						this->isDisable = true;
+					}
+
+					if (e->ny == -1 && block->isBlockTop()) {
+						this->vy = 0;
+						this->y = y0 + min_ty * this->dy + ny * 0.4f;
+						this->isDisable = true;
+					}
+
+					if (e->ny == 1 && block->isBlockBottom()) {
+						this->vy = 0;
+						this->y = y0 + min_ty * this->dy + ny * 0.4f;
+						this->isDisable = true;
+					}
+				}
+
 				// GOOMBA
 				if (dynamic_cast<CGoomba*>(e->obj)) {
+					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+					this->isDisable = true;
 					CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
 					if (goomba->GetState() != GOOMBA_STATE_DIE)
 					{
@@ -45,6 +82,8 @@ void CMarioFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				// KOOPA
 				if (dynamic_cast<CKoopa*>(e->obj))
 				{
+					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+					this->isDisable = true;
 					CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
 					if (koopa->GetState() != KOOPA_STATE_DIE)
 					{
@@ -55,6 +94,8 @@ void CMarioFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				// SHELL
 				if (dynamic_cast<CShell*>(e->obj)) {
+					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+					this->isDisable = true;
 					CShell* shell = dynamic_cast<CShell*>(e->obj);
 					if (shell->GetState() == SHELL_STATE_IDLE) {
 						if (e->nx != 0) {
@@ -70,12 +111,24 @@ void CMarioFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 				}
 			}
-
-		this->isDisable = true;
 	}
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+}
+
+void CMarioFireBullet::BasicCollision(float min_tx, float min_ty, float nx, float ny, float x0, float y0)
+{
+	if (nx != 0)
+	{
+		this->vx = 0;
+		this->x = x0 + min_tx * this->dx + nx * 0.4f;
+	}
+	if (ny != 0)
+	{
+		this->vy = 0;
+		this->y = y0 + min_ty * this->dy + ny * 0.4f;
+	}
 }
 
 void CMarioFireBullet::Render()
