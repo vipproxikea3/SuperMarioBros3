@@ -77,6 +77,9 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		case DIK_Z:
 			mario->Shot();
 			break;
+		case DIK_X:
+			mario->Fly();
+			break;
 		}
 	}
 }
@@ -84,6 +87,15 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 void CSampleKeyHander::OnKeyUp(int KeyCode)
 {
 	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
+	if (mario->state != MARIO_STATE_DIE) {
+		switch (KeyCode)
+		{
+		case DIK_X:
+			mario->SetStopFly();
+			mario->SetStopFall();
+			break;
+		}
+	}
 }
 
 void CSampleKeyHander::KeyState(BYTE* states)
@@ -168,23 +180,27 @@ void LoadResources()
 	sprites->Add(10034, 36, 0, 49, 16, texMario);			// jum small left
 
 	// raccoon
-	sprites->Add(10041, 243, 634, 264, 662, texMario);		// idle fire right
+	sprites->Add(10041, 243, 634, 264, 662, texMario);		// idle raccoon right
 	sprites->Add(10042, 272, 634, 293, 662, texMario);		// walk 
 	sprites->Add(10043, 303, 634, 324, 662, texMario);		//
-	sprites->Add(10044, 303, 714, 324, 741, texMario);		// jum fire right
-	sprites->Add(10045, 331, 634, 355, 662, texMario);		// run fire right
+	sprites->Add(10044, 303, 714, 324, 741, texMario);		// jum raccoon right
+	sprites->Add(10045, 331, 634, 355, 662, texMario);		// run raccoon right
 	sprites->Add(10046, 361, 634, 385, 662, texMario);
 	sprites->Add(10047, 391, 634, 414, 662, texMario);
-	sprites->Add(10048, 425, 634, 441, 662, texMario);		// driff fire right
+	sprites->Add(10048, 425, 634, 441, 662, texMario);		// driff raccoon right
+	sprites->Add(10049, 331, 714, 355, 742, texMario);		// fly raccoon right
+	sprites->Add(10050, 361, 714, 385, 742, texMario);
 
-	sprites->Add(10051, 182, 634, 203, 662, texMario);		// idle fire left
+	sprites->Add(10051, 182, 634, 203, 662, texMario);		// idle raccoon left
 	sprites->Add(10052, 153, 634, 174, 662, texMario);		// walk
 	sprites->Add(10053, 122, 634, 143, 662, texMario);
-	sprites->Add(10054, 122, 714, 143, 741, texMario);		// jum fire left
-	sprites->Add(10055, 91, 634, 115, 662, texMario);		// run fire left
+	sprites->Add(10054, 122, 714, 143, 741, texMario);		// jum raccoon left
+	sprites->Add(10055, 91, 634, 115, 662, texMario);		// run raccoon left
 	sprites->Add(10056, 61, 634, 84, 662, texMario);
 	sprites->Add(10057, 32, 634, 53, 662, texMario);
 	sprites->Add(10058, 5, 634, 21, 662, texMario);			// driff fire left
+	sprites->Add(10059, 91, 714, 115, 742, texMario);		// fly raccoon left
+	sprites->Add(10060, 61, 714, 85, 742, texMario);
 
 	// fire
 	sprites->Add(10061, 245, 394, 261, 421, texMario);		// idle fire right
@@ -393,6 +409,16 @@ void LoadResources()
 	ani->Add(10078);
 	animations->Add(625, ani);
 
+	ani = new CAnimation(100);		// fly raccoon right
+	ani->Add(10049);
+	ani->Add(10050);
+	animations->Add(630, ani);
+
+	ani = new CAnimation(100);		// fly raccoon left
+	ani->Add(10059);
+	ani->Add(10060);
+	animations->Add(631, ani);
+
 	
 
 	mario = new CMario();
@@ -427,6 +453,8 @@ void LoadResources()
 	mario->AddAnimation(613);		// raccoon run left
 	mario->AddAnimation(622);		// raccoon driff right
 	mario->AddAnimation(623);		// raccoon driff left
+	mario->AddAnimation(630);		// raccoon fly right
+	mario->AddAnimation(631);		// raccoon fly left
 
 	mario->AddAnimation(406);		// fire idle right 
 	mario->AddAnimation(407);		// fire idle left

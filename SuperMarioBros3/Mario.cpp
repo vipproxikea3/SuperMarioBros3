@@ -44,8 +44,17 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 
+	// Check flying
+	if (GetTickCount() - fly_start >= MARIO_FLY_TIME) {
+		flyIng = false;
+		fly_start = NULL;
+	}
+
 	// Simple fall down
-	vy += MARIO_GRAVITY * dt;
+	if (!flyIng && !fallIng) {
+		vy += MARIO_GRAVITY * dt;
+	}
+
 	CalVx(dt);
 
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -69,6 +78,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		x += dx;
 		y += dy;
+
+		isOnGround = false;
 	}
 	else
 	{
@@ -79,9 +90,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		float x0 = x;
 		float y0 = y;
 
-
 		x = x0 + dx;
 		y = y0 + dy;
+
+		if (ny != 0) isOnGround = false;
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
@@ -89,6 +101,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			if (e->ny == -1) {
 				canJump = 1;
+				fallIng = false;
 				isOnGround = true;
 			}
 
@@ -394,6 +407,23 @@ void CMario::Shot() {
 	}
 }
 
+void CMario::Fly() {
+	if (this->level == MARIO_LEVEL_RACCOON) {
+		if (canJump && abs(vx) == MARIO_RUN_SPEED)
+		{
+			flyIng = true;
+			canJump = false;
+			fly_start = GetTickCount();
+			vy = -MARIO_FLY_SPEED;
+		}
+		else if (!isOnGround && !flyIng)
+		{
+			fallIng = true;
+			vy = MARIO_FALL_SPEED;
+		}
+	}
+}
+
 void CMario::BasicCollision(float min_tx, float min_ty, float nx, float ny, float x0, float y0)
 {
 	if (nx != 0)
@@ -508,6 +538,14 @@ void CMario::Render()
 					}
 				}
 			}
+
+			if (flyIng || fallIng) {
+				if (nx > 0)
+					ani = MARIO_ANI_RACCOON_FLY_RIGHT;
+				else
+					ani = MARIO_ANI_RACCOON_FLY_LEFT;
+			}
+
 			break;
 		case MARIO_LEVEL_FIRE:
 			if (vy < 0) {
