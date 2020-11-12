@@ -1,5 +1,7 @@
 #pragma once
 #include "GameObject.h"
+#include "MarioFireBullet.h"
+#include "MarioFireBullet.h"
 
 #define MARIO_WALKING_SPEED_BASE		0.05f
 #define MARIO_WALKING_SPEED				0.1f
@@ -81,6 +83,7 @@
 #define MARIO_SMALL_BBOX_HEIGHT			15
 
 #define MARIO_UNTOUCHABLE_TIME			5000
+#define MARIO_SHOT_COOLDOWN_TIME		500
 
 
 class CMario : public CGameObject
@@ -89,7 +92,13 @@ class CMario : public CGameObject
 	bool walkingLeft = false;
 	bool isOnGround = true;
 	float ax;
+
 	int level;
+
+	CMarioFireBullet* bullet;
+	vector<LPGAMEOBJECT> bullets;
+	DWORD lastShotTime;
+
 	int untouchable;
 	DWORD untouchable_start;
 public:
@@ -97,10 +106,12 @@ public:
 	{
 		level = MARIO_LEVEL_SMALL;
 		untouchable = 0;
+		lastShotTime = 0;
 	}
 	void CalVx(DWORD dt);
 	bool canJump = 0;
 	void LvlUp();
+	void Shot();
 	void BasicCollision(float min_tx, float min_ty, float nx, float ny, float x0, float y0);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();

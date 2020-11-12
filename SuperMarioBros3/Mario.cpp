@@ -36,6 +36,11 @@ void CMario::CalVx(DWORD dt) {
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 
+	for (int i = 0; i < bullets.size(); i++) {
+		if (!bullets[i]->isDisable)
+			bullets[i]->Update(dt, coObjects);
+	}
+
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 
@@ -344,6 +349,16 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
+	// clean bullets
+	for (int i = 0; i < bullets.size(); i++) {
+		if (bullets[i]->isDisable) {
+			CGameObject* p = bullets[i];
+			bullets.erase(bullets.begin() + i);
+			delete p;
+		}
+			
+	}
 }
 
 void CMario::LvlUp() {
@@ -358,6 +373,24 @@ void CMario::LvlUp() {
 	case MARIO_LEVEL_RACCOON:
 		this->SetLevel(MARIO_LEVEL_FIRE);
 		break;
+	}
+}
+
+void CMario::Shot() {
+	if (GetTickCount() - lastShotTime >= MARIO_SHOT_COOLDOWN_TIME && this->level == MARIO_LEVEL_FIRE) {
+		lastShotTime = GetTickCount();
+		bullet = new CMarioFireBullet();
+		bullet->AddAnimation(1000);
+		bullet->AddAnimation(1001);
+		if (nx > 0) {
+			bullet->SetPosition(this->x + 17.0f, this->y + 13.0f);
+			bullet->SetState(BULLET_STATE_WALKING_RIGHT);
+		}
+		else {
+			bullet->SetPosition(this->x - 2.0f, this->y + 13.0f);
+			bullet->SetState(BULLET_STATE_WALKING_LEFT);
+		}
+		bullets.push_back(bullet);
 	}
 }
 
@@ -377,6 +410,11 @@ void CMario::BasicCollision(float min_tx, float min_ty, float nx, float ny, floa
 
 void CMario::Render()
 {
+	for (int i = 0; i < bullets.size(); i++) {
+		if (!bullets[i]->isDisable)
+			bullets[i]->Render();
+	}
+
 	int ani;
 	if (state == MARIO_STATE_DIE)
 		ani = MARIO_ANI_DIE;

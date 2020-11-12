@@ -74,6 +74,9 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		case DIK_A:
 			mario->LvlUp();
 			break;
+		case DIK_Z:
+			mario->Shot();
+			break;
 		}
 	}
 }
@@ -439,6 +442,31 @@ void LoadResources()
 
 	mario->SetPosition(0.0f, 388.0f);
 	objects.push_back(mario);
+
+	// LOAD MARIO FIRE BULLET
+	sprites->Add(10101, 240, 554, 248, 562, texMario);		// mario fire bullet walking right
+	sprites->Add(10102, 258, 554, 266, 562, texMario);
+	sprites->Add(10103, 258, 574, 266, 582, texMario);
+	sprites->Add(10104, 240, 573, 248, 581, texMario);
+
+	sprites->Add(10111, 198, 554, 206, 562, texMario);		// mario fire bullet walking left
+	sprites->Add(10112, 180, 554, 188, 562, texMario);
+	sprites->Add(10113, 180, 574, 188, 582, texMario);
+	sprites->Add(10114, 198, 573, 206, 581, texMario);
+
+	ani = new CAnimation(25);	// mario fire bullet walking right
+	ani->Add(10101);
+	ani->Add(10102);
+	ani->Add(10103);
+	ani->Add(10104);
+	animations->Add(1000, ani);
+
+	ani = new CAnimation(25);	// mario fire bullet walking left
+	ani->Add(10111);
+	ani->Add(10112);
+	ani->Add(10113);
+	ani->Add(10114);
+	animations->Add(1001, ani);
 
 	// LOAD SHELL
 	LPDIRECT3DTEXTURE9 texEnemy_2 = textures->Get(ID_TEX_ENEMY_2);
