@@ -110,16 +110,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					this->vy = 0;
 					this->y = y0 + min_ty * this->dy + ny * 0.4f;
 				}
-
-				/*switch (block->GetTypeBlock()) {
-				case 0:
-					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
-					break;
-				case 1:
-					if (e->ny == -1)
-						BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
-					break;
-				}*/
 			}
 			
 			// GOOMBA
@@ -154,6 +144,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 									SetLevel(MARIO_LEVEL_BIG);
 									StartUntouchable();
 									break;
+								case MARIO_LEVEL_FIRE:
+									SetLevel(MARIO_LEVEL_RACCOON);
+									StartUntouchable();
+									break;
 								}
 							}
 						}
@@ -177,6 +171,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								break;
 							case MARIO_LEVEL_RACCOON:
 								SetLevel(MARIO_LEVEL_BIG);
+								StartUntouchable();
+								break;
+							case MARIO_LEVEL_FIRE:
+								SetLevel(MARIO_LEVEL_RACCOON);
 								StartUntouchable();
 								break;
 							}
@@ -219,6 +217,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 									SetLevel(MARIO_LEVEL_BIG);
 									StartUntouchable();
 									break;
+								case MARIO_LEVEL_FIRE:
+									SetLevel(MARIO_LEVEL_RACCOON);
+									StartUntouchable();
+									break;
 								}
 							}
 						}
@@ -242,6 +244,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								break;
 							case MARIO_LEVEL_RACCOON:
 								SetLevel(MARIO_LEVEL_BIG);
+								StartUntouchable();
+								break;
+							case MARIO_LEVEL_FIRE:
+								SetLevel(MARIO_LEVEL_RACCOON);
 								StartUntouchable();
 								break;
 							}
@@ -291,11 +297,15 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							SetState(MARIO_STATE_DIE);
 							break;
 						case MARIO_LEVEL_BIG:
-							level = MARIO_LEVEL_SMALL;
+							SetLevel(MARIO_LEVEL_SMALL);
 							StartUntouchable();
 							break;
 						case MARIO_LEVEL_RACCOON:
-							level = MARIO_LEVEL_BIG;
+							SetLevel(MARIO_LEVEL_BIG);
+							StartUntouchable();
+							break;
+						case MARIO_LEVEL_FIRE:
+							SetLevel(MARIO_LEVEL_RACCOON);
 							StartUntouchable();
 							break;
 						}
@@ -346,6 +356,7 @@ void CMario::LvlUp() {
 		this->SetLevel(MARIO_LEVEL_RACCOON);
 		break;
 	case MARIO_LEVEL_RACCOON:
+		this->SetLevel(MARIO_LEVEL_FIRE);
 		break;
 	}
 }
@@ -460,6 +471,41 @@ void CMario::Render()
 				}
 			}
 			break;
+		case MARIO_LEVEL_FIRE:
+			if (vy < 0) {
+				if (nx > 0)
+					ani = MARIO_ANI_FIRE_JUMP_RIGHT;
+				else
+					ani = MARIO_ANI_FIRE_JUMP_LEFT;
+			}
+			else {
+				if (vx == 0)
+				{
+					if (nx > 0) ani = MARIO_ANI_FIRE_IDLE_RIGHT;
+					else ani = MARIO_ANI_FIRE_IDLE_LEFT;
+				}
+				else if (vx > 0) {
+					if (nx < 0) {
+						ani = MARIO_ANI_FIRE_DRIFF_RIGHT;
+					}
+					else {
+						ani = MARIO_ANI_FIRE_WALKING_RIGHT;
+						if (vx == MARIO_RUN_SPEED)
+							ani = MARIO_ANI_FIRE_RUN_RIGHT;
+					}
+				}
+				else {
+					if (nx > 0) {
+						ani = MARIO_ANI_FIRE_DRIFF_LEFT;
+					}
+					else {
+						ani = MARIO_ANI_FIRE_WALKING_LEFT;
+						if (vx == -MARIO_RUN_SPEED)
+							ani = MARIO_ANI_FIRE_RUN_LEFT;
+					}
+				}
+			}
+			break;
 		}
 	}
 
@@ -561,6 +607,10 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 			right = left + MARIO_RACCOON_BBOX_WIDTH;
 		}
 
+		break;
+	case MARIO_LEVEL_FIRE:
+		right = x + MARIO_FIRE_BBOX_WIDTH;
+		bottom = y + MARIO_FIRE_BBOX_HEIGHT;
 		break;
 	}
 }

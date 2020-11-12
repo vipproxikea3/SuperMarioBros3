@@ -165,23 +165,42 @@ void LoadResources()
 	sprites->Add(10034, 36, 0, 49, 16, texMario);			// jum small left
 
 	// raccoon
-	sprites->Add(10041, 243, 634, 264, 662, texMario);		// idle raccoon right
+	sprites->Add(10041, 243, 634, 264, 662, texMario);		// idle fire right
 	sprites->Add(10042, 272, 634, 293, 662, texMario);		// walk 
 	sprites->Add(10043, 303, 634, 324, 662, texMario);		//
-	sprites->Add(10044, 303, 714, 324, 741, texMario);		// jum raccoon right
-	sprites->Add(10045, 331, 634, 355, 662, texMario);		// run raccoon right
+	sprites->Add(10044, 303, 714, 324, 741, texMario);		// jum fire right
+	sprites->Add(10045, 331, 634, 355, 662, texMario);		// run fire right
 	sprites->Add(10046, 361, 634, 385, 662, texMario);
 	sprites->Add(10047, 391, 634, 414, 662, texMario);
-	sprites->Add(10048, 425, 634, 441, 662, texMario);		// driff raccoon right
+	sprites->Add(10048, 425, 634, 441, 662, texMario);		// driff fire right
 
-	sprites->Add(10051, 182, 634, 203, 662, texMario);		// idle raccoon left
+	sprites->Add(10051, 182, 634, 203, 662, texMario);		// idle fire left
 	sprites->Add(10052, 153, 634, 174, 662, texMario);		// walk
 	sprites->Add(10053, 122, 634, 143, 662, texMario);
-	sprites->Add(10054, 122, 714, 143, 741, texMario);		// jum raccoon left
-	sprites->Add(10055, 91, 634, 115, 662, texMario);		// run raccoon left
+	sprites->Add(10054, 122, 714, 143, 741, texMario);		// jum fire left
+	sprites->Add(10055, 91, 634, 115, 662, texMario);		// run fire left
 	sprites->Add(10056, 61, 634, 84, 662, texMario);
 	sprites->Add(10057, 32, 634, 53, 662, texMario);
-	sprites->Add(10058, 5, 634, 21, 662, texMario);			// driff raccoon left
+	sprites->Add(10058, 5, 634, 21, 662, texMario);			// driff fire left
+
+	// fire
+	sprites->Add(10061, 245, 394, 261, 421, texMario);		// idle fire right
+	sprites->Add(10062, 275, 394, 291, 421, texMario);		// walk 
+	sprites->Add(10063, 305, 394, 321, 421, texMario);		//
+	sprites->Add(10064, 305, 475, 321, 501, texMario);		// jum fire right
+	sprites->Add(10065, 334, 394, 353, 421, texMario);		// run fire right
+	sprites->Add(10066, 362, 394, 381, 421, texMario);
+	sprites->Add(10067, 392, 394, 411, 421, texMario);
+	sprites->Add(10068, 425, 394, 441, 422, texMario);		// driff fire right
+
+	sprites->Add(10071, 185, 394, 201, 421, texMario);		// idle fire left
+	sprites->Add(10072, 155, 394, 171, 421, texMario);		// walk
+	sprites->Add(10073, 125, 394, 141, 421, texMario);
+	sprites->Add(10074, 125, 475, 141, 501, texMario);		// jum fire left
+	sprites->Add(10075, 93, 394, 112, 421, texMario);		// run fire left
+	sprites->Add(10076, 65, 394, 84, 421, texMario);
+	sprites->Add(10077, 35, 394, 55, 421, texMario);
+	sprites->Add(10078, 5, 394, 21, 422, texMario);			// driff fire left
 
 	
 
@@ -216,6 +235,14 @@ void LoadResources()
 	ani = new CAnimation(100);	// idle raccoon left
 	ani->Add(10051);
 	animations->Add(405, ani);
+
+	ani = new CAnimation(100);	// idle fire right
+	ani->Add(10061);
+	animations->Add(406, ani);
+
+	ani = new CAnimation(100);	// idle fire left
+	ani->Add(10071);
+	animations->Add(407, ani);
 
 
 
@@ -254,6 +281,18 @@ void LoadResources()
 	ani->Add(10052);
 	ani->Add(10053);
 	animations->Add(505, ani);
+
+	ani = new CAnimation(100);	// walk fire right
+	ani->Add(10061);
+	ani->Add(10062);
+	ani->Add(10063);
+	animations->Add(506, ani);
+
+	ani = new CAnimation(100);	// walk fire left
+	ani->Add(10071);
+	ani->Add(10072);
+	ani->Add(10073);
+	animations->Add(507, ani);
 	
 
 
@@ -281,6 +320,16 @@ void LoadResources()
 	ani->Add(10054);
 	animations->Add(605, ani);
 
+	ani = new CAnimation(100);		// jump fire right
+	ani->Add(10064);
+	animations->Add(606, ani);
+
+	ani = new CAnimation(100);		// jump fire left
+	ani->Add(10074);
+	animations->Add(607, ani);
+
+
+
 	ani = new CAnimation(25);		// run big right
 	ani->Add(10005);
 	ani->Add(10006);
@@ -305,6 +354,18 @@ void LoadResources()
 	ani->Add(10057);
 	animations->Add(613, ani);
 
+	ani = new CAnimation(25);		// run fire right
+	ani->Add(10065);
+	ani->Add(10066);
+	ani->Add(10067);
+	animations->Add(614, ani);
+
+	ani = new CAnimation(25);		// run fire left
+	ani->Add(10075);
+	ani->Add(10076);
+	ani->Add(10077);
+	animations->Add(615, ani);
+
 	ani = new CAnimation(100);		// driff big right
 	ani->Add(10008);
 	animations->Add(620, ani);
@@ -320,6 +381,14 @@ void LoadResources()
 	ani = new CAnimation(100);		// driff raccon left
 	ani->Add(10058);
 	animations->Add(623, ani);
+
+	ani = new CAnimation(100);		// driff fire right
+	ani->Add(10068);
+	animations->Add(624, ani);
+
+	ani = new CAnimation(100);		// driff fire left
+	ani->Add(10078);
+	animations->Add(625, ani);
 
 	
 
@@ -355,6 +424,17 @@ void LoadResources()
 	mario->AddAnimation(613);		// raccoon run left
 	mario->AddAnimation(622);		// raccoon driff right
 	mario->AddAnimation(623);		// raccoon driff left
+
+	mario->AddAnimation(406);		// fire idle right 
+	mario->AddAnimation(407);		// fire idle left
+	mario->AddAnimation(506);		// fire walk right
+	mario->AddAnimation(507);		// fire walk left
+	mario->AddAnimation(606);		// fire jump right
+	mario->AddAnimation(607);		// fire jump left
+	mario->AddAnimation(614);		// fire run right
+	mario->AddAnimation(615);		// fire run left
+	mario->AddAnimation(624);		// fire driff right
+	mario->AddAnimation(625);		// fire driff left
 
 
 	mario->SetPosition(0.0f, 388.0f);
