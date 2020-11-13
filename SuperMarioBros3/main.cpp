@@ -98,7 +98,7 @@ void CSampleKeyHander::OnKeyUp(int KeyCode)
 			mario->SetStopFall();
 			break;
 		case DIK_C:
-			mario->isReadyHug = false;
+			mario->StopHug();
 			break;
 		}
 	}

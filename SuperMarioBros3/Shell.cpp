@@ -10,7 +10,8 @@ void CShell::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt);
 
 	// Simple fall down
-	vy += SHELL_GRAVITY * dt;
+	if (!isHugging)
+		vy += SHELL_GRAVITY * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -159,6 +160,7 @@ void CShell::SetState(int state)
 		vx = SHELL_WALKING_SPEED;
 		break;
 	case SHELL_STATE_BEHUG:
+		isHugging = true;
 		vx = 0;
 		vy = 0;
 		break;

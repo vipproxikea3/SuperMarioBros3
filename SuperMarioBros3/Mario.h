@@ -129,6 +129,8 @@ public:
 	void Fly();
 	void SetStopFly() { flyIng = false; }
 	void SetStopFall() { fallIng = false; }
+	void UpdateHuggingShellPosition();
+	void StopHug();
 	void BasicCollision(float min_tx, float min_ty, float nx, float ny, float x0, float y0);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();

@@ -35,11 +35,15 @@ void CMario::CalVx(DWORD dt) {
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-
+	// Update bullets
 	for (int i = 0; i < bullets.size(); i++) {
 		if (!bullets[i]->isDisable)
 			bullets[i]->Update(dt, coObjects);
 	}
+
+	// Update hugging shell Position
+	if (hugging)
+		UpdateHuggingShellPosition();
 
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
@@ -285,13 +289,21 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				case SHELL_STATE_IDLE:
 					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 					if (e->nx != 0) {
-						if (e->nx < 0) {
-							shell->SetState(SHELL_STATE_WALKING);
-							shell->SetSpeed(SHELL_WALKING_SPEED, 0);
+						if (isReadyHug) {
+							huggingShell = shell;
+							shell->SetState(SHELL_STATE_BEHUG);
+							hugging = true;
+							isReadyHug = false;
 						}
 						else {
-							shell->SetState(SHELL_STATE_WALKING);
-							shell->SetSpeed(-SHELL_WALKING_SPEED, 0);
+							if (e->nx < 0) {
+								shell->SetState(SHELL_STATE_WALKING);
+								shell->SetSpeed(SHELL_WALKING_SPEED, 0);
+							}
+							else {
+								shell->SetState(SHELL_STATE_WALKING);
+								shell->SetSpeed(-SHELL_WALKING_SPEED, 0);
+							}
 						}
 					}
 					if (e->ny == -1) {
@@ -376,6 +388,55 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 			
 	}
+}
+
+void CMario::UpdateHuggingShellPosition() {
+	if (huggingShell == NULL) return;
+	switch (this->level)
+	{
+	case MARIO_LEVEL_SMALL:
+		if (nx > 0)
+			huggingShell->SetPosition(this->x + 11.0f, this->y - 1.0f);
+		else
+			huggingShell->SetPosition(this->x - 14.0f, this->y - 1.0f);
+		break;
+	case MARIO_LEVEL_BIG:
+		if (nx > 0)
+			huggingShell->SetPosition(this->x + 13.0f, this->y + 5.0f);
+		else
+			huggingShell->SetPosition(this->x - 14.0f, this->y + 5.0f);
+		break;
+	case MARIO_LEVEL_RACCOON:
+		if (nx > 0)
+			huggingShell->SetPosition(this->x + 19.0f, this->y + 5.0f);
+		else
+			huggingShell->SetPosition(this->x - 14.0f, this->y + 5.0f);
+		break;
+	case MARIO_LEVEL_FIRE:
+		if (nx > 0)
+			huggingShell->SetPosition(this->x + 13.0f, this->y + 5.0f);
+		else
+			huggingShell->SetPosition(this->x - 14.0f, this->y + 5.0f);
+		break;
+	}
+}
+
+void CMario::StopHug() {
+	if (!hugging) return;
+	if (nx > 0) {
+		huggingShell->SetState(SHELL_STATE_WALKING);
+		huggingShell->SetSpeed(SHELL_WALKING_SPEED, 0);
+		huggingShell->isHugging = false;
+	}
+	else {
+		huggingShell->SetState(SHELL_STATE_WALKING);
+		huggingShell->SetSpeed(-SHELL_WALKING_SPEED, 0);
+		huggingShell->isHugging = false;
+	}
+
+	this->hugging = false;
+	this->isReadyHug = false;
+	this->huggingShell = NULL;
 }
 
 void CMario::LvlUp() {
