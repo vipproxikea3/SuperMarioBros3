@@ -25,6 +25,7 @@
 #define MARIO_STATE_RUN_LEFT			400
 #define MARIO_STATE_JUMP				500
 #define MARIO_STATE_DIE					600
+#define MARIO_STATE_SPIN				700
 
 #define MARIO_ANI_DIE					0
 
@@ -58,17 +59,19 @@
 #define MARIO_ANI_RACCOON_DRIFF_LEFT	26
 #define MARIO_ANI_RACCOON_FLY_RIGHT		27
 #define MARIO_ANI_RACCOON_FLY_LEFT		28
+#define MARIO_ANI_RACCOON_SPIN_RIGHT	29
+#define MARIO_ANI_RACCOON_SPIN_LEFT		30
 
-#define MARIO_ANI_FIRE_IDLE_RIGHT		29
-#define MARIO_ANI_FIRE_IDLE_LEFT		30
-#define MARIO_ANI_FIRE_WALKING_RIGHT	31
-#define MARIO_ANI_FIRE_WALKING_LEFT		32
-#define MARIO_ANI_FIRE_JUMP_RIGHT		33
-#define MARIO_ANI_FIRE_JUMP_LEFT		34
-#define MARIO_ANI_FIRE_RUN_RIGHT		35
-#define MARIO_ANI_FIRE_RUN_LEFT			36
-#define MARIO_ANI_FIRE_DRIFF_RIGHT		37
-#define MARIO_ANI_FIRE_DRIFF_LEFT		38
+#define MARIO_ANI_FIRE_IDLE_RIGHT		31
+#define MARIO_ANI_FIRE_IDLE_LEFT		32
+#define MARIO_ANI_FIRE_WALKING_RIGHT	33
+#define MARIO_ANI_FIRE_WALKING_LEFT		34
+#define MARIO_ANI_FIRE_JUMP_RIGHT		35
+#define MARIO_ANI_FIRE_JUMP_LEFT		36
+#define MARIO_ANI_FIRE_RUN_RIGHT		37
+#define MARIO_ANI_FIRE_RUN_LEFT			38
+#define MARIO_ANI_FIRE_DRIFF_RIGHT		39
+#define MARIO_ANI_FIRE_DRIFF_LEFT		40
 
 #define	MARIO_LEVEL_SMALL				1
 #define	MARIO_LEVEL_BIG					2
@@ -90,6 +93,7 @@
 #define MARIO_UNTOUCHABLE_TIME			5000
 #define MARIO_FLY_TIME					3500
 #define MARIO_SHOT_COOLDOWN_TIME		500
+#define MARIO_SPIN_TIME					300
 
 
 class CMario : public CGameObject
@@ -102,6 +106,10 @@ class CMario : public CGameObject
 	bool flyIng = false;
 	bool fallIng = false;
 	DWORD fly_start;
+
+	bool spinning;
+	DWORD spin_start;
+	DWORD last_spin;
 
 	int level;
 
@@ -120,11 +128,15 @@ public:
 		level = MARIO_LEVEL_SMALL;
 		untouchable = 0;
 		lastShotTime = 0;
+		spinning = 0;
+		last_spin = 0;
 	}
 	void CalVx(DWORD dt);
 	bool canJump = 0;
 	bool isReadyHug = false;
 	void LvlUp();
+	void lvlDown();
+	void Spin();
 	void Shot();
 	void Fly();
 	void SetStopFly() { flyIng = false; }

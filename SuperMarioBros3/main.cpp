@@ -83,6 +83,9 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		case DIK_C:
 			mario->isReadyHug = true;
 			break;
+		case DIK_S:
+			mario->Spin();
+			break;
 		}
 	}
 }
@@ -207,6 +210,9 @@ void LoadResources()
 	sprites->Add(10058, 5, 634, 21, 662, texMario);			// driff fire left
 	sprites->Add(10059, 91, 714, 115, 742, texMario);		// fly raccoon left
 	sprites->Add(10060, 61, 714, 85, 742, texMario);
+
+	sprites->Add(10035, 215, 634, 231, 662, texMario);		// spin raccoon
+	sprites->Add(10036, 215, 674, 231, 702, texMario);
 
 	// fire
 	sprites->Add(10061, 245, 394, 261, 421, texMario);		// idle fire right
@@ -425,6 +431,18 @@ void LoadResources()
 	ani->Add(10060);
 	animations->Add(631, ani);
 
+	ani = new CAnimation(100);		// spin raccoon right
+	ani->Add(10035);
+	ani->Add(10051);
+	ani->Add(10036);
+	animations->Add(640, ani);
+
+	ani = new CAnimation(100);		// spin raccoon left
+	ani->Add(10035);
+	ani->Add(10041);
+	ani->Add(10036);
+	animations->Add(641, ani);
+
 	
 
 	mario = new CMario();
@@ -461,6 +479,8 @@ void LoadResources()
 	mario->AddAnimation(623);		// raccoon driff left
 	mario->AddAnimation(630);		// raccoon fly right
 	mario->AddAnimation(631);		// raccoon fly left
+	mario->AddAnimation(640);		// raccoon spin right
+	mario->AddAnimation(641);		// raccoon spin left
 
 	mario->AddAnimation(406);		// fire idle right 
 	mario->AddAnimation(407);		// fire idle left

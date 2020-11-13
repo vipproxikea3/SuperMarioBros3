@@ -45,6 +45,13 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (hugging)
 		UpdateHuggingShellPosition();
 
+	// Stop spingning
+	if (GetTickCount() - spin_start >= MARIO_SPIN_TIME && spinning) {
+		spinning = false;
+		this->SetState(MARIO_STATE_IDLE);
+		spin_start = NULL;
+	}
+
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 
@@ -157,23 +164,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						{
 							if (goomba->GetState() != GOOMBA_STATE_DIE)
 							{
-								switch (level) {
-								case MARIO_LEVEL_SMALL:
-									SetState(MARIO_STATE_DIE);
-									break;
-								case MARIO_LEVEL_BIG:
-									SetLevel(MARIO_LEVEL_SMALL);
-									StartUntouchable();
-									break;
-								case MARIO_LEVEL_RACCOON:
-									SetLevel(MARIO_LEVEL_BIG);
-									StartUntouchable();
-									break;
-								case MARIO_LEVEL_FIRE:
-									SetLevel(MARIO_LEVEL_RACCOON);
-									StartUntouchable();
-									break;
-								}
+								lvlDown();
 							}
 						}
 					}
@@ -182,27 +173,26 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (e->nx != 0) {
 					vx = 0;
 					x = x0 + min_tx * dx + e->nx * 0.4f;
-					if (untouchable == 0)
+
+					// raccoon spin
+					if (spinning) {
+						if (e->nx * this->nx < 0) {
+							if (goomba->GetState() != GOOMBA_STATE_DIE)
+							{
+								goomba->SetState(GOOMBA_STATE_DIE);
+							}
+						}
+						else {
+							if (goomba->GetState() != GOOMBA_STATE_DIE)
+							{
+								lvlDown();
+							}
+						}
+					} else if (untouchable == 0)
 					{
 						if (goomba->GetState() != GOOMBA_STATE_DIE)
 						{
-							switch (level) {
-							case MARIO_LEVEL_SMALL:
-								SetState(MARIO_STATE_DIE);
-								break;
-							case MARIO_LEVEL_BIG:
-								SetLevel(MARIO_LEVEL_SMALL);
-								StartUntouchable();
-								break;
-							case MARIO_LEVEL_RACCOON:
-								SetLevel(MARIO_LEVEL_BIG);
-								StartUntouchable();
-								break;
-							case MARIO_LEVEL_FIRE:
-								SetLevel(MARIO_LEVEL_RACCOON);
-								StartUntouchable();
-								break;
-							}
+							lvlDown();
 						}
 					}
 				}
@@ -231,23 +221,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						{
 							if (koopa->GetState() != KOOPA_STATE_DIE)
 							{
-								switch (level) {
-								case MARIO_LEVEL_SMALL:
-									SetState(MARIO_STATE_DIE);
-									break;
-								case MARIO_LEVEL_BIG:
-									SetLevel(MARIO_LEVEL_SMALL);
-									StartUntouchable();
-									break;
-								case MARIO_LEVEL_RACCOON:
-									SetLevel(MARIO_LEVEL_BIG);
-									StartUntouchable();
-									break;
-								case MARIO_LEVEL_FIRE:
-									SetLevel(MARIO_LEVEL_RACCOON);
-									StartUntouchable();
-									break;
-								}
+								lvlDown();
 							}
 						}
 					}
@@ -256,27 +230,27 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (e->nx != 0) {
 					vx = 0;
 					x = x0 + min_tx * dx + e->nx * 0.4f;
-					if (untouchable == 0)
+					// raccoon spin
+					if (spinning) {
+						if (e->nx * this->nx < 0) {
+							if (koopa->GetState() != KOOPA_STATE_DIE)
+							{
+								koopa->SetState(KOOPA_STATE_DIE);
+								koopa->showShell();
+							}
+						}
+						else {
+							if (koopa->GetState() != KOOPA_STATE_DIE)
+							{
+								lvlDown();
+							}
+						}
+					}
+					else if (untouchable == 0)
 					{
 						if (koopa->GetState() != KOOPA_STATE_DIE)
 						{
-							switch (level) {
-							case MARIO_LEVEL_SMALL:
-								SetState(MARIO_STATE_DIE);
-								break;
-							case MARIO_LEVEL_BIG:
-								SetLevel(MARIO_LEVEL_SMALL);
-								StartUntouchable();
-								break;
-							case MARIO_LEVEL_RACCOON:
-								SetLevel(MARIO_LEVEL_BIG);
-								StartUntouchable();
-								break;
-							case MARIO_LEVEL_FIRE:
-								SetLevel(MARIO_LEVEL_RACCOON);
-								StartUntouchable();
-								break;
-							}
+							lvlDown();
 						}
 					}
 				}
@@ -325,23 +299,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						shell->SetSpeed(0, 0);
 					} else if (untouchable == 0)
 					{
-						switch (level) {
-						case MARIO_LEVEL_SMALL:
-							SetState(MARIO_STATE_DIE);
-							break;
-						case MARIO_LEVEL_BIG:
-							SetLevel(MARIO_LEVEL_SMALL);
-							StartUntouchable();
-							break;
-						case MARIO_LEVEL_RACCOON:
-							SetLevel(MARIO_LEVEL_BIG);
-							StartUntouchable();
-							break;
-						case MARIO_LEVEL_FIRE:
-							SetLevel(MARIO_LEVEL_RACCOON);
-							StartUntouchable();
-							break;
-						}
+						lvlDown();
 					}
 					break;
 				}
@@ -422,6 +380,7 @@ void CMario::UpdateHuggingShellPosition() {
 }
 
 void CMario::StopHug() {
+	this->isReadyHug = false;
 	if (!hugging) return;
 	if (nx > 0) {
 		huggingShell->SetState(SHELL_STATE_WALKING);
@@ -435,7 +394,6 @@ void CMario::StopHug() {
 	}
 
 	this->hugging = false;
-	this->isReadyHug = false;
 	this->huggingShell = NULL;
 }
 
@@ -451,6 +409,34 @@ void CMario::LvlUp() {
 	case MARIO_LEVEL_RACCOON:
 		this->SetLevel(MARIO_LEVEL_FIRE);
 		break;
+	}
+}
+
+void CMario::lvlDown() {
+	switch (level) {
+	case MARIO_LEVEL_SMALL:
+		SetState(MARIO_STATE_DIE);
+		break;
+	case MARIO_LEVEL_BIG:
+		SetLevel(MARIO_LEVEL_SMALL);
+		StartUntouchable();
+		break;
+	case MARIO_LEVEL_RACCOON:
+		SetLevel(MARIO_LEVEL_BIG);
+		StartUntouchable();
+		break;
+	case MARIO_LEVEL_FIRE:
+		SetLevel(MARIO_LEVEL_RACCOON);
+		StartUntouchable();
+		break;
+	}
+}
+
+void CMario::Spin() {
+	if (level == MARIO_LEVEL_RACCOON && GetTickCount() - last_spin > MARIO_SPIN_TIME) {
+		spinning = true;
+		spin_start = GetTickCount();
+		last_spin = GetTickCount();
 	}
 }
 
@@ -611,6 +597,13 @@ void CMario::Render()
 					ani = MARIO_ANI_RACCOON_FLY_LEFT;
 			}
 
+			if (spinning) {
+				if (nx > 0)
+					ani = MARIO_ANI_RACCOON_SPIN_RIGHT;
+				else
+					ani = MARIO_ANI_RACCOON_SPIN_LEFT;
+			}
+
 			break;
 		case MARIO_LEVEL_FIRE:
 			if (vy < 0) {
@@ -747,7 +740,6 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 				left = x + 9.0f;
 			right = left + MARIO_RACCOON_BBOX_WIDTH;
 		}
-
 		break;
 	case MARIO_LEVEL_FIRE:
 		right = x + MARIO_FIRE_BBOX_WIDTH;
