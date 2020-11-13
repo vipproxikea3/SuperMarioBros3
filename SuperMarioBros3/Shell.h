@@ -6,9 +6,11 @@
 
 #define SHELL_STATE_IDLE				0
 #define SHELL_STATE_WALKING				100
+#define SHELL_STATE_BEHUG				200
 
 #define SHELL_ANI_IDLE					0
-#define SHELL_ANI_SMALL_WALKING			1
+#define SHELL_ANI_WALKING				1
+#define SHELL_ANI_BEHUG					2
 
 #define SHELL_SMALL_BBOX_WIDTH			16
 #define SHELL_SMALL_BBOX_HEIGHT			16
@@ -20,6 +22,7 @@ public:
 	{
 		this->SetState(SHELL_STATE_IDLE);
 	}
+	bool isHugging = false;
 	void BasicCollision(float min_tx, float min_ty, float nx, float ny, float x0, float y0);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();

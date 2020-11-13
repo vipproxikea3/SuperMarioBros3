@@ -80,6 +80,9 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		case DIK_X:
 			mario->Fly();
 			break;
+		case DIK_C:
+			mario->isReadyHug = true;
+			break;
 		}
 	}
 }
@@ -93,6 +96,9 @@ void CSampleKeyHander::OnKeyUp(int KeyCode)
 		case DIK_X:
 			mario->SetStopFly();
 			mario->SetStopFall();
+			break;
+		case DIK_C:
+			mario->isReadyHug = false;
 			break;
 		}
 	}
@@ -498,10 +504,11 @@ void LoadResources()
 
 	// LOAD SHELL
 	LPDIRECT3DTEXTURE9 texEnemy_2 = textures->Get(ID_TEX_ENEMY_2);
-	sprites->Add(20001, 239, 202, 255, 218, texEnemy_2);
-	sprites->Add(20002, 256, 202, 272, 218, texEnemy_2);
+	sprites->Add(20001, 239, 202, 255, 218, texEnemy_2); // idle
+	sprites->Add(20002, 256, 202, 272, 218, texEnemy_2); // walking
 	sprites->Add(20003, 273, 202, 289, 218, texEnemy_2);
 	sprites->Add(20004, 290, 202, 306, 218, texEnemy_2);
+	sprites->Add(20005, 152, 202, 168, 218, texEnemy_2); // beHug
 
 	ani = new CAnimation(1000);	// shell idle
 	ani->Add(20001);
@@ -514,9 +521,14 @@ void LoadResources()
 	ani->Add(20004);
 	animations->Add(202, ani);
 
+	ani = new CAnimation(1000);	// shell beHug
+	ani->Add(20005);
+	animations->Add(203, ani);
+
 	shell = new CShell();
 	shell->AddAnimation(201);	// shell idle
 	shell->AddAnimation(202);	// shell walking
+	shell->AddAnimation(203);	// shell beHug
 	shell->SetPosition(575, 360);
 	objects.push_back(shell);
 

@@ -1,6 +1,6 @@
 #pragma once
 #include "GameObject.h"
-#include "MarioFireBullet.h"
+#include "Shell.h"
 #include "MarioFireBullet.h"
 
 #define MARIO_WALKING_SPEED_BASE		0.05f
@@ -101,6 +101,7 @@ class CMario : public CGameObject
 
 	bool flyIng = false;
 	bool fallIng = false;
+	DWORD fly_start;
 
 	int level;
 
@@ -108,10 +109,11 @@ class CMario : public CGameObject
 	vector<LPGAMEOBJECT> bullets;
 	DWORD lastShotTime;
 
-	int untouchable;
-	DWORD untouchable_start;
+	CShell* huggingShell;
+	bool hugging = false;
 
-	DWORD fly_start;
+	int untouchable;
+	DWORD untouchable_start;	
 public:
 	CMario() : CGameObject()
 	{
@@ -121,6 +123,7 @@ public:
 	}
 	void CalVx(DWORD dt);
 	bool canJump = 0;
+	bool isReadyHug = false;
 	void LvlUp();
 	void Shot();
 	void Fly();

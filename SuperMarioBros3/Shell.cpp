@@ -38,7 +38,7 @@ void CShell::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		x = x0 + dx;
 		y = y0 + dy;
 
-		if (!this->isDisable)
+		if (!this->isDisable && !this->isHugging)
 			for (UINT i = 0; i < coEventsResult.size(); i++)
 			{
 				LPCOLLISIONEVENT e = coEventsResult[i];
@@ -126,10 +126,18 @@ void CShell::BasicCollision(float min_tx, float min_ty, float nx, float ny, floa
 void CShell::Render()
 {
 	int ani;
-	ani = SHELL_ANI_IDLE;
 
-	if (this->GetState() != SHELL_ANI_IDLE)
-		ani = SHELL_ANI_SMALL_WALKING;
+	switch (this->GetState()) {
+	case SHELL_STATE_IDLE:
+		ani = SHELL_ANI_IDLE;
+		break;
+	case SHELL_STATE_WALKING:
+		ani = SHELL_ANI_WALKING;
+		break;
+	case SHELL_STATE_BEHUG:
+		ani = SHELL_ANI_BEHUG;
+		break;
+	}
 
 	int alpha = 255;
 	animations[ani]->Render(x, y, alpha);
@@ -149,6 +157,10 @@ void CShell::SetState(int state)
 		vy = 0;
 		nx = 1;
 		vx = SHELL_WALKING_SPEED;
+		break;
+	case SHELL_STATE_BEHUG:
+		vx = 0;
+		vy = 0;
 		break;
 	}
 }

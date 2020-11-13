@@ -127,6 +127,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (e->ny == 1 && block->isBlockBottom()) {
 					this->vy = 0;
 					this->y = y0 + min_ty * this->dy + ny * 0.4f;
+
+					flyIng = false;
 				}
 			}
 			
@@ -146,6 +148,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 					else {
+						flyIng = false;
 						if (untouchable == 0)
 						{
 							if (goomba->GetState() != GOOMBA_STATE_DIE)
@@ -219,6 +222,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 					else {
+						flyIng = false;
 						if (untouchable == 0)
 						{
 							if (koopa->GetState() != KOOPA_STATE_DIE)
@@ -280,7 +284,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				switch (shell->GetState()) {
 				case SHELL_STATE_IDLE:
 					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
-					
 					if (e->nx != 0) {
 						if (e->nx < 0) {
 							shell->SetState(SHELL_STATE_WALKING);
@@ -348,6 +351,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 				if (e->ny == 1 && brickReward->GetState() == BRICKREWARD_STATE_IDLE) {
 					brickReward->SetState(BRICKREWARD_STATE_JUMP);
+					flyIng = false;
 				}
 			}
 
