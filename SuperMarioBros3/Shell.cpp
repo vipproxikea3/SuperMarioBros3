@@ -102,7 +102,7 @@ void CShell::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	game->GetCamPos(cx, cy);
 	float screenWidth = game->GetScreenWidth();
 
-	if (this->x < cx || this->x > cx + screenWidth) {
+	if (this->x < cx - 50.0f || this->x > cx + screenWidth + 50.0f) {
 		this->isDisable = true;
 	}
 

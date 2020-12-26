@@ -421,12 +421,12 @@ void LoadResources()
 	ani->Add(10078);
 	animations->Add(625, ani);
 
-	ani = new CAnimation(100);		// fly raccoon right
+	ani = new CAnimation(50);		// fly raccoon right
 	ani->Add(10049);
 	ani->Add(10050);
 	animations->Add(630, ani);
 
-	ani = new CAnimation(100);		// fly raccoon left
+	ani = new CAnimation(50);		// fly raccoon left
 	ani->Add(10059);
 	ani->Add(10060);
 	animations->Add(631, ani);
