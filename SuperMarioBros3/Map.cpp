@@ -3,7 +3,7 @@
 #include "Textures.h"
 #include "Game.h"
 
-Map::Map(int TotalRowsOfMap, int TotalColumnsOfMap, int TotalRowsOfTileSet, int TotalColumnsOfTileSet, int TileSetID, LPCWSTR mapMatrixPath) {
+Map::Map(int TotalRowsOfMap, int TotalColumnsOfMap, int TotalRowsOfTileSet, int TotalColumnsOfTileSet, int TileSetID, wstring mapMatrixPath) {
 	this->TotalRowsOfTileSet = TotalRowsOfTileSet;
 	this->TotalColumnsOfTileSet = TotalColumnsOfTileSet;
 	this->TotalRowsOfMap = TotalRowsOfMap;
@@ -12,7 +12,7 @@ Map::Map(int TotalRowsOfMap, int TotalColumnsOfMap, int TotalRowsOfTileSet, int 
 	LoadMapMatrix(mapMatrixPath);
 }
 
-void Map::LoadMapMatrix(LPCWSTR path) {
+void Map::LoadMapMatrix(wstring path) {
 	fstream inputfile;
 	inputfile.open(path, ios::in);
 	int tmp;
@@ -82,4 +82,9 @@ void Map::Render() {
 		if (isDraw)
 			DrawTile(MapData[i], xOfTile, yOfTile);
 	}
+}
+
+Map::~Map()
+{
+
 }

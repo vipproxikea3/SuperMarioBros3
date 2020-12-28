@@ -1,8 +1,8 @@
 #include "Block.h"
 
-CBlock::CBlock(int idSprite) {
-	this->idSprite = idSprite;
-	SetBlockSideByIdSprite(this->idSprite);
+CBlock::CBlock(int typeBlock) {
+	this->typeBlock = typeBlock;
+	SetBlockSideByTypeBlock(this->typeBlock);
 }
 
 void CBlock::SetBlockSide(bool bL, bool bT, bool bR, bool bB) {
@@ -12,8 +12,8 @@ void CBlock::SetBlockSide(bool bL, bool bT, bool bR, bool bB) {
 	this->bB = bB;
 }
 
-void CBlock::SetBlockSideByIdSprite(int idSprite) {
-	switch (idSprite)
+void CBlock::SetBlockSideByTypeBlock(int typeBlock) {
+	switch (typeBlock)
 	{
 	case 0:
 		SetBlockSide(1, 1, 0, 1);
@@ -86,7 +86,7 @@ CBlock::~CBlock() {}
 void CBlock::Render()
 {
 	CSprites* sprites = CSprites::GetInstance();
-	sprites->Get(idSprite)->Draw(x, y);
+	animation_set->at(typeBlock)->Render(x, y, 255);
 }
 
 void CBlock::GetBoundingBox(float& l, float& t, float& r, float& b)

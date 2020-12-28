@@ -1,0 +1,4 @@
+[SETTINGS]
+start	3
+[SCENES]
+3	scene\scene-1-1.txt

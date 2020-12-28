@@ -24,7 +24,7 @@ void CCoin::Render()
 	ani = COIN_ANI_IDLE;
 
 	int alpha = 255;
-	animations[ani]->Render(x, y, alpha);
+	animation_set->at(ani)->Render(x, y, alpha);
 }
 
 void CCoin::SetState(int state)

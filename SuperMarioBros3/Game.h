@@ -6,22 +6,15 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 
+
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 
-#define KEYBOARD_BUFFER_SIZE 1024
-/*
-Abstract class to define keyboard event handlers
-*/
-class CKeyEventHandler
-{
-public:
-	virtual void KeyState(BYTE* state) = 0;
-	virtual void OnKeyDown(int KeyCode) = 0;
-	virtual void OnKeyUp(int KeyCode) = 0;
-};
+#include "Scene.h"
 
-typedef CKeyEventHandler* LPKEYEVENTHANDLER;
+using namespace std;
+
+#define KEYBOARD_BUFFER_SIZE 1024
 
 class CGame
 {
@@ -48,13 +41,24 @@ class CGame
 	int screen_width;
 	int screen_height;
 
+	unordered_map<int, LPSCENE> scenes;
+	int current_scene;
+
+	void _ParseSection_SETTINGS(string line);
+	void _ParseSection_SCENES(string line);
+
 public:
-	void InitKeyboard(LPKEYEVENTHANDLER handler);
+	void InitKeyboard();
+	void SetKeyHandler(LPKEYEVENTHANDLER handler) { keyHandler = handler; }
 	void Init(HWND hWnd);
 	void Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha = 255);
 
 	int IsKeyDown(int KeyCode);
 	void ProcessKeyboard();
+
+	void Load(LPCWSTR gameFile);
+	LPSCENE GetCurrentScene() { return scenes[current_scene]; }
+	void SwitchScene(int scene_id);
 
 	int GetScreenWidth() { return screen_width; }
 	int GetScreenHeight() { return screen_height; }
@@ -79,9 +83,11 @@ public:
 	LPD3DXSPRITE GetSpriteHandler() { return this->spriteHandler; }
 
 	void SetCamPos(float x, float y) { cam_x = x; cam_y = y; }
-	void GetCamPos(float &x, float &y) { x = this->cam_x; y = this->cam_y; }
+	void GetCamPos(float& x, float& y) { x = this->cam_x; y = this->cam_y; }
 
 	static CGame* GetInstance();
 
 	~CGame();
 };
+
+

@@ -143,39 +143,47 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Animations.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="BrickReward.h" />
     <ClInclude Include="Coin.h" />
-    <ClInclude Include="debug.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Goomba.h" />
+    <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Koopa.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Mario.h" />
     <ClInclude Include="MarioFireBullet.h" />
+    <ClInclude Include="PlayScene.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="Shell.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="SuperMushroom.h" />
     <ClInclude Include="Textures.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Animations.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BrickReward.cpp" />
     <ClCompile Include="Coin.cpp" />
-    <ClCompile Include="debug.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Goomba.cpp" />
+    <ClCompile Include="KeyEventHandler.cpp" />
     <ClCompile Include="Koopa.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="MarioFireBullet.cpp" />
+    <ClCompile Include="PlayScene.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shell.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="SuperMushroom.cpp" />
     <ClCompile Include="Textures.cpp" />
+    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

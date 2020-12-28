@@ -16,9 +16,9 @@ class Map
 	vector<int> MapData;
 
 public:
-	Map(int TotalRowsOfMap, int TotalColumnsOfMap, int TotalRowsOfTileSet, int TotalColumnsOfTileSet, int TileSetID, LPCWSTR mapMatrixPath);
+	Map(int TotalRowsOfMap, int TotalColumnsOfMap, int TotalRowsOfTileSet, int TotalColumnsOfTileSet, int TileSetID, wstring mapMatrixPath);
 	~Map();
-	void LoadMapMatrix(LPCWSTR mapMatrixPath);
+	void LoadMapMatrix(wstring mapMatrixPath);
 	void DrawTile(int idOfTile, float x, float y);
 	float getMapWidth();
 	float getMapHeight();

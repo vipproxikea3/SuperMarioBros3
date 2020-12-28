@@ -59,7 +59,7 @@ void CBrickReward::Render()
 		ani = BRICKREWARD_ANI_ACTIVED;
 
 	int alpha = 255;
-	animations[ani]->Render(x, y, alpha);
+	animation_set->at(ani)->Render(x, y, alpha);
 }
 
 void CBrickReward::SetState(int state)

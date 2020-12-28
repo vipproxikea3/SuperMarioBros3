@@ -1,5 +1,5 @@
 #include <algorithm>
-#include "debug.h"
+#include "Utils.h"
 
 #include "Mario.h"
 #include "Game.h"
@@ -95,8 +95,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	else
 	{
 		float min_tx, min_ty, nx = 0, ny;
+		float rdx = 0;
+		float rdy = 0;
 
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
 		float x0 = x;
 		float y0 = y;
@@ -444,8 +446,8 @@ void CMario::Shot() {
 	if (GetTickCount() - lastShotTime >= MARIO_SHOT_COOLDOWN_TIME && this->level == MARIO_LEVEL_FIRE) {
 		lastShotTime = GetTickCount();
 		bullet = new CMarioFireBullet();
-		bullet->AddAnimation(1000);
-		bullet->AddAnimation(1001);
+		CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+		bullet->SetAnimationSet(animation_sets->Get(MARIO_FIRE_BULLET_ANI_SET_ID));
 		if (nx > 0) {
 			bullet->SetPosition(this->x + 7.0f, this->y + 5.0f);
 			bullet->SetState(BULLET_STATE_WALKING_RIGHT);
@@ -645,7 +647,7 @@ void CMario::Render()
 
 	int alpha = 255;
 	if (untouchable) alpha = 128;
-	animations[ani]->Render(x, y, alpha);
+	animation_set->at(ani)->Render(x, y, alpha);
 }
 
 void CMario::SetState(int state)

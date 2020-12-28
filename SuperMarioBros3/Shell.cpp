@@ -29,8 +29,10 @@ void CShell::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	else
 	{
 		float min_tx, min_ty, nx = 0, ny;
+		float rdx = 0;
+		float rdy = 0;
 
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
 		float x0 = x;
 		float y0 = y;
@@ -141,7 +143,7 @@ void CShell::Render()
 	}
 
 	int alpha = 255;
-	animations[ani]->Render(x, y, alpha);
+	animation_set->at(ani)->Render(x, y, alpha);
 }
 
 void CShell::SetState(int state)
