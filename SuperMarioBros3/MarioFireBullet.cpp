@@ -114,6 +114,30 @@ void CMarioFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 
 				}
+
+				if (dynamic_cast<CParaKoopa*>(e->obj))
+				{
+					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+					this->isDisable = true;
+					CParaKoopa* paraKoopa = dynamic_cast<CParaKoopa*>(e->obj);
+					if (paraKoopa->GetLevel() != PARAKOOPA_LEVEL_SHELL) {
+						paraKoopa->lvlDown();
+					}
+					else {
+						if (paraKoopa->GetState() == PARAKOOPA_SHELL_STATE_IDLE) {
+							if (e->nx != 0) {
+								if (e->nx < 0) {
+									paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING);
+									paraKoopa->SetSpeed(PARAKOOPA_SHELL_WALKING_SPEED, 0);
+								}
+								else {
+									paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING);
+									paraKoopa->SetSpeed(-PARAKOOPA_SHELL_WALKING_SPEED, 0);
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 

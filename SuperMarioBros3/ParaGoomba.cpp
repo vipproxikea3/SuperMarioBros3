@@ -131,6 +131,7 @@ void CParaGoomba::ReSet() {
 		this->SetPosition(this->x_start, this->y_start);
 		this->SetState(PARAGOOMBA_STATE_WALKING);
 		this->SetLevel(PARAGOOMBA_LEVEL_WING);
+		last_jump = GetTickCount64();
 	}
 	if (!game->IsInCamera(this->x_start, this->y_start, this->x_start + r - l, this->y_start + b - t)) {
 		if (this->isDisable) {

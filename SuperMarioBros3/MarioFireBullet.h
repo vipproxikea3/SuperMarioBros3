@@ -2,6 +2,7 @@
 #pragma once
 #include "GameObject.h"
 #include "ParaGoomba.h"
+#include "ParaKoopa.h"
 
 #define BULLET_WALKING_SPEED			0.15f
 #define BULLET_GRAVITY					0.0005f

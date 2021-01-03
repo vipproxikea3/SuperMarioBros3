@@ -9,6 +9,7 @@
 #include "Goomba.h"
 #include "Koopa.h"
 #include "ParaGoomba.h"
+#include "ParaKoopa.h"
 
 
 class CPlayScene : public CScene

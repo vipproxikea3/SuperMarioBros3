@@ -255,7 +255,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 
-			// KOOMBA
+			// KOOPA
 			if (dynamic_cast<CKoopa*>(e->obj))
 			{
 				CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
@@ -334,6 +334,95 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						if (e->ny == -1) {
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
 							koopa->SetState(SHELL_STATE_IDLE);
+						}
+						else if (untouchable == 0)
+						{
+							lvlDown();
+						}
+						break;
+					}
+				}
+			}
+
+			// PARAKOOPA
+			if (dynamic_cast<CParaKoopa*>(e->obj))
+			{
+				CParaKoopa* paraKoopa = dynamic_cast<CParaKoopa*>(e->obj);
+
+				if (paraKoopa->GetLevel() == PARAKOOPA_LEVEL_KOOPA || paraKoopa->GetLevel() == PARAKOOPA_LEVEL_WING) {
+					if (e->ny != 0) {
+						vy = 0;
+						if (e->ny < 0)
+						{
+							y = y0 + min_ty * dy + e->ny * 0.4f;
+							paraKoopa->lvlDown();
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+						}
+						else {
+							flyIng = false;
+							if (untouchable == 0)
+							{
+								lvlDown();
+							}
+						}
+					}
+
+					if (e->nx != 0) {
+						vx = 0;
+						x = x0 + min_tx * dx + e->nx * 0.4f;
+						// raccoon spin
+						if (spinning) {
+							if (e->nx * this->nx < 0) {
+								paraKoopa->lvlDown();
+							}
+							else {
+								lvlDown();
+							}
+						}
+						else if (untouchable == 0)
+						{
+							lvlDown();
+						}
+					}
+				}
+				else {
+					switch (paraKoopa->GetState()) {
+					case PARAKOOPA_SHELL_STATE_IDLE:
+						BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+						if (e->nx != 0) {
+							if (isReadyHug) {
+								huggingShell = paraKoopa;
+								paraKoopa->SetState(PARAKOOPA_SHELL_STATE_BEHUG);
+								hugging = true;
+								isReadyHug = false;
+							}
+							else {
+								if (e->nx < 0) {
+									paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING);
+									paraKoopa->SetSpeed(PARAKOOPA_SHELL_WALKING_SPEED, 0);
+								}
+								else {
+									paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING);
+									paraKoopa->SetSpeed(-PARAKOOPA_SHELL_WALKING_SPEED, 0);
+								}
+							}
+						}
+						if (e->ny == -1) {
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							if (this->x < paraKoopa->x + (PARAKOOPA_SHELL_BBOX_WIDTH / 2)) {
+								paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING);
+								paraKoopa->SetSpeed(PARAKOOPA_SHELL_WALKING_SPEED, 0);
+							}
+							else {
+								paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING);
+								paraKoopa->SetSpeed(-PARAKOOPA_SHELL_WALKING_SPEED, 0);
+							}
+						}
+						break;
+					case PARAKOOPA_SHELL_STATE_WALKING:
+						if (e->ny == -1) {
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							paraKoopa->SetState(PARAKOOPA_SHELL_STATE_IDLE);
 						}
 						else if (untouchable == 0)
 						{

@@ -34,6 +34,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_GOOMBA		2
 #define OBJECT_TYPE_KOOPA		3
 #define OBJECT_TYPE_PARAGOOMBA	4
+#define OBJECT_TYPE_PARAKOOPA	5
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -198,6 +199,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float limitL = atoi(tokens[4].c_str());
 		float limitR = atoi(tokens[5].c_str());
 		obj = new CParaGoomba(limitL, limitR);
+		break;
+	}
+	case OBJECT_TYPE_PARAKOOPA:
+	{
+		float limitL = atoi(tokens[4].c_str());
+		float limitR = atoi(tokens[5].c_str());
+		obj = new CParaKoopa(limitL, limitR);
 		break;
 	}
 	/*case OBJECT_TYPE_PORTAL:

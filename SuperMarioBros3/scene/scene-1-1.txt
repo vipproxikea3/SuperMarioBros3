@@ -339,6 +339,28 @@
 # goomba die x
 703	30004	100
 
+# PARAGOOMBA
+
+# paragoomba walking
+1100	100000	100	100001	100
+
+# paragoomba die x
+1101	100002	100
+
+# paragoomba die y
+1102	100003	100
+# paragoomba wing right walking
+1103	100004	100
+
+# paragoomba wing right jump
+1104	100004	50	100005	50
+
+# paragoomba wing left walking
+1105	100006	100
+
+# paragoomba wing left jump
+1106	100006	50	100007	50
+
 # KOOPA
 
 # koopa walking right
@@ -355,6 +377,35 @@
 
 # shell be hug
 203	20005	100
+
+# PARAKOOPA
+
+# paraKoopa walking right
+1200	70001	100	70002	100
+
+# paraKoopa walking left
+1201	70003	100	70004	100
+
+# paraKoopa shell idle
+1202	20001	100
+
+# paraKoopa shell walking
+1203	20001	100	20002	100	20003	100	20004	100
+
+# paraKoopa shell be hug
+1204	20005	100
+
+# paraKoopa wing right walking
+1205	100004	100
+
+# paraKoopa wing right jump
+1206	100004	50	100005	50
+
+# paraKoopa wing left walking
+1207	100006	100
+
+# paraKoopa wing left jump
+1208	100006	50	100007	50
 
 # BLOCK
 
@@ -408,31 +459,9 @@
 # white block right
 20	20	100
 
-# PARAGOOMBA
-
-# paragoomba walking
-1100	100000	100	100001	100
-
-# paragoomba die x
-1101	100002	100
-
-# paragoomba die y
-1102	100003	100
-# paragoomba wing right walking
-1103	100004	100
-
-# paragoomba wing right jump
-1104	100004	50	100005	50
-
-# paragoomba wing left walking
-1105	100006	100
-
-# paragoomba wing left jump
-1106	100006	50	100007	50
-
 [ANIMATION_SETS]
 # ani_set_id    ani_1   ani_2   ani_3   ...
-# 1 = Mario | 2 = Block | 3 = MarioFireBullet | 4 = Goomba | 5 = Koopa | 6 = ParaGoomba
+# 1 = Mario | 2 = Block | 3 = MarioFireBullet | 4 = Goomba | 5 = Koopa | 6 = ParaGoomba | 7 = ParaKoopa
 
 # MARIO
 1	599	402	403	502	503	602	603	400	401	500	501	600	601	610	611	620	621	404	405	504	505	604	605	612	613	622	623	630	631	640	641	406	407	506	507	606	607	614	615	624	625
@@ -451,9 +480,12 @@
 # PARAGOOMBA
 6	1100	1101	1102	1103	1104	1105	1106
 
+# PARAKOOPA
+7	1200	1201	1202	1203	1204	1205	1206	1207	1208
+
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings
-# type: 0 = Mario | 1 = Block | 2 = Goomba | 3 = Koopa | 4 = ParaGoomba
+# type: 0 = Mario | 1 = Block | 2 = Goomba | 3 = Koopa | 4 = ParaGoomba | 5 = ParaKoopa
 
 # BLOCK
 # type	x	y	ani_set_id	typeBlock
@@ -851,6 +883,7 @@
 # type	x	y	ani_set_id	limitL	limitR
 
 3	577	357	5	512	607
+3	1472	389	5	1264	1503
 
 
 # PARAGOOMBA
@@ -858,5 +891,14 @@
 
 4	946	382	6	720	1087
 
+# PARAKOOPA
+# type	x	y	ani_set_id	limitL	limitR
+
+5	1423	290	7	1088	1503
+5	1376	290	7	1088	1503
+5	1328	290	7	1088	1503
+
+
 # MARIO
 0	16	385	1
+#0	1296	326	1

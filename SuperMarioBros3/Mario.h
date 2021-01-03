@@ -3,11 +3,14 @@
 #include "MarioFireBullet.h"
 #include "Koopa.h"
 #include "ParaGoomba.h"
+#include "ParaKoopa.h"
 
-#define MARIO_WALKING_SPEED_BASE		0.05f
+//#define MARIO_WALKING_SPEED_BASE		0.05f
+#define MARIO_WALKING_SPEED_BASE		0.0375f
 #define MARIO_WALKING_SPEED				0.1f
 #define MARIO_RUN_SPEED					0.15f
-#define MARIO_ACCELERATION				0.000075f
+//#define MARIO_ACCELERATION			0.000075f
+#define MARIO_ACCELERATION				0.00005f
 #define MARIO_WALKING_FRICTION			0.00025f
 
 #define MARIO_FLY_SPEED					0.1f
@@ -118,7 +121,7 @@ class CMario : public CGameObject
 	vector<LPGAMEOBJECT> bullets;
 	DWORD lastShotTime;
 
-	CKoopa* huggingShell;
+	CGameObject* huggingShell;
 	bool hugging = false;
 
 	int untouchable;

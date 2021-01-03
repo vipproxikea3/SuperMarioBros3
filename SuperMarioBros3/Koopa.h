@@ -26,7 +26,7 @@
 #define SHELL_BBOX_WIDTH				16
 #define SHELL_BBOX_HEIGHT				16
 
-#define SHELL_TIME 10000
+#define SHELL_TIME 5000
 
 class CKoopa : public CGameObject
 {
