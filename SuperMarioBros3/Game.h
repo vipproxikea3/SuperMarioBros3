@@ -60,8 +60,8 @@ public:
 	LPSCENE GetCurrentScene() { return scenes[current_scene]; }
 	void SwitchScene(int scene_id);
 
-	int GetScreenWidth() { return screen_width; }
-	int GetScreenHeight() { return screen_height; }
+	float GetScreenWidth() { return screen_width; }
+	float GetScreenHeight() { return screen_height; }
 
 	static void SweptAABB(
 		float ml,			// move left 
@@ -82,8 +82,25 @@ public:
 	LPDIRECT3DSURFACE9 GetBackBuffer() { return backBuffer; }
 	LPD3DXSPRITE GetSpriteHandler() { return this->spriteHandler; }
 
-	void SetCamPos(float x, float y) { cam_x = x; cam_y = y; }
+	void SetCamPos(float x, float y)
+	{
+		cam_x = round(x);
+		cam_y = round(y);
+	}
 	void GetCamPos(float& x, float& y) { x = this->cam_x; y = this->cam_y; }
+	bool IsInCamera(float l, float t, float r, float b) {
+		float camX, camY;
+		float screenWidth, screenHeight;
+		GetCamPos(camX, camY);
+		screenWidth = GetScreenWidth();
+		screenHeight = GetScreenHeight();
+
+		if (r < camX) return false;
+		if (l > camX + screenWidth) return false;
+		/*if (b < camY) return false;
+		if (t > camY + screenHeight) return false;*/
+		return true;
+	}
 
 	static CGame* GetInstance();
 

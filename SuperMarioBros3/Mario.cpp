@@ -8,7 +8,6 @@
 #include "Coin.h"
 #include "BrickReward.h"
 #include "SuperMushroom.h"
-#include "Shell.h"
 #include "Koopa.h"
 
 void CMario::CalVx(DWORD dt) {
@@ -149,22 +148,75 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (dynamic_cast<CGoomba*>(e->obj))
 			{
 				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+
 				if (e->ny != 0) {
-					vy = 0;
-					y = y0 + min_ty * dy + e->ny * 0.4f;
 					if (e->ny < 0)
 					{
-						if (goomba->GetState() != GOOMBA_STATE_DIE)
-						{
-							goomba->SetState(GOOMBA_STATE_DIE);
-							vy = -MARIO_JUMP_DEFLECT_SPEED;
-						}
+						vy = 0;
+						y = y0 + min_ty * dy + e->ny * 0.4f;
+						goomba->SetState(GOOMBA_STATE_DIE_Y);
+						vy = -MARIO_JUMP_DEFLECT_SPEED;
 					}
 					else {
 						flyIng = false;
 						if (untouchable == 0)
 						{
-							if (goomba->GetState() != GOOMBA_STATE_DIE)
+							if (goomba->GetState() != GOOMBA_STATE_DIE_Y && goomba->GetState() != GOOMBA_STATE_DIE_X)
+							{
+								lvlDown();
+							}
+						}
+					}
+				}
+
+				if (e->nx != 0) {
+					// raccoon spin
+					if (spinning) {
+						if (e->nx * this->nx < 0) {
+							vx = 0;
+							x = x0 + min_tx * dx + e->nx * 0.4f;
+							goomba->SetState(GOOMBA_STATE_DIE_X);
+						}
+						else {
+							if (goomba->GetState() != GOOMBA_STATE_DIE_Y && goomba->GetState() != GOOMBA_STATE_DIE_X)
+							{
+								lvlDown();
+							}
+						}
+					}
+					else if (untouchable == 0)
+					{
+						if (goomba->GetState() != GOOMBA_STATE_DIE_Y && goomba->GetState() != GOOMBA_STATE_DIE_X)
+						{
+							lvlDown();
+						}
+					}
+				}
+			}
+
+			// PARAGOOMBA
+			if (dynamic_cast<CParaGoomba*>(e->obj))
+			{
+				CParaGoomba* paraGoomba = dynamic_cast<CParaGoomba*>(e->obj);
+
+				if (e->ny != 0) {
+					vy = 0;
+					if (e->ny < 0)
+					{
+						y = y0 + min_ty * dy + e->ny * 0.4f;
+						if (paraGoomba->GetLevel() == PARAGOOMBA_LEVEL_WING) {
+							paraGoomba->SetLevel(PARAGOOMBA_LEVEL_GOOMBA);
+						}
+						else {
+							paraGoomba->SetState(PARAGOOMBA_STATE_DIE_Y);
+						}
+						vy = -MARIO_JUMP_DEFLECT_SPEED;
+					}
+					else {
+						flyIng = false;
+						if (untouchable == 0)
+						{
+							if (paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_Y && paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_X)
 							{
 								lvlDown();
 							}
@@ -179,20 +231,23 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					// raccoon spin
 					if (spinning) {
 						if (e->nx * this->nx < 0) {
-							if (goomba->GetState() != GOOMBA_STATE_DIE)
-							{
-								goomba->SetState(GOOMBA_STATE_DIE);
+							if (paraGoomba->GetLevel() == PARAGOOMBA_LEVEL_WING) {
+								paraGoomba->SetLevel(PARAGOOMBA_LEVEL_GOOMBA);
+							}
+							else {
+								paraGoomba->SetState(PARAGOOMBA_STATE_DIE_X);
 							}
 						}
 						else {
-							if (goomba->GetState() != GOOMBA_STATE_DIE)
+							if (paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_Y && paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_X)
 							{
 								lvlDown();
 							}
 						}
-					} else if (untouchable == 0)
+					}
+					else if (untouchable == 0)
 					{
-						if (goomba->GetState() != GOOMBA_STATE_DIE)
+						if (paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_Y && paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_X)
 						{
 							lvlDown();
 						}
@@ -204,109 +259,90 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (dynamic_cast<CKoopa*>(e->obj))
 			{
 				CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
-				//BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
-				if (e->ny != 0) {
-					vy = 0;
-					y = y0 + min_ty * dy + e->ny * 0.4f;
-					if (e->ny < 0)
-					{
-						if (koopa->GetState() != KOOPA_STATE_DIE)
+
+				if (koopa->GetLevel() == KOOPA_LEVEL_KOOPA) {
+					if (e->ny != 0) {
+						vy = 0;
+						y = y0 + min_ty * dy + e->ny * 0.4f;
+						if (e->ny < 0)
 						{
-							koopa->SetState(KOOPA_STATE_DIE);
-							koopa->showShell();
+							koopa->lvlDown();
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
 						}
-					}
-					else {
-						flyIng = false;
-						if (untouchable == 0)
-						{
-							if (koopa->GetState() != KOOPA_STATE_DIE)
-							{
-								lvlDown();
-							}
-						}
-					}
-				}
-
-				if (e->nx != 0) {
-					vx = 0;
-					x = x0 + min_tx * dx + e->nx * 0.4f;
-					// raccoon spin
-					if (spinning) {
-						if (e->nx * this->nx < 0) {
-							if (koopa->GetState() != KOOPA_STATE_DIE)
-							{
-								koopa->SetState(KOOPA_STATE_DIE);
-								koopa->showShell();
-							}
-						}
 						else {
-							if (koopa->GetState() != KOOPA_STATE_DIE)
+							flyIng = false;
+							if (untouchable == 0)
 							{
 								lvlDown();
 							}
 						}
 					}
-					else if (untouchable == 0)
-					{
-						if (koopa->GetState() != KOOPA_STATE_DIE)
+
+					if (e->nx != 0) {
+						vx = 0;
+						x = x0 + min_tx * dx + e->nx * 0.4f;
+						// raccoon spin
+						if (spinning) {
+							if (e->nx * this->nx < 0) {
+								koopa->lvlDown();
+							}
+							else {
+								lvlDown();
+							}
+						}
+						else if (untouchable == 0)
 						{
 							lvlDown();
 						}
 					}
 				}
-			}
-
-			// SHELL
-			if (dynamic_cast<CShell*>(e->obj)) {
-				CShell* shell = dynamic_cast<CShell*>(e->obj);
-				switch (shell->GetState()) {
-				case SHELL_STATE_IDLE:
-					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
-					if (e->nx != 0) {
-						if (isReadyHug) {
-							huggingShell = shell;
-							shell->SetState(SHELL_STATE_BEHUG);
-							hugging = true;
-							isReadyHug = false;
-						}
-						else {
-							if (e->nx < 0) {
-								shell->SetState(SHELL_STATE_WALKING);
-								shell->SetSpeed(SHELL_WALKING_SPEED, 0);
+				else {
+					switch (koopa->GetState()) {
+					case SHELL_STATE_IDLE:
+						BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+						if (e->nx != 0) {
+							if (isReadyHug) {
+								huggingShell = koopa;
+								koopa->SetState(SHELL_STATE_BEHUG);
+								hugging = true;
+								isReadyHug = false;
 							}
 							else {
-								shell->SetState(SHELL_STATE_WALKING);
-								shell->SetSpeed(-SHELL_WALKING_SPEED, 0);
+								if (e->nx < 0) {
+									koopa->SetState(SHELL_STATE_WALKING);
+									koopa->SetSpeed(SHELL_WALKING_SPEED, 0);
+								}
+								else {
+									koopa->SetState(SHELL_STATE_WALKING);
+									koopa->SetSpeed(-SHELL_WALKING_SPEED, 0);
+								}
 							}
 						}
-					}
-					if (e->ny == -1) {
-						vy = -MARIO_JUMP_DEFLECT_SPEED;
-						if (this->x < shell->x + (SHELL_SMALL_BBOX_WIDTH / 2)) {
-							shell->SetState(SHELL_STATE_WALKING);
-							shell->SetSpeed(SHELL_WALKING_SPEED, 0);
+						if (e->ny == -1) {
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							if (this->x < koopa->x + (SHELL_BBOX_WIDTH / 2)) {
+								koopa->SetState(SHELL_STATE_WALKING);
+								koopa->SetSpeed(SHELL_WALKING_SPEED, 0);
+							}
+							else {
+								koopa->SetState(SHELL_STATE_WALKING);
+								koopa->SetSpeed(-SHELL_WALKING_SPEED, 0);
+							}
 						}
-						else {
-							shell->SetState(SHELL_STATE_WALKING);
-							shell->SetSpeed(-SHELL_WALKING_SPEED, 0);
+						break;
+					case SHELL_STATE_WALKING:
+						if (e->ny == -1) {
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							koopa->SetState(SHELL_STATE_IDLE);
 						}
+						else if (untouchable == 0)
+						{
+							lvlDown();
+						}
+						break;
 					}
-					break;
-				case SHELL_STATE_WALKING:
-					if (e->ny == -1) {
-						vy = -MARIO_JUMP_DEFLECT_SPEED;
-						shell->SetState(SHELL_STATE_IDLE);
-						shell->SetSpeed(0, 0);
-					} else if (untouchable == 0)
-					{
-						lvlDown();
-					}
-					break;
 				}
 			}
-
 
 			// COIN
 			/*if (dynamic_cast<CCoin*>(e->obj)) {
@@ -387,12 +423,10 @@ void CMario::StopHug() {
 	if (nx > 0) {
 		huggingShell->SetState(SHELL_STATE_WALKING);
 		huggingShell->SetSpeed(SHELL_WALKING_SPEED, 0);
-		huggingShell->isHugging = false;
 	}
 	else {
 		huggingShell->SetState(SHELL_STATE_WALKING);
 		huggingShell->SetSpeed(-SHELL_WALKING_SPEED, 0);
-		huggingShell->isHugging = false;
 	}
 
 	this->hugging = false;

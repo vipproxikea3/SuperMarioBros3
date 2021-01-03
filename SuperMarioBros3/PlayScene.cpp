@@ -29,10 +29,11 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define SCENE_SECTION_ANIMATION_SETS	6
 #define SCENE_SECTION_OBJECTS			7
 
-#define OBJECT_TYPE_MARIO	0
-#define OBJECT_TYPE_BLOCK	1
-#define OBJECT_TYPE_GOOMBA	2
-#define OBJECT_TYPE_KOOPAS	3
+#define OBJECT_TYPE_MARIO		0
+#define OBJECT_TYPE_BLOCK		1
+#define OBJECT_TYPE_GOOMBA		2
+#define OBJECT_TYPE_KOOPA		3
+#define OBJECT_TYPE_PARAGOOMBA	4
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -178,9 +179,28 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CBlock(tB);
 		break;
 	}
-	/*case OBJECT_TYPE_GOOMBA: obj = new CGoomba(); break;
-	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
-	case OBJECT_TYPE_PORTAL:
+	case OBJECT_TYPE_GOOMBA: 
+	{
+		float limitL = atoi(tokens[4].c_str());
+		float limitR = atoi(tokens[5].c_str());
+		obj = new CGoomba(limitL, limitR);
+		break;
+	}
+	case OBJECT_TYPE_KOOPA:
+	{
+		float limitL = atoi(tokens[4].c_str());
+		float limitR = atoi(tokens[5].c_str());
+		obj = new CKoopa(limitL, limitR);
+		break;		
+	}
+	case OBJECT_TYPE_PARAGOOMBA:
+	{
+		float limitL = atoi(tokens[4].c_str());
+		float limitR = atoi(tokens[5].c_str());
+		obj = new CParaGoomba(limitL, limitR);
+		break;
+	}
+	/*case OBJECT_TYPE_PORTAL:
 	{
 		float r = atof(tokens[4].c_str());
 		float b = atof(tokens[5].c_str());
@@ -195,6 +215,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	// General object setup
 	obj->SetPosition(x, y);
+	obj->SetDefaultPosition(x, y);
 
 	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 
@@ -264,7 +285,8 @@ void CPlayScene::Update(DWORD dt)
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 1; i < objects.size(); i++)
 	{
-		coObjects.push_back(objects[i]);
+		if (!objects[i]->isDisable)
+			coObjects.push_back(objects[i]);
 	}
 
 	for (size_t i = 0; i < objects.size(); i++)
@@ -295,7 +317,10 @@ void CPlayScene::Render()
 	if (map)
 		map->Render();
 	for (int i = 0; i < objects.size(); i++)
-		objects[i]->Render();
+	{
+		if (!objects[i]->isDisable)
+			objects[i]->Render();
+	}
 }
 
 /*

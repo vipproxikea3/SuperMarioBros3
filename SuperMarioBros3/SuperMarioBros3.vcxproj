@@ -155,9 +155,9 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="Mario.h" />
     <ClInclude Include="MarioFireBullet.h" />
+    <ClInclude Include="ParaGoomba.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Scene.h" />
-    <ClInclude Include="Shell.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="SuperMushroom.h" />
     <ClInclude Include="Textures.h" />
@@ -177,9 +177,9 @@
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="MarioFireBullet.cpp" />
+    <ClCompile Include="ParaGoomba.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="Shell.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="SuperMushroom.cpp" />
     <ClCompile Include="Textures.cpp" />

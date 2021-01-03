@@ -6,6 +6,7 @@
 20	textures\enemies.png	3	26	110
 30	textures\enemies-2.png	0	128	128
 40	textures\misc.png	176	224	248
+50	textures\enemies-3.png	41	88	124
 
 [MAP]
 # TotalRowsOfMap	TotalColumnsOfMap	TotalRowsOfTileSet		TotalColumnsOfTileSet	TileSetID	MapMatrixPath
@@ -140,6 +141,37 @@
 10113	180	574	188	582	10
 10114	198	573	206	581	10
 
+# GOOMBA
+# goomba walk
+30001	5	14	21	29	20
+30002	25	14	41	29	20
+
+# goomba die y
+30003	45	21	61	29	20
+
+# goomba die x
+30004	136	35	152	51	20
+
+# KOOPA
+# koopa walking right
+70001	170	191	186	218	30
+70002	187	191	203	218	30
+
+# koopa walking left
+70003	205	191	221	218	30
+70004	222	191	238	218	30
+
+# shell idle
+20001	239	202	255	218	30
+
+# shell walking
+20002	256	202	272	218	30
+20003	273	202	289	218	30
+20004	290	202	306	218	30
+
+# shell be hug
+20005	152	202	168	218	30
+
 # BLOCK
 # ground block
 0	96	160	112	176	0
@@ -178,6 +210,21 @@
 19	144	48	160	64	0
 20	160	48	176	64	0
 
+# PARAGOOMBA
+# paragoomba walk
+100000	88	0	104	16	50
+100001	104	0	120	16	50
+# paragoomba die x
+100002	271	0	287	16	50
+# paragoomba die y
+100003	120	7	136	16	50
+# paragoomba wing right
+100004	144	2	152	15	50
+100005	136	2	144	15	50
+
+# paragoomba wing left
+100006	256	2	264	15	50
+100007	264	2	272	15	50
 
 [ANIMATIONS]
 # ani_id sprite_1_id time_1 sprite_2_id time_2 ...
@@ -281,6 +328,34 @@
 # mario fire bullet left
 1001	10111	25	10112	25	10113	25	10114	25
 
+# GOOMBA
+
+# goomba walk
+701	30001	100	30002	100
+
+# goomba die y
+702	30003	100
+
+# goomba die x
+703	30004	100
+
+# KOOPA
+
+# koopa walking right
+101	70001	100	70002	100
+
+# koopa walking left
+102	70003	100	70004	100
+
+# shell idle
+201	20001	100
+
+# shell walking
+202	20001	100	20002	100	20003	100	20004	100
+
+# shell be hug
+203	20005	100
+
 # BLOCK
 
 # ground block left
@@ -333,8 +408,31 @@
 # white block right
 20	20	100
 
+# PARAGOOMBA
+
+# paragoomba walking
+1100	100000	100	100001	100
+
+# paragoomba die x
+1101	100002	100
+
+# paragoomba die y
+1102	100003	100
+# paragoomba wing right walking
+1103	100004	100
+
+# paragoomba wing right jump
+1104	100004	50	100005	50
+
+# paragoomba wing left walking
+1105	100006	100
+
+# paragoomba wing left jump
+1106	100006	50	100007	50
+
 [ANIMATION_SETS]
 # ani_set_id    ani_1   ani_2   ani_3   ...
+# 1 = Mario | 2 = Block | 3 = MarioFireBullet | 4 = Goomba | 5 = Koopa | 6 = ParaGoomba
 
 # MARIO
 1	599	402	403	502	503	602	603	400	401	500	501	600	601	610	611	620	621	404	405	504	505	604	605	612	613	622	623	630	631	640	641	406	407	506	507	606	607	614	615	624	625
@@ -345,9 +443,17 @@
 # MARIO FIRE BULLET
 3	1000	1001
 
+# GOOMBA
+4	701	702	703
+# KOOPA
+5	101	102	201	202	203
+
+# PARAGOOMBA
+6	1100	1101	1102	1103	1104	1105	1106
+
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings
-# type: 0 = Mario | 1 = Block
+# type: 0 = Mario | 1 = Block | 2 = Goomba | 3 = Koopa | 4 = ParaGoomba
 
 # BLOCK
 # type	x	y	ani_set_id	typeBlock
@@ -382,8 +488,8 @@
 1	304	416	2	1
 1	320	416	2	1
 1	336	416	2	1
-1	352	416	2	1
-1	368	416	2	1
+#1	352	416	2	1
+#1	368	416	2	1
 1	384	416	2	1
 1	400	416	2	1
 1	416	416	2	1
@@ -449,22 +555,22 @@
 1	1472	416	2	1
 
 1	1552	416	2	1
-1	1568	416	2	1
-1	1584	416	2	1
+#1	1568	416	2	1
+#1	1584	416	2	1
 
-1	1680	416	2	1
-1	1696	416	2	1
+#1	1680	416	2	1
+#1	1696	416	2	1
 1	1712	416	2	1
 1	1728	416	2	1
 1	1744	416	2	1
 1	1760	416	2	1
 1	1776	416	2	1
-1	1792	416	2	1
-1	1808	416	2	1
+#1	1792	416	2	1
+#1	1808	416	2	1
 1	1824	416	2	1
 1	1840	416	2	1
-1	1856	416	2	1
-1	1872	416	2	1
+#1	1856	416	2	1
+#1	1872	416	2	1
 1	1888	416	2	1
 1	1904	416	2	1
 1	1920	416	2	1
@@ -487,11 +593,11 @@
 1	2192	416	2	1
 1	2208	416	2	1
 
-1	2272	416	2	1
+#1	2272	416	2	1
 1	2288	416	2	1
 1	2304	416	2	1
-1	2320	416	2	1
-1	2336	416	2	1
+#1	2320	416	2	1
+#1	2336	416	2	1
 1	2352	416	2	1
 1	2368	416	2	1
 1	2384	416	2	1
@@ -732,6 +838,25 @@
 
 # white block right
 1	560	304	2	20
+
+# GOOMBA
+# type	x	y	ani_set_id	limitL	limitR
+
+2	224	398	4	-32	352
+2	528	398	4	384	624
+2	832	382	4	672	1087
+2	880	382	4	672	1087
+
+# KOOPA
+# type	x	y	ani_set_id	limitL	limitR
+
+3	577	357	5	512	607
+
+
+# PARAGOOMBA
+# type	x	y	ani_set_id	limitL	limitR
+
+4	946	382	6	720	1087
 
 # MARIO
 0	16	385	1

@@ -8,25 +8,12 @@
 #include "Textures.h"
 
 #include "Mario.h"
-
 #include "PlayScene.h"
-
-//#include "Map.h"
-//#include "Mario.h"
-//#include "Block.h"
-//#include "Goomba.h"
-//#include "Coin.h"
-//#include "BrickReward.h"
-//#include "SuperMushroom.h"
-//#include "Shell.h"
-//#include "Koopa.h"
-
-
 
 #define WINDOW_CLASS_NAME L"SuperMarioBros3"
 #define MAIN_WINDOW_TITLE L"SuperMarioBros3"
 
-#define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
+#define BACKGROUND_COLOR D3DCOLOR_XRGB(156, 252, 240)
 
 #define SCREEN_WIDTH	320
 #define SCREEN_HEIGHT	240
@@ -34,12 +21,6 @@
 #define MAX_FRAME_RATE	120
 
 CGame* game;
-
-//#define ID_TEX_MAP		0
-//#define ID_TEX_MARIO	10
-//#define ID_TEX_ENEMY	20
-//#define ID_TEX_ENEMY_2	30
-//#define ID_TEX_MISC		40
 
 //Map* map;
 //

@@ -1,7 +1,8 @@
 #pragma once
 #include "GameObject.h"
-#include "Shell.h"
 #include "MarioFireBullet.h"
+#include "Koopa.h"
+#include "ParaGoomba.h"
 
 #define MARIO_WALKING_SPEED_BASE		0.05f
 #define MARIO_WALKING_SPEED				0.1f
@@ -117,7 +118,7 @@ class CMario : public CGameObject
 	vector<LPGAMEOBJECT> bullets;
 	DWORD lastShotTime;
 
-	CShell* huggingShell;
+	CKoopa* huggingShell;
 	bool hugging = false;
 
 	int untouchable;

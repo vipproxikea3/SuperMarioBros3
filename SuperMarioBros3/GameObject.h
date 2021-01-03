@@ -4,6 +4,7 @@
 #include <d3dx9.h>
 #include <vector>
 
+#include "Game.h"
 #include "Sprites.h"
 #include "Animations.h"
 
@@ -46,6 +47,7 @@ class CGameObject
 {
 public:
 	bool isDisable = false;
+	bool isReadyReset = false;
 	float x_start;
 	float y_start;
 
@@ -68,9 +70,12 @@ public:
 
 public:
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
+	void SetDefaultPosition(float x, float y) { this->x_start = x, this->y_start = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 	void GetPosition(float& x, float& y) { x = this->x; y = this->y; }
 	void GetSpeed(float& vx, float& vy) { vx = this->vx; vy = this->vy; }
+
+	void ReSet();
 
 	int GetState() { return this->state; }
 
@@ -96,7 +101,6 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL);
 	virtual void Render() = 0;
 	virtual void SetState(int state) { this->state = state; }
-
 
 	~CGameObject();
 };

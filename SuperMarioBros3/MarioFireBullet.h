@@ -1,9 +1,11 @@
 #pragma once
 #pragma once
 #include "GameObject.h"
+#include "ParaGoomba.h"
 
 #define BULLET_WALKING_SPEED			0.15f
-#define BULLET_GRAVITY					0.0001f
+#define BULLET_GRAVITY					0.0005f
+#define BULLET_JUMP_DEFLECT_SPEED		0.1f
 
 #define BULLET_STATE_WALKING_RIGHT		100
 #define BULLET_STATE_WALKING_LEFT		200
@@ -25,6 +27,7 @@ public:
 	void BasicCollision(float min_tx, float min_ty, float nx, float ny, float x0, float y0);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
+	void ReSet();
 	void SetState(int state);
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };
