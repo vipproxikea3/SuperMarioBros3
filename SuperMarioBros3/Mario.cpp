@@ -29,7 +29,24 @@ void CMario::CalVx(DWORD dt) {
 			if (vx > 0)
 				vx = 0;
 	}
+}
 
+void CMario::UpdateRunSpeedStack() {
+	runSpeedStack = 0;
+	if (abs(vx) > MARRIO_RUN_SPEED_STACK_1)
+		runSpeedStack = 1;
+	if (abs(vx) > MARRIO_RUN_SPEED_STACK_2)
+		runSpeedStack = 2;
+	if (abs(vx) > MARRIO_RUN_SPEED_STACK_3)
+		runSpeedStack = 3;
+	if (abs(vx) > MARRIO_RUN_SPEED_STACK_4)
+		runSpeedStack = 4;
+	if (abs(vx) > MARRIO_RUN_SPEED_STACK_5)
+		runSpeedStack = 5;
+	if (abs(vx) > MARRIO_RUN_SPEED_STACK_6)
+		runSpeedStack = 6;
+	if (abs(vx) > MARRIO_RUN_SPEED_STACK_7)
+		runSpeedStack = 7;
 }
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -65,7 +82,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vy += MARIO_GRAVITY * dt;
 	}
 
+	// Calculate vx
 	CalVx(dt);
+
+	// Update run speed stack
+	UpdateRunSpeedStack();
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -143,7 +164,28 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					flyIng = false;
 				}
 			}
-			
+
+			// BREAKBLOCK
+			if (dynamic_cast<CBreakBlock*>(e->obj)) {
+				CBreakBlock* breakBlock = dynamic_cast<CBreakBlock*>(e->obj);
+				BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+
+				if (e->ny == 1 && breakBlock->GetType() == BREAKBLOCK_TYPE_SWITCH && breakBlock->GetState() == BREAKBLOCK_STATE_IDLE) {
+					breakBlock->SetState(BREAKBLOCK_STATE_LOCK);
+					breakBlock->ShowSwitchBlock();
+				}
+			}
+
+			// SWITCHBLOCK
+			if (dynamic_cast<CSwitchBlock*>(e->obj)) {
+				CSwitchBlock* switchBlock = dynamic_cast<CSwitchBlock*>(e->obj);
+				BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+				if (e->ny == -1 && switchBlock->GetState() == SWITCHBLOCK_STATE_IDLE) {
+					switchBlock->Switch();
+					vy = -MARIO_JUMP_DEFLECT_SPEED;
+				}
+			}
+
 			// GOOMBA
 			if (dynamic_cast<CGoomba*>(e->obj))
 			{
@@ -174,7 +216,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (spinning) {
 						if (e->nx * this->nx < 0) {
 							vx = 0;
-							x = x0 + min_tx * dx + e->nx * 0.4f;
+							//x = x0 + min_tx * dx + e->nx * 0.4f;
 							goomba->SetState(GOOMBA_STATE_DIE_X);
 						}
 						else {
@@ -226,7 +268,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				if (e->nx != 0) {
 					vx = 0;
-					x = x0 + min_tx * dx + e->nx * 0.4f;
+					//x = x0 + min_tx * dx + e->nx * 0.4f;
 
 					// raccoon spin
 					if (spinning) {
@@ -280,7 +322,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 					if (e->nx != 0) {
 						vx = 0;
-						x = x0 + min_tx * dx + e->nx * 0.4f;
+						//x = x0 + min_tx * dx + e->nx * 0.4f;
 						// raccoon spin
 						if (spinning) {
 							if (e->nx * this->nx < 0) {
@@ -369,7 +411,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 					if (e->nx != 0) {
 						vx = 0;
-						x = x0 + min_tx * dx + e->nx * 0.4f;
+						//x = x0 + min_tx * dx + e->nx * 0.4f;
 						// raccoon spin
 						if (spinning) {
 							if (e->nx * this->nx < 0) {
@@ -434,23 +476,22 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 
 			// COIN
-			/*if (dynamic_cast<CCoin*>(e->obj)) {
+			if (dynamic_cast<CCoin*>(e->obj)) {
 				CCoin* coin = dynamic_cast<CCoin*>(e->obj);
 				if (coin->GetState() == COIN_STATE_IDLE) {
 					coin->isDisable = true;
 				}
-			}*/
-
+			}
 
 			// BRICKREWARD
-			if (dynamic_cast<CBrickReward*>(e->obj)) {
+			/*if (dynamic_cast<CBrickReward*>(e->obj)) {
 				CBrickReward* brickReward = dynamic_cast<CBrickReward*>(e->obj);
 				BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 				if (e->ny == 1 && brickReward->GetState() == BRICKREWARD_STATE_IDLE) {
 					brickReward->SetState(BRICKREWARD_STATE_JUMP);
 					flyIng = false;
 				}
-			}
+			}*/
 
 			// SUPERMUSHROOM
 			/*if (dynamic_cast<CSuperMushroom*>(e->obj)) {
@@ -470,8 +511,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			CGameObject* p = bullets[i];
 			bullets.erase(bullets.begin() + i);
 			delete p;
-		}
-			
+		}	
 	}
 }
 
@@ -585,7 +625,7 @@ void CMario::Shot() {
 
 void CMario::Fly() {
 	if (this->level == MARIO_LEVEL_RACCOON) {
-		if (canJump && abs(vx) == MARIO_RUN_SPEED)
+		if (runSpeedStack == 7)
 		{
 			flyIng = true;
 			canJump = false;
@@ -699,7 +739,7 @@ void CMario::Render()
 					}
 					else {
 						ani = MARIO_ANI_RACCOON_WALKING_RIGHT;
-						if (vx == MARIO_RUN_SPEED)
+						if (runSpeedStack == 7)
 							ani = MARIO_ANI_RACCOON_RUN_RIGHT;
 					}
 				}
@@ -709,7 +749,7 @@ void CMario::Render()
 					}
 					else {
 						ani = MARIO_ANI_RACCOON_WALKING_LEFT;
-						if (vx == -MARIO_RUN_SPEED)
+						if (runSpeedStack == 7)
 							ani = MARIO_ANI_RACCOON_RUN_LEFT;
 					}
 				}

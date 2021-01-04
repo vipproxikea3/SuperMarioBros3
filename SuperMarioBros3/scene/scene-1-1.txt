@@ -7,6 +7,7 @@
 30	textures\enemies-2.png	0	128	128
 40	textures\misc.png	176	224	248
 50	textures\enemies-3.png	41	88	124
+60	textures\misc-1.png	166	185	255
 
 [MAP]
 # TotalRowsOfMap	TotalColumnsOfMap	TotalRowsOfTileSet		TotalColumnsOfTileSet	TileSetID	MapMatrixPath
@@ -226,6 +227,27 @@
 100006	256	2	264	15	50
 100007	264	2	272	15	50
 
+# COIN
+50001	303	99	313	115	40
+50002	321	99	331	115	40
+50003	339	99	349	115	40
+
+# BREAK BLOCK
+# break block idle
+11001	274	188	290	204	60
+11002	293	188	309	204	60
+11003	312	188	328	204	60
+11004	331	188	347	204	60
+#break block lock
+11005	235	188	251	204	60
+
+# SWITCHBLOCK
+# switch block idle
+12001	156	144	172	160	60
+12002	178	144	194	160	60
+# switch block actived
+12003	200	153	216	160	60
+
 [ANIMATIONS]
 # ani_id sprite_1_id time_1 sprite_2_id time_2 ...
 
@@ -407,6 +429,25 @@
 # paraKoopa wing left jump
 1208	100006	50	100007	50
 
+# COIN
+800	50001	100	50002	100	50003	100
+
+# BREAK BLOCK
+
+# breakBlock idle
+1300	11001	1000	11002	100	11003	100	11004	100
+
+# breakBlock lock
+1301	11005	100
+
+# SWITCH BLOCK
+
+# switch block idle
+1400	12001	100	12002	100
+
+# switch block actived
+1401	12003	100
+
 # BLOCK
 
 # ground block left
@@ -461,7 +502,7 @@
 
 [ANIMATION_SETS]
 # ani_set_id    ani_1   ani_2   ani_3   ...
-# 1 = Mario | 2 = Block | 3 = MarioFireBullet | 4 = Goomba | 5 = Koopa | 6 = ParaGoomba | 7 = ParaKoopa
+# 1 = Mario | 2 = Block | 3 = MarioFireBullet | 4 = Goomba | 5 = Koopa | 6 = ParaGoomba | 7 = ParaKoopa | 8 = Coin | 9 = BreakBlock | 10 = Switch Block
 
 # MARIO
 1	599	402	403	502	503	602	603	400	401	500	501	600	601	610	611	620	621	404	405	504	505	604	605	612	613	622	623	630	631	640	641	406	407	506	507	606	607	614	615	624	625
@@ -483,9 +524,18 @@
 # PARAKOOPA
 7	1200	1201	1202	1203	1204	1205	1206	1207	1208
 
+# COIN
+8	800
+
+# BREAKBLOCK
+9	1300	1301
+
+# SWITCH BLOCK
+10	1400	1401
+
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings
-# type: 0 = Mario | 1 = Block | 2 = Goomba | 3 = Koopa | 4 = ParaGoomba | 5 = ParaKoopa
+# type: 0 = Mario | 1 = Block | 2 = Goomba | 3 = Koopa | 4 = ParaGoomba | 5 = ParaKoopa | 6 = Coin | 7 = BreakBlock | 8 = SwitchBlock
 
 # BLOCK
 # type	x	y	ani_set_id	typeBlock
@@ -884,6 +934,7 @@
 
 3	577	357	5	512	607
 3	1472	389	5	1264	1503
+3	2096	355	5	2090	2117
 
 
 # PARAGOOMBA
@@ -898,7 +949,69 @@
 5	1376	290	7	1088	1503
 5	1328	290	7	1088	1503
 
+# COIN
+# type	x	y	ani_set_id
+
+6	1073	320	8
+6	1105	288	8
+6	1137	256	8
+6	1169	224	8
+6	1201	192	8
+
+6	1329	80	8
+6	1345	80	8
+6	1361	80	8
+
+6	1473	112	8
+6	1489	112	8
+
+6	1537	128	8
+6	1553	128	8
+6	1569	128	8
+6	1585	128	8
+
+6	1617	112	8
+6	1633	112	8
+6	1649	112	8
+6	1665	112	8
+
+6	1697	144	8
+6	1729	112	8
+6	1761	128	8
+6	1809	96	8
+6	1841	128	8
+
+# BREAKBLOCK
+# type	x	y	ani_set_id	type
+
+7	1984	368	9	0
+7	2000	368	9	0
+7	2016	368	9	0
+7	2032	368	9	1
+
+7	1968	384	9	0
+7	1984	384	9	0
+7	2000	384	9	0
+7	2016	384	9	0
+7	2032	384	9	0
+
+7	1952	400	9	0
+7	1968	400	9	0
+7	1984	400	9	0
+7	2000	400	9	0
+7	2016	400	9	0
+7	2032	400	9	0
+7	2048	400	9	0
+
+7	2096	384	9	0
+7	2096	400	9	0
+7	2112	400	9	0
+
+# SWITCHBLOCK
+# type	x	y	ani_set_id
+
+#8	2032	352	10
 
 # MARIO
-0	16	385	1
-#0	1296	326	1
+#0	16	385	1
+0	1970	368	1

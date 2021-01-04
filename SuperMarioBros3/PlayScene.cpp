@@ -35,6 +35,9 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_KOOPA		3
 #define OBJECT_TYPE_PARAGOOMBA	4
 #define OBJECT_TYPE_PARAKOOPA	5
+#define OBJECT_TYPE_COIN		6
+#define OBJECT_TYPE_BREAKBLOCK	7
+#define OBJECT_TYPE_SWITCHBLOCK	8
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -206,6 +209,22 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float limitL = atoi(tokens[4].c_str());
 		float limitR = atoi(tokens[5].c_str());
 		obj = new CParaKoopa(limitL, limitR);
+		break;
+	}
+	case OBJECT_TYPE_COIN:
+	{
+		obj = new CCoin();
+		break;
+	}
+	case OBJECT_TYPE_BREAKBLOCK:
+	{
+		int type = atoi(tokens[4].c_str());
+		obj = new CBreakBlock(type);
+		break;
+	}
+	case OBJECT_TYPE_SWITCHBLOCK:
+	{
+		obj = new CSwitchBlock();
 		break;
 	}
 	/*case OBJECT_TYPE_PORTAL:
@@ -420,4 +439,8 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		else
 			mario->SetState(MARIO_STATE_IDLE);
 	}
+}
+
+void CPlayScene::PushBackObj(CGameObject* obj) {
+	objects.push_back(obj);
 }

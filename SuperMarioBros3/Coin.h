@@ -7,10 +7,10 @@
 #define COIN_STATE_IDLE			0
 #define COIN_STATE_JUMP			100
 
-#define COIN_ANI_IDLE 0
+#define COIN_ANI_IDLE			0
 
-#define COIN_BBOX_WIDTH  10
-#define COIN_BBOX_HEIGHT 16
+#define COIN_BBOX_WIDTH			10
+#define COIN_BBOX_HEIGHT		16
 
 class CCoin : public CGameObject
 {
@@ -19,6 +19,7 @@ public:
 	{
 		this->SetState(COIN_STATE_IDLE);
 	}
+	~CCoin() {}
 	void showReward();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();

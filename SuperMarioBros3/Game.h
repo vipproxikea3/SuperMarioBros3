@@ -97,8 +97,6 @@ public:
 
 		if (r < camX) return false;
 		if (l > camX + screenWidth) return false;
-		/*if (b < camY) return false;
-		if (t > camY + screenHeight) return false;*/
 		return true;
 	}
 

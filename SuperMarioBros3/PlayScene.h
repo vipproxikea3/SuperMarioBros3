@@ -10,6 +10,9 @@
 #include "Koopa.h"
 #include "ParaGoomba.h"
 #include "ParaKoopa.h"
+#include "Coin.h"
+#include "BreakBlock.h"
+#include "SwitchBlock.h"
 
 
 class CPlayScene : public CScene
@@ -35,6 +38,8 @@ public:
 	virtual void Update(DWORD dt);
 	virtual void Render();
 	virtual void Unload();
+	void PushBackObj(CGameObject* obj);
+	vector<LPGAMEOBJECT> GetListObj() { return objects; }
 
 	CMario* GetPlayer() { return player; }
 

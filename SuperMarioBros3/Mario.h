@@ -4,16 +4,26 @@
 #include "Koopa.h"
 #include "ParaGoomba.h"
 #include "ParaKoopa.h"
+#include "BreakBlock.h"
+#include "SwitchBlock.h"
 
 //#define MARIO_WALKING_SPEED_BASE		0.05f
-#define MARIO_WALKING_SPEED_BASE		0.0375f
+#define MARIO_WALKING_SPEED_BASE		0.04f
 #define MARIO_WALKING_SPEED				0.1f
-#define MARIO_RUN_SPEED					0.15f
+#define MARIO_RUN_SPEED					0.145f
 //#define MARIO_ACCELERATION			0.000075f
 #define MARIO_ACCELERATION				0.00005f
 #define MARIO_WALKING_FRICTION			0.00025f
 
-#define MARIO_FLY_SPEED					0.1f
+#define MARRIO_RUN_SPEED_STACK_1		0.04
+#define MARRIO_RUN_SPEED_STACK_2		0.055
+#define MARRIO_RUN_SPEED_STACK_3		0.07
+#define MARRIO_RUN_SPEED_STACK_4		0.085
+#define MARRIO_RUN_SPEED_STACK_5		0.01
+#define MARRIO_RUN_SPEED_STACK_6		0.115
+#define MARRIO_RUN_SPEED_STACK_7		0.13
+
+#define MARIO_FLY_SPEED					0.15f
 #define MARIO_FALL_SPEED				0.05f
 
 #define MARIO_JUMP_SPEED_Y_WEAK			0.35f
@@ -125,7 +135,9 @@ class CMario : public CGameObject
 	bool hugging = false;
 
 	int untouchable;
-	DWORD untouchable_start;	
+	DWORD untouchable_start;
+
+	float runSpeedStack = 0;
 public:
 	CMario() : CGameObject()
 	{
@@ -136,6 +148,7 @@ public:
 		last_spin = 0;
 	}
 	void CalVx(DWORD dt);
+	void UpdateRunSpeedStack();
 	bool canJump = 0;
 	bool isReadyHug = false;
 	void LvlUp();

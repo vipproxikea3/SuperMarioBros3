@@ -1,31 +1,6 @@
-﻿  ParaGoomba.cpp
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Game.h(63,34): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Game.h(64,35): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaGoomba.cpp(8,28): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaGoomba.cpp(21,30): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaGoomba.cpp(112,82): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaGoomba.cpp(112,66): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaGoomba.cpp(113,84): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaGoomba.cpp(113,67): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaGoomba.cpp(117,86): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaGoomba.cpp(117,70): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaGoomba.cpp(118,88): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaGoomba.cpp(118,71): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaGoomba.cpp(134,29): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaGoomba.cpp(154,29): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaGoomba.cpp(160,29): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
-  ParaKoopa.cpp
+﻿  SwitchBlock.cpp
 D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Game.h(63,34): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
 D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Game.h(64,35): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
 D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaKoopa.h(50,29): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaKoopa.cpp(36,31): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaKoopa.cpp(240,67): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaKoopa.cpp(243,70): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaKoopa.cpp(249,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaKoopa.cpp(249,63): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaKoopa.cpp(252,75): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaKoopa.cpp(252,66): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaKoopa.cpp(290,29): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\ParaKoopa.cpp(316,31): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
-  Generating Code...
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\SwitchBlock.cpp(11,20): warning C4018: '<': signed/unsigned mismatch
   SuperMarioBros3.vcxproj -> D:\DATA\UIT\Deadline\Game\SuperMarioBros3\Debug\SuperMarioBros3.exe

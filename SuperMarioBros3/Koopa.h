@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "ParaGoomba.h"
+#include "BreakBlock.h"
 
 #define KOOPA_WALKING_SPEED				0.025f
 #define KOOPA_GRAVITY					0.0005f

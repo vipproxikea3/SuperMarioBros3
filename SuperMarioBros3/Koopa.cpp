@@ -57,6 +57,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				for (UINT i = 0; i < coEventsResult.size(); i++) {
 					LPCOLLISIONEVENT e = coEventsResult[i];
 
+					// BLOCK
 					if (dynamic_cast<CBlock*>(e->obj)) {
 						CBlock* block = dynamic_cast<CBlock*>(e->obj);
 
@@ -79,6 +80,12 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							this->vy = 0;
 							this->y = y0 + min_ty * this->dy + ny * 0.4f;
 						}
+					}
+
+					// BREAKBLOCK
+					if (dynamic_cast<CBreakBlock*>(e->obj)) {
+						CBreakBlock* breakBlock = dynamic_cast<CBreakBlock*>(e->obj);
+						BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 					}
 				}
 			}
@@ -157,6 +164,21 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							if (e->ny == 1 && block->isBlockBottom()) {
 								this->vy = 0;
 								this->y = y0 + min_ty * this->dy + ny * 0.4f;
+							}
+						}
+
+						// BREAKBLOCK
+						if (dynamic_cast<CBreakBlock*>(e->obj)) {
+							CBreakBlock* breakBlock = dynamic_cast<CBreakBlock*>(e->obj);
+							BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+
+							if (e->nx == 1) {
+								this->vx = SHELL_WALKING_SPEED;
+								breakBlock->isDisable = true;
+							}
+							else if (e->nx == -1) {
+								this->vx = -SHELL_WALKING_SPEED;
+								breakBlock->isDisable = true;
 							}
 						}
 
