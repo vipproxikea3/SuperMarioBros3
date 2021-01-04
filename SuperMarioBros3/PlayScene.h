@@ -13,6 +13,8 @@
 #include "Coin.h"
 #include "BreakBlock.h"
 #include "SwitchBlock.h"
+#include "BrickReward.h"
+#include "SuperMushroom.h"
 
 
 class CPlayScene : public CScene

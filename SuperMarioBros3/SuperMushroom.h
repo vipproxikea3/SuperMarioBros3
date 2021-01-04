@@ -1,17 +1,16 @@
 #pragma once
 #include "GameObject.h"
 
-#define SUPERMUSHROOM_WALKING_SPEED				0.02f 
-#define SUPERMUSHROOM_GRAVITY					0.0008f
+#define SUPERMUSHROOM_WALKING_SPEED		0.02f 
+#define SUPERMUSHROOM_GRAVITY			0.0008f
 
-#define SUPERMUSHROOM_STATE_IDLE				0
-#define SUPERMUSHROOM_STATE_WALKING_RIGHT		100
-#define SUPERMUSHROOM_STATE_WALKING_LEFT		200
+#define SUPERMUSHROOM_STATE_IDLE		0
+#define SUPERMUSHROOM_STATE_WALKING		100
 
-#define SUPERMUSHROOM_ANI_SMALL_IDLE			0
+#define SUPERMUSHROOM_ANI				0
 
-#define SUPERMUSHROOM_BBOX_WIDTH				16
-#define SUPERMUSHROOM_BBOX_HEIGHT				15
+#define SUPERMUSHROOM_BBOX_WIDTH		16
+#define SUPERMUSHROOM_BBOX_HEIGHT		16
 
 
 class CSuperMushroom : public CGameObject
@@ -19,9 +18,9 @@ class CSuperMushroom : public CGameObject
 public:
 	CSuperMushroom() : CGameObject()
 	{
-		this->SetState(SUPERMUSHROOM_STATE_IDLE);
+		this->SetState(SUPERMUSHROOM_STATE_WALKING);
 	}
-	void showReward();
+	~CSuperMushroom() {}
 	void BasicCollision(float min_tx, float min_ty, float nx, float ny, float x0, float y0);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();

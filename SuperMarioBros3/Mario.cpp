@@ -478,27 +478,25 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			// COIN
 			if (dynamic_cast<CCoin*>(e->obj)) {
 				CCoin* coin = dynamic_cast<CCoin*>(e->obj);
-				if (coin->GetState() == COIN_STATE_IDLE) {
-					coin->isDisable = true;
-				}
+				coin->isDisable = true;
 			}
 
 			// BRICKREWARD
-			/*if (dynamic_cast<CBrickReward*>(e->obj)) {
+			if (dynamic_cast<CBrickReward*>(e->obj)) {
 				CBrickReward* brickReward = dynamic_cast<CBrickReward*>(e->obj);
 				BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 				if (e->ny == 1 && brickReward->GetState() == BRICKREWARD_STATE_IDLE) {
 					brickReward->SetState(BRICKREWARD_STATE_JUMP);
 					flyIng = false;
 				}
-			}*/
+			}
 
 			// SUPERMUSHROOM
-			/*if (dynamic_cast<CSuperMushroom*>(e->obj)) {
+			if (dynamic_cast<CSuperMushroom*>(e->obj)) {
 				CSuperMushroom* mushroom = dynamic_cast<CSuperMushroom*>(e->obj);
 				mushroom->isDisable = true;
 				this->LvlUp();
-			}*/
+			}
 		}
 	}
 
@@ -591,7 +589,7 @@ void CMario::lvlDown() {
 		StartUntouchable();
 		break;
 	case MARIO_LEVEL_FIRE:
-		SetLevel(MARIO_LEVEL_RACCOON);
+		SetLevel(MARIO_LEVEL_BIG);
 		StartUntouchable();
 		break;
 	}

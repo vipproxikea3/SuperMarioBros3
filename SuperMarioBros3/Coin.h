@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject.h"
 
-#define COIN_JUMP_SPEED_Y		0.5f
+#define COIN_JUMP_SPEED_Y		0.4f
 #define COIN_GRAVITY			0.002f
 
 #define COIN_STATE_IDLE			0
@@ -20,7 +20,7 @@ public:
 		this->SetState(COIN_STATE_IDLE);
 	}
 	~CCoin() {}
-	void showReward();
+	void Jump();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 	void SetState(int state);

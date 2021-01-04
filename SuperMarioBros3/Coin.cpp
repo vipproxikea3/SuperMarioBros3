@@ -1,6 +1,6 @@
 #include "Coin.h"
 
-void CCoin::showReward() {
+void CCoin::Jump() {
 	this->SetState(COIN_STATE_JUMP);
 }
 

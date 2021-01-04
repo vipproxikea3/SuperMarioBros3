@@ -85,7 +85,7 @@ CBlock::~CBlock() {}
 
 void CBlock::Render()
 {
-	CSprites* sprites = CSprites::GetInstance();
+	//CSprites* sprites = CSprites::GetInstance();
 	animation_set->at(typeBlock)->Render(x, y, 255);
 }
 

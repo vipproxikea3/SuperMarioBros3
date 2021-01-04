@@ -3,10 +3,6 @@
 #include "BrickReward.h"
 #include "Game.h"
 
-void CSuperMushroom::showReward() {
-	this->SetState(SUPERMUSHROOM_STATE_WALKING_LEFT);
-}
-
 void CSuperMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	// Calculate dx, dy 
@@ -49,25 +45,35 @@ void CSuperMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			// BLOCK
 			if (dynamic_cast<CBlock*>(e->obj)) {
-				if (e->ny == -1)
-					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+				CBlock* block = dynamic_cast<CBlock*>(e->obj);
+
+				if (e->nx == -1 && block->isBlockLeft()) {
+					this->vx = 0;
+					this->x = x0 + min_tx * this->dx + nx * 0.4f;
+				}
+
+				if (e->nx == 1 && block->isBlockRight()) {
+					this->vx = 0;
+					this->x = x0 + min_tx * this->dx + nx * 0.4f;
+				}
+
+				if (e->ny == -1 && block->isBlockTop()) {
+					this->vy = 0;
+					this->y = y0 + min_ty * this->dy + ny * 0.4f;
+				}
+
+				if (e->ny == 1 && block->isBlockBottom()) {
+					this->vy = 0;
+					this->y = y0 + min_ty * this->dy + ny * 0.4f;
+				}
 			}
 
 			// BRICKREWARD
 			if (dynamic_cast<CBrickReward*>(e->obj)) {
-				if (e->ny == -1)
-					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+				CBrickReward* brickReward = dynamic_cast<CBrickReward*>(e->obj);
+				BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 			}
 		}
-	}
-
-	CGame* game = CGame::GetInstance();
-	float cx, cy;
-	game->GetCamPos(cx, cy);
-	float screenWidth = game->GetScreenWidth();
-
-	if (this->x < cx || this->x > cx + screenWidth) {
-		this->isDisable = true;
 	}
 
 	// clean up collision events
@@ -86,7 +92,7 @@ void CSuperMushroom::BasicCollision(float min_tx, float min_ty, float nx, float 
 void CSuperMushroom::Render()
 {
 	int ani;
-	ani = SUPERMUSHROOM_ANI_SMALL_IDLE;
+	ani = SUPERMUSHROOM_ANI;
 	int alpha = 255;
 	animation_set->at(ani)->Render(x, y, alpha);
 }
@@ -101,12 +107,8 @@ void CSuperMushroom::SetState(int state)
 		vx = 0;
 		vy = 0;
 		break;
-	case SUPERMUSHROOM_STATE_WALKING_RIGHT:
-		vy = -0.2f;
-		vx = SUPERMUSHROOM_WALKING_SPEED;
-		break;
-	case SUPERMUSHROOM_STATE_WALKING_LEFT:
-		vy = -0.2f;
+	case SUPERMUSHROOM_STATE_WALKING:
+		vy = 0;
 		vx = -SUPERMUSHROOM_WALKING_SPEED;
 		break;
 	}

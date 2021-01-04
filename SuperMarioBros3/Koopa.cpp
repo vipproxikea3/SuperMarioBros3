@@ -19,6 +19,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 				mario->StopHug();
 				mario->lvlDown();
+				mario = NULL;
 			}
 			this->SetLevel(KOOPA_LEVEL_KOOPA);
 			this->SetState(KOOPA_STATE_WALKING);
@@ -183,7 +184,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 
 						// BRICKREWARD
-						/*if (dynamic_cast<CBrickReward*>(e->obj)) {
+						if (dynamic_cast<CBrickReward*>(e->obj)) {
 							BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 							if (e->nx != 0) {
 								if (e->nx == -1)
@@ -197,7 +198,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							if (e->nx != 0 && brick->GetState() == BRICKREWARD_STATE_IDLE) {
 								brick->SetState(BRICKREWARD_STATE_JUMP);
 							}
-						}*/
+						}
 
 						// GOOMBA
 						if (dynamic_cast<CGoomba*>(e->obj))

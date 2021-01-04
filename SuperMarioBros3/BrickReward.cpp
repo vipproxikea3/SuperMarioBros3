@@ -1,36 +1,41 @@
 #include "BrickReward.h"
 #include "GameObject.h"
+#include "PlayScene.h"
 #include "Coin.h"
 #include "SuperMushroom.h"
 
-void CBrickReward::setReward(CGameObject* GObj) {
-	this->reward = GObj;
-	GObj->isDisable = true;
+void CBrickReward::ShowReward() {
+	if (this->type == BRICKREWARD_TYPE_COIN) {
+		CCoin* coin = new CCoin();
+		coin->SetPosition(this->x + 3.0f, this->y - 18.0f);
+		coin->SetDefaultPosition(this->x + 3.0f, this->y - 18.0f);
 
-	if (dynamic_cast<CCoin*>(this->reward)) {
-		CCoin* coin = dynamic_cast<CCoin*>(this->reward);
-		coin->SetPosition(x + 2.0f, y - 16.0f);
+		CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+		LPANIMATION_SET ani_set = animation_sets->Get(8);
+		coin->SetAnimationSet(ani_set);
+		((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(coin);
+		coin->Jump();
 	}
+	if (this->type == BRICKREWARD_TYPE_LEVEL) {
+		CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+		if (mario->GetLevel() == MARIO_LEVEL_SMALL) {
+			CSuperMushroom* mushroom = new CSuperMushroom();
+			mushroom->SetPosition(this->x, this->y - 20.0f);
+			mushroom->SetDefaultPosition(this->x, this->y - 20.0f);
+			float mario_x, mario_y;
+			mario->GetPosition(mario_x, mario_y);
+			if (x + BRICKREWARD_BBOX_WIDTH * 0.5 > mario_x + MARIO_SMALL_BBOX_WIDTH * 0.5) {
+				mushroom->SetSpeed(SUPERMUSHROOM_WALKING_SPEED, 0);
+			}
+			else {
+				mushroom->SetSpeed(-SUPERMUSHROOM_WALKING_SPEED, 0);
+			}
 
-	if (dynamic_cast<CSuperMushroom*>(this->reward)) {
-		CSuperMushroom* mushroom = dynamic_cast<CSuperMushroom*>(this->reward);
-		mushroom->SetPosition(x, y - 16.0f);
-	}
-}
-
-void CBrickReward::showReward() {
-
-	if (this->reward != NULL)
-		this->reward->isDisable = false;
-
-	if (dynamic_cast<CCoin*>(this->reward)) {
-		CCoin* coin = dynamic_cast<CCoin*>(this->reward);
-		coin->showReward();
-	}
-
-	if (dynamic_cast<CSuperMushroom*>(this->reward)) {
-		CSuperMushroom* mushroom = dynamic_cast<CSuperMushroom*>(this->reward);
-		mushroom->showReward();
+			CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+			LPANIMATION_SET ani_set = animation_sets->Get(12);
+			mushroom->SetAnimationSet(ani_set);
+			((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(mushroom);
+		}
 	}
 }
 
@@ -45,7 +50,7 @@ void CBrickReward::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 		if (y > y_start) {
 			y = y_start;
 			vy = 0;
-			this->SetState(BRICKREWARD_STATE_ACTIVED);
+			this->SetState(BRICKREWARD_STATE_LOCK);
 		}
 	}
 }
@@ -56,7 +61,7 @@ void CBrickReward::Render()
 	ani = BRICKREWARD_ANI_IDLE;
 
 	if (this->state != BRICKREWARD_STATE_IDLE)
-		ani = BRICKREWARD_ANI_ACTIVED;
+		ani = BRICKREWARD_ANI_LOCK;
 
 	int alpha = 255;
 	animation_set->at(ani)->Render(x, y, alpha);
@@ -72,13 +77,13 @@ void CBrickReward::SetState(int state)
 		vy = 0;
 		y = y_start;
 		break;
-	case BRICKREWARD_STATE_ACTIVED:
+	case BRICKREWARD_STATE_LOCK:
 		vy = 0;
 		y = y_start;
 		break;
 	case BRICKREWARD_STATE_JUMP:
 		vy = -BRICKREWARD_JUMP_SPEED_Y;
-		this->showReward();
+		ShowReward();
 		break;
 	}
 }

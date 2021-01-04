@@ -2,29 +2,34 @@
 #include "GameObject.h"
 
 #define BRICKREWARD_JUMP_SPEED_Y	0.075f
-#define BRICKREWARD_GRAVITY			0.0005f
+#define BRICKREWARD_GRAVITY			0.001f
 
 #define BRICKREWARD_STATE_IDLE		0
-#define BRICKREWARD_STATE_ACTIVED	100
+#define BRICKREWARD_STATE_LOCK		100
 #define BRICKREWARD_STATE_JUMP		200
 
-#define BRICKREWARD_ANI_IDLE	0
-#define BRICKREWARD_ANI_ACTIVED 1
+#define BRICKREWARD_TYPE_COIN		0
+#define BRICKREWARD_TYPE_LEVEL		1
+#define BRICKREWARD_TYPE_LIFE		2
 
-#define BRICKREWARD_BBOX_WIDTH  16
-#define BRICKREWARD_BBOX_HEIGHT 16
+#define BRICKREWARD_ANI_IDLE		0
+#define BRICKREWARD_ANI_LOCK		1
+
+#define BRICKREWARD_BBOX_WIDTH		16
+#define BRICKREWARD_BBOX_HEIGHT		16
 
 class CBrickReward : public CGameObject
 {
-	CGameObject* reward;
+	int type;
 
 public:
-	CBrickReward() : CGameObject()
+	CBrickReward(int type) : CGameObject()
 	{
 		this->SetState(BRICKREWARD_STATE_IDLE);
+		this->type = type;
 	}
-	void setReward(CGameObject* GObj);
-	void showReward();
+	~CBrickReward() {}
+	void ShowReward();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 	void SetState(int state);

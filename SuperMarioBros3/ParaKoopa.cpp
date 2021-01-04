@@ -24,6 +24,7 @@ void CParaKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 				mario->StopHug();
 				mario->lvlDown();
+				mario = NULL;
 			}
 			this->SetLevel(PARAKOOPA_LEVEL_KOOPA);
 			this->SetState(PARAKOOPA_STATE_WALKING);

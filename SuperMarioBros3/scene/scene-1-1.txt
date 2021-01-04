@@ -248,6 +248,19 @@
 # switch block actived
 12003	200	153	216	160	60
 
+# BRICK REWARD
+# brick reward idle
+60001	157	188	173	204	60
+60002	176	188	192	204	60
+60003	196	188	212	204	60
+60004	215	188	231	204	60
+
+# brick reward lock
+60005	235	188	251	204	60
+
+# SUPERMUSHROOM
+40001	156	121	172	137	60
+
 [ANIMATIONS]
 # ani_id sprite_1_id time_1 sprite_2_id time_2 ...
 
@@ -448,6 +461,17 @@
 # switch block actived
 1401	12003	100
 
+# BRICK REWARD
+
+# brick reward idle
+900	60001	1000	60002	100	60003	100	60004	100
+
+# brick reward lock
+901	60005	100
+
+# SUPERMUSHROOM
+300	40001	100
+
 # BLOCK
 
 # ground block left
@@ -502,7 +526,7 @@
 
 [ANIMATION_SETS]
 # ani_set_id    ani_1   ani_2   ani_3   ...
-# 1 = Mario | 2 = Block | 3 = MarioFireBullet | 4 = Goomba | 5 = Koopa | 6 = ParaGoomba | 7 = ParaKoopa | 8 = Coin | 9 = BreakBlock | 10 = Switch Block
+# 1 = Mario | 2 = Block | 3 = MarioFireBullet | 4 = Goomba | 5 = Koopa | 6 = ParaGoomba | 7 = ParaKoopa | 8 = Coin | 9 = BreakBlock | 10 = SwitchBlock | 11 = BrickReward | 12 = SuperMushroom
 
 # MARIO
 1	599	402	403	502	503	602	603	400	401	500	501	600	601	610	611	620	621	404	405	504	505	604	605	612	613	622	623	630	631	640	641	406	407	506	507	606	607	614	615	624	625
@@ -533,9 +557,15 @@
 # SWITCH BLOCK
 10	1400	1401
 
+# BRICK REWARD
+11	900	901
+
+# SUPERMUSHROOM
+12	300
+
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings
-# type: 0 = Mario | 1 = Block | 2 = Goomba | 3 = Koopa | 4 = ParaGoomba | 5 = ParaKoopa | 6 = Coin | 7 = BreakBlock | 8 = SwitchBlock
+# type: 0 = Mario | 1 = Block | 2 = Goomba | 3 = Koopa | 4 = ParaGoomba | 5 = ParaKoopa | 6 = Coin | 7 = BreakBlock | 8 = SwitchBlock | 9 = BrickReward | 10 = SuperMushroom
 
 # BLOCK
 # type	x	y	ani_set_id	typeBlock
@@ -1007,11 +1037,24 @@
 7	2096	400	9	0
 7	2112	400	9	0
 
-# SWITCHBLOCK
+# BRICKREWARD
+# type	x	y	ani_set_id	type
+
+9	176	352	11	0
+9	192	352	11	0
+9	224	304	11	0
+9	416	320	11	0
+9	704	352	11	0
+
+9	240	304	11	1
+9	656	384	11	1
+9	1440	128	11	1
+9	1472	368	11	1
+
+# SUPERMUSHROOM
 # type	x	y	ani_set_id
 
-#8	2032	352	10
+#10	239	270	12
 
 # MARIO
-#0	16	385	1
-0	1970	368	1
+0	16	385	1
