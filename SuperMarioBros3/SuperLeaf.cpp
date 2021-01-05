@@ -5,21 +5,18 @@ void CSuperLeaf::Jump() {
 }
 
 void CSuperLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
-	if (this->state == SUPERLEAF_STATE_JUMP) {
-		// Calculate dx, dy 
-		CGameObject::Update(dt);
+	// Calculate dx, dy 
+	CGameObject::Update(dt);
 
+	if (this->state == SUPERLEAF_STATE_JUMP) {
 		// Simple fall down
 		vy += SUPERLEAF_GRAVITY * dt;
 
 		y += dy;
 
-		if (vy >= 0) this->SetState(SUPERLEAF_STATE_FALL);
+		if (vy > 0) this->SetState(SUPERLEAF_STATE_FALL);
 	}
 	if (this->state == SUPERLEAF_STATE_FALL) {
-		// Calculate dx, dy 
-		CGameObject::Update(dt);
-
 		// Simple fall down
 		if (vx < 0)
 			vy += SUPERLEAF_GRAVITY * dt;
@@ -33,11 +30,52 @@ void CSuperLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 			x = this->x_start - SUPERLEAF_BBOX_WIDTH;
 			vx = SUPERLEAF_FALL_SPEED_X;
 		}
-		if (x >= this->x_start + SUPERLEAF_BBOX_WIDTH * 2) {
-			x = this->x_start + SUPERLEAF_BBOX_WIDTH * 2;
+		if (x >= this->x_start + SUPERLEAF_BBOX_WIDTH) {
+			x = this->x_start + SUPERLEAF_BBOX_WIDTH;
 			vx = -SUPERLEAF_FALL_SPEED_X;
 		}
 	}
+
+	vector<LPCOLLISIONEVENT> coEvents;
+	vector<LPCOLLISIONEVENT> coEventsResult;
+
+	coEvents.clear();
+
+	CalcPotentialCollisions(coObjects, coEvents);
+
+	if (coEvents.size() == 0)
+	{
+		y += dy;
+		x += dx;
+	}
+	else
+	{
+		float min_tx, min_ty, nx = 0, ny = 0;
+		float rdx = 0;
+		float rdy = 0;
+
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+		float x0 = x;
+		float y0 = y;
+
+		x = x0 + dx;
+		y = y0 + dy;
+
+		for (UINT i = 0; i < coEventsResult.size(); i++) {
+			LPCOLLISIONEVENT e = coEventsResult[i];
+
+			//MARIO
+			if (dynamic_cast<CMario*>(e->obj)) {
+				CMario* mario = dynamic_cast<CMario*>(e->obj);
+				this->isDisable = true;
+				if (mario->GetLevel() == MARIO_LEVEL_BIG)
+					mario->LvlUp();
+			}
+		}
+	}
+
+	// clean up collision events
+	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
 
 void CSuperLeaf::Render()

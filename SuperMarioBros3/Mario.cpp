@@ -10,6 +10,8 @@
 #include "SuperMushroom.h"
 #include "SuperLeaf.h"
 #include "Koopa.h"
+#include "Gate.h"
+#include "PlayScene.h"
 
 void CMario::CalVx(DWORD dt) {
 	vx += ax * dt;
@@ -476,10 +478,13 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 
-			// COIN
-			if (dynamic_cast<CCoin*>(e->obj)) {
-				CCoin* coin = dynamic_cast<CCoin*>(e->obj);
-				coin->isDisable = true;
+			// GATE
+			if (dynamic_cast<CGate*>(e->obj)) {
+				CGate* gate = dynamic_cast<CGate*>(e->obj);
+				this->x = gate->GetTargetX();
+				this->y = gate->GetTargetY();
+				vx = 0;
+				((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->SwitchZone(gate->GetTargetZone());
 			}
 
 			// BRICKREWARD
@@ -493,20 +498,20 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 
 			// SUPERMUSHROOM
-			if (dynamic_cast<CSuperMushroom*>(e->obj)) {
+			/*if (dynamic_cast<CSuperMushroom*>(e->obj)) {
 				CSuperMushroom* mushroom = dynamic_cast<CSuperMushroom*>(e->obj);
 				mushroom->isDisable = true;
 				if (mushroom->GetType() == SUPERMUSHROOM_TYPE_LEVEL)
 					this->LvlUp();
-			}
+			}*/
 
 			// SUPERLEAF
-			if (dynamic_cast<CSuperLeaf*>(e->obj)) {
+			/*if (dynamic_cast<CSuperLeaf*>(e->obj)) {
 				CSuperLeaf* leaf = dynamic_cast<CSuperLeaf*>(e->obj);
 				leaf->isDisable = true;
 				if (this->level == MARIO_LEVEL_BIG)
 					this->LvlUp();
-			}
+			}*/
 		}
 	}
 

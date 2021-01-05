@@ -1,8 +1,9 @@
 #pragma once
 #include "GameObject.h"
+#include "Mario.h"
 
-#define COIN_JUMP_SPEED_Y		0.4f
-#define COIN_GRAVITY			0.002f
+#define COIN_JUMP_SPEED_Y		0.2f
+#define COIN_GRAVITY			0.001f
 
 #define COIN_STATE_IDLE			0
 #define COIN_STATE_JUMP			100

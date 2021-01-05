@@ -12,7 +12,13 @@
 [MAP]
 # TotalRowsOfMap	TotalColumnsOfMap	TotalRowsOfTileSet		TotalColumnsOfTileSet	TileSetID	MapMatrixPath
 
-27	176	12	11	0	Map\map1-1.txt
+27	208	13	11	0	Map\map1-1.txt
+
+[ZONE]
+# id	left	top	right	bottom
+
+1	0	0	2816	432
+2	2816	0	3328	192
 
 [SPRITES]
 # ID left top right bottom texID
@@ -175,41 +181,50 @@
 
 # BLOCK
 # ground block
-0	96	160	112	176	0
-1	112	160	128	176	0
-2	128	160	144	176	0
+0	48	176	64	192	0
+1	64	176	80	192	0
+2	80	176	96	192	0
 
 # box block
-3	16	64	32	80	0
+3	144	64	160	80	0
 
 # pipe block
-4	112	0	128	16	0
-5	128	0	144	16	0
-6	160	0	176	16	0
-7	0	16	16	32	0
+4	64	16	80	32	0
+5	80	16	96	32	0
+6	112	16	128	32	0
+7	128	16	144	32	0
 
 # cloud block
-8	16	32	32	48	0
+8	144	32	160	48	0
 
 # green block
-9	128	32	144	48	0
-10	144	32	160	48	0
-11	160	32	176	48	0
+9	80	48	96	60	0
+10	96	48	112	60	0
+11	112	48	128	60	0
 
 # pink block
-12	16	16	32	32	0
-13	32	16	48	32	0
-14	48	16	64	32	0
+12	144	16	160	32	0
+13	160	16	176	32	0
+14	0	32	16	48	0
 
 # blue block
-15	112	64	128	80	0
-16	128	64	144	80	0
-17	144	64	160	80	0
+15	64	80	80	96	0
+16	80	80	96	96	0
+17	96	80	112	96	0
 
 # white block
-18	128	48	144	64	0
-19	144	48	160	64	0
-20	160	48	176	64	0
+18	80	64	96	80	0
+19	96	64	112	80	0
+20	112	64	128	80	0
+
+# cave block
+21	64	0	80	16	0
+
+# black pipe block
+22	80	0	96	16	0
+23	96	0	112	16	0
+24	144	0	160	16	0
+25	160	0	176	16	0
 
 # PARAGOOMBA
 # paragoomba walk
@@ -267,6 +282,9 @@
 
 # SUPERLEAF
 13001	180	123	196	137	60
+
+# GATE
+14001	400	167	416	183	60
 
 [ANIMATIONS]
 # ani_id sprite_1_id time_1 sprite_2_id time_2 ...
@@ -486,6 +504,9 @@
 # SUPERLEAAF
 1500	13001	100
 
+# GATE
+1600	14001	100
+
 # BLOCK
 
 # ground block left
@@ -538,15 +559,27 @@
 # white block right
 20	20	100
 
+# cave block
+21	21	100
+
+# black pipe block left
+22	22	100
+# black pipe block right
+23	23	100
+# black pipe block bot left
+24	24	100
+# black pipe block bot right
+25	25	100
+
 [ANIMATION_SETS]
 # ani_set_id    ani_1   ani_2   ani_3   ...
-# 1 = Mario | 2 = Block | 3 = MarioFireBullet | 4 = Goomba | 5 = Koopa | 6 = ParaGoomba | 7 = ParaKoopa | 8 = Coin | 9 = BreakBlock | 10 = SwitchBlock | 11 = BrickReward | 12 = SuperMushroom | 13 = SuperLeaf
+# 1 = Mario | 2 = Block | 3 = MarioFireBullet | 4 = Goomba | 5 = Koopa | 6 = ParaGoomba | 7 = ParaKoopa | 8 = Coin | 9 = BreakBlock | 10 = SwitchBlock | 11 = BrickReward | 12 = SuperMushroom | 13 = SuperLeaf | 14 = Gate
 
 # MARIO
 1	599	402	403	502	503	602	603	400	401	500	501	600	601	610	611	620	621	404	405	504	505	604	605	612	613	622	623	630	631	640	641	406	407	506	507	606	607	614	615	624	625
 
 # BLOCK
-2	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20
+2	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21	22	23	24	25
 
 # MARIO FIRE BULLET
 3	1000	1001
@@ -580,9 +613,12 @@
 # SUPERLEAF
 13	1500
 
+# GATE
+14	1600
+
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings
-# type: 0 = Mario | 1 = Block | 2 = Goomba | 3 = Koopa | 4 = ParaGoomba | 5 = ParaKoopa | 6 = Coin | 7 = BreakBlock | 8 = SwitchBlock | 9 = BrickReward | 10 = SuperMushroom | 11 = SuperLeaf
+# type: 0 = Mario | 1 = Block | 2 = Goomba | 3 = Koopa | 4 = ParaGoomba | 5 = ParaKoopa | 6 = Coin | 7 = BreakBlock | 8 = SwitchBlock | 9 = BrickReward | 10 = SuperMushroom | 11 = SuperLeaf | 12 = Gate
 
 # BLOCK
 # type	x	y	ani_set_id	typeBlock
@@ -968,6 +1004,74 @@
 # white block right
 1	560	304	2	20
 
+# cave block
+1	2928	0	2	21
+1	2928	16	2	21
+1	2928	32	2	21
+1	2928	48	2	21
+1	2928	64	2	21
+1	2928	80	2	21
+1	2928	96	2	21
+1	2928	112	2	21
+1	2928	128	2	21
+1	2928	144	2	21
+1	2928	160	2	21
+1	2928	176	2	21
+
+1	2976	0	2	21
+1	2992	0	2	21
+1	3008	0	2	21
+1	3024	0	2	21
+1	3040	0	2	21
+1	3056	0	2	21
+1	3072	0	2	21
+1	3088	0	2	21
+1	3104	0	2	21
+1	3120	0	2	21
+1	3136	0	2	21
+1	3152	0	2	21
+
+1	2944	160	2	21
+1	2960	160	2	21
+1	2976	160	2	21
+1	2992	160	2	21
+1	3008	160	2	21
+1	3024	160	2	21
+1	3040	160	2	21
+1	3056	160	2	21
+
+1	3152	64	2	21
+1	3168	64	2	21
+1	3184	64	2	21
+
+1	3200	0	2	21
+1	3200	16	2	21
+1	3200	32	2	21
+1	3200	48	2	21
+1	3200	64	2	21
+
+1	3072	144	2	21
+1	3088	128	2	21
+1	3104	112	2	21
+1	3120	96	2	21
+1	3136	80	2	21
+
+# black pipe block left
+1	2944	0	2	22
+1	3168	0	2	22
+
+# black pipe block right
+1	2960	0	2	23
+1	3184	0	2	23
+
+# black pipe block bot left
+1	2944	16	2	24
+1	3168	16	2	24
+
+# black pipe block bot right
+1	2960	16	2	25
+1	3184	16	2	25
+
 # GOOMBA
 # type	x	y	ani_set_id	limitL	limitR
 
@@ -1028,6 +1132,19 @@
 6	1809	96	8
 6	1841	128	8
 
+6	3041	24	8
+6	3057	24	8
+6	3025	40	8
+6	3073	40	8
+6	3073	56	8
+6	3041	72	8
+6	3057	72	8
+6	3073	88	8
+6	3025	104	8
+6	3073	104	8
+6	3041	120	8
+6	3057	120	8
+
 # BREAKBLOCK
 # type	x	y	ani_set_id	type
 
@@ -1074,5 +1191,13 @@
 
 #11	239	250	13
 
+# GATE
+# type	x	y	ani_set_id	targetX	targetY	targetZone
+
+12	2264	111	14	2952	40	2
+12	3176	17	14	2320	384	1
+
 # MARIO
 0	16	385	1
+#0	2260	65	1
+#0	2790	376	1

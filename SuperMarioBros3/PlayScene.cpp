@@ -24,10 +24,11 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define SCENE_SECTION_UNKNOWN			-1
 #define SCENE_SECTION_TEXTURES			2
 #define SCENE_SECTION_MAP				3
-#define SCENE_SECTION_SPRITES			4
-#define SCENE_SECTION_ANIMATIONS		5
-#define SCENE_SECTION_ANIMATION_SETS	6
-#define SCENE_SECTION_OBJECTS			7
+#define SCENE_SECTION_ZONE				4
+#define SCENE_SECTION_SPRITES			5
+#define SCENE_SECTION_ANIMATIONS		6
+#define SCENE_SECTION_ANIMATION_SETS	7
+#define SCENE_SECTION_OBJECTS			8
 
 #define OBJECT_TYPE_MARIO				0
 #define OBJECT_TYPE_BLOCK				1
@@ -41,6 +42,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_BRICKREWARD			9
 #define OBJECT_TYPE_SUPERMUSHROOM		10
 #define OBJECT_TYPE_SUPERLEAF			11
+#define OBJECT_TYPE_GATE				12
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -75,8 +77,23 @@ void CPlayScene::_ParseSection_MAP(string line)
 	int TileSetID = atoi(tokens[4].c_str());
 	wstring mapMatrixPath = ToWSTR(tokens[5]);
 
-	/*this->map = new Map(27, 176, 12, 11, ID_TEX_MAP, L"Map\\map1-1.txt");*/
 	this->map = new Map(TotalRowsOfMap, TotalColumnsOfMap, TotalRowsOfTileSet, TotalColumnsOfTileSet, TileSetID, mapMatrixPath);
+}
+
+void CPlayScene::_ParseSection_ZONE(string line)
+{
+	vector<string> tokens = split(line);
+
+	if (tokens.size() < 5) return; // skip invalid lines
+
+	int id = atoi(tokens[0].c_str());
+	float left = atof(tokens[1].c_str());
+	float top = atof(tokens[2].c_str());
+	float right = atof(tokens[3].c_str());
+	float bottom = atof(tokens[4].c_str());
+
+	CZone* zone = new CZone(id, left, top, right, bottom);
+	zones.push_back(zone);
 }
 
 void CPlayScene::_ParseSection_SPRITES(string line)
@@ -247,6 +264,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CSuperLeaf();
 		break;
 	}
+	case OBJECT_TYPE_GATE:
+	{
+		float targetX = atof(tokens[4].c_str());
+		float targetY = atof(tokens[5].c_str());
+		int targetZone = atoi(tokens[6].c_str());
+		obj = new CGate(targetX, targetY, targetZone);
+		break;
+	}
 	/*case OBJECT_TYPE_PORTAL:
 	{
 		float r = atof(tokens[4].c_str());
@@ -289,6 +314,7 @@ void CPlayScene::Load()
 		
 		if (line == "[TEXTURES]") { section = SCENE_SECTION_TEXTURES; continue; }
 		if (line == "[MAP]") { section = SCENE_SECTION_MAP; continue; }
+		if (line == "[ZONE]") { section = SCENE_SECTION_ZONE; continue; }
 		if (line == "[SPRITES]") {
 			section = SCENE_SECTION_SPRITES; continue;
 		}
@@ -310,6 +336,7 @@ void CPlayScene::Load()
 		{
 		case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
 		case SCENE_SECTION_MAP: _ParseSection_MAP(line); break;
+		case SCENE_SECTION_ZONE: _ParseSection_ZONE(line); break;
 		case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
 		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
 		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
@@ -322,6 +349,8 @@ void CPlayScene::Load()
 	/*CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));*/
 
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
+
+	SwitchZone(currentZone);
 }
 
 void CPlayScene::Update(DWORD dt)
@@ -341,6 +370,10 @@ void CPlayScene::Update(DWORD dt)
 		objects[i]->Update(dt, &coObjects);
 	}
 
+	UpdateCameraPos();
+}
+
+void CPlayScene::UpdateCameraPos() {
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
 
@@ -349,12 +382,20 @@ void CPlayScene::Update(DWORD dt)
 	player->GetPosition(cx, cy);
 
 	CGame* game = CGame::GetInstance();
-	cx -= game->GetScreenWidth() / 2;
+
+	/*cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
-	if (cy < 0) cy = 0;
-	if (cy > map->getMapHeight() - game->GetScreenHeight()) cy = map->getMapHeight() - game->GetScreenHeight();
 	if (cx < 0) cx = 0;
 	if (cx > map->getMapWidth() - game->GetScreenWidth()) cx = map->getMapWidth() - game->GetScreenWidth();
+	if (cy < 0) cy = 0;
+	if (cy > map->getMapHeight() - game->GetScreenHeight()) cy = map->getMapHeight() - game->GetScreenHeight();*/
+
+	cx -= game->GetScreenWidth() / 2;
+	cy -= (game->GetScreenHeight() - 40) / 2;
+	if (cx < zoneLeft) cx = zoneLeft;
+	if (cx > zoneRight - game->GetScreenWidth()) cx = zoneRight - game->GetScreenWidth();
+	if (cy - 40 > zoneBottom - game->GetScreenHeight()) cy = zoneBottom + 40 - game->GetScreenHeight();
+	if (cy < zoneTop) cy = zoneTop;
 
 	CGame::GetInstance()->SetCamPos(cx, cy);
 }
@@ -379,6 +420,12 @@ void CPlayScene::Unload()
 		delete objects[i];
 
 	objects.clear();
+
+	for (int i = 0; i < zones.size(); i++)
+		delete zones[i];
+
+	zones.clear();
+
 	player = NULL;
 
 	delete map;

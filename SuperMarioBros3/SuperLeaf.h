@@ -1,8 +1,9 @@
 #pragma once
 #include "GameObject.h"
+#include "Mario.h"
 
 #define SUPERLEAF_JUMP_SPEED_Y	0.03f
-#define SUPERLEAF_FALL_SPEED_X	0.05f
+#define SUPERLEAF_FALL_SPEED_X	0.025f
 #define SUPERLEAF_GRAVITY		0.00003f
 
 #define SUPERLEAF_STATE_IDLE	0

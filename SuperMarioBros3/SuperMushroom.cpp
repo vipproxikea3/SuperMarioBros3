@@ -78,6 +78,14 @@ void CSuperMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (dynamic_cast<CBreakBlock*>(e->obj)) {
 				BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 			}
+
+			// MARIO
+			if (dynamic_cast<CMario*>(e->obj)) {
+				CMario* mario = dynamic_cast<CMario*>(e->obj);
+				this->isDisable = true;
+				if (this->GetType() == SUPERMUSHROOM_TYPE_LEVEL)
+					mario->LvlUp();
+			}
 		}
 	}
 

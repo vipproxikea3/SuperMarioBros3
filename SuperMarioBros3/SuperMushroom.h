@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Mario.h"
 
 #define SUPERMUSHROOM_WALKING_SPEED		0.02f 
 #define SUPERMUSHROOM_GRAVITY			0.0008f
