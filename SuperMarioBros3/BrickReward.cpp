@@ -3,6 +3,7 @@
 #include "PlayScene.h"
 #include "Coin.h"
 #include "SuperMushroom.h"
+#include "SuperLeaf.h"
 
 void CBrickReward::ShowReward() {
 	if (this->type == BRICKREWARD_TYPE_COIN) {
@@ -19,7 +20,7 @@ void CBrickReward::ShowReward() {
 	if (this->type == BRICKREWARD_TYPE_LEVEL) {
 		CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 		if (mario->GetLevel() == MARIO_LEVEL_SMALL) {
-			CSuperMushroom* mushroom = new CSuperMushroom();
+			CSuperMushroom* mushroom = new CSuperMushroom(SUPERMUSHROOM_TYPE_LEVEL);
 			mushroom->SetPosition(this->x, this->y - 20.0f);
 			mushroom->SetDefaultPosition(this->x, this->y - 20.0f);
 			float mario_x, mario_y;
@@ -36,6 +37,18 @@ void CBrickReward::ShowReward() {
 			mushroom->SetAnimationSet(ani_set);
 			((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(mushroom);
 		}
+		else {
+			CSuperLeaf* leaf = new CSuperLeaf();
+			leaf->SetPosition(this->x, this->y - 18.0f);
+			leaf->SetDefaultPosition(this->x, this->y - 18.0f);
+
+			CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+			LPANIMATION_SET ani_set = animation_sets->Get(13);
+			leaf->SetAnimationSet(ani_set);
+			((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(leaf);
+			leaf->Jump();
+		}
+		mario = NULL;
 	}
 }
 

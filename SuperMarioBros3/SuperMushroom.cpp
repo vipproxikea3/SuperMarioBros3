@@ -2,6 +2,7 @@
 #include "Block.h"
 #include "BrickReward.h"
 #include "Game.h"
+#include "BreakBlock.h"
 
 void CSuperMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -70,7 +71,11 @@ void CSuperMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			// BRICKREWARD
 			if (dynamic_cast<CBrickReward*>(e->obj)) {
-				CBrickReward* brickReward = dynamic_cast<CBrickReward*>(e->obj);
+				BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+			}
+
+			// BREAKBLOCK
+			if (dynamic_cast<CBreakBlock*>(e->obj)) {
 				BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 			}
 		}
@@ -92,7 +97,9 @@ void CSuperMushroom::BasicCollision(float min_tx, float min_ty, float nx, float 
 void CSuperMushroom::Render()
 {
 	int ani;
-	ani = SUPERMUSHROOM_ANI;
+	ani = SUPERMUSHROOM_LEVEL_ANI;
+	if (type == SUPERMUSHROOM_TYPE_LIFE)
+		ani = SUPERMUSHROOM_LIFE_ANI;
 	int alpha = 255;
 	animation_set->at(ani)->Render(x, y, alpha);
 }

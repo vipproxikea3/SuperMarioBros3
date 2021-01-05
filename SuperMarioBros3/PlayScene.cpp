@@ -29,17 +29,18 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define SCENE_SECTION_ANIMATION_SETS	6
 #define SCENE_SECTION_OBJECTS			7
 
-#define OBJECT_TYPE_MARIO			0
-#define OBJECT_TYPE_BLOCK			1
-#define OBJECT_TYPE_GOOMBA			2
-#define OBJECT_TYPE_KOOPA			3
-#define OBJECT_TYPE_PARAGOOMBA		4
-#define OBJECT_TYPE_PARAKOOPA		5
-#define OBJECT_TYPE_COIN			6
-#define OBJECT_TYPE_BREAKBLOCK		7
-#define OBJECT_TYPE_SWITCHBLOCK		8
-#define OBJECT_TYPE_BRICKREWARD		9
-#define OBJECT_TYPE_SUPERMUSHROOM	10
+#define OBJECT_TYPE_MARIO				0
+#define OBJECT_TYPE_BLOCK				1
+#define OBJECT_TYPE_GOOMBA				2
+#define OBJECT_TYPE_KOOPA				3
+#define OBJECT_TYPE_PARAGOOMBA			4
+#define OBJECT_TYPE_PARAKOOPA			5
+#define OBJECT_TYPE_COIN				6
+#define OBJECT_TYPE_BREAKBLOCK			7
+#define OBJECT_TYPE_SWITCHBLOCK			8
+#define OBJECT_TYPE_BRICKREWARD			9
+#define OBJECT_TYPE_SUPERMUSHROOM		10
+#define OBJECT_TYPE_SUPERLEAF			11
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -237,7 +238,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_SUPERMUSHROOM:
 	{
-		obj = new CSuperMushroom();
+		int type = atoi(tokens[4].c_str());
+		obj = new CSuperMushroom(type);
+		break;
+	}
+	case OBJECT_TYPE_SUPERLEAF:
+	{
+		obj = new CSuperLeaf();
 		break;
 	}
 	/*case OBJECT_TYPE_PORTAL:

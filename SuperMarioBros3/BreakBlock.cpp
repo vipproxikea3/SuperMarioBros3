@@ -5,6 +5,18 @@ void CBreakBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	
 }
 
+void CBreakBlock::ShowReward() {
+	switch (type)
+	{
+	case BREAKBLOCK_TYPE_SWITCH:
+		ShowSwitchBlock();
+		break;
+	case BREAKBLOCK_TYPE_LIFE:
+		ShowSuperMushroomLevel();
+		break;
+	}
+}
+
 void CBreakBlock::ShowSwitchBlock() {
 	CGameObject* obj = new CSwitchBlock();
 	// General object setup
@@ -16,6 +28,27 @@ void CBreakBlock::ShowSwitchBlock() {
 	obj->SetAnimationSet(ani_set);
 
 	((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(obj);
+}
+
+void CBreakBlock::ShowSuperMushroomLevel() {
+	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+	CSuperMushroom* mushroom = new CSuperMushroom(SUPERMUSHROOM_TYPE_LIFE);
+	mushroom->SetPosition(this->x, this->y - 20.0f);
+	mushroom->SetDefaultPosition(this->x, this->y - 20.0f);
+	float mario_x, mario_y;
+	mario->GetPosition(mario_x, mario_y);
+	if (x + BRICKREWARD_BBOX_WIDTH * 0.5 > mario_x + MARIO_SMALL_BBOX_WIDTH * 0.5) {
+		mushroom->SetSpeed(SUPERMUSHROOM_WALKING_SPEED, 0);
+	}
+	else {
+		mushroom->SetSpeed(-SUPERMUSHROOM_WALKING_SPEED, 0);
+	}
+
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+	LPANIMATION_SET ani_set = animation_sets->Get(12);
+	mushroom->SetAnimationSet(ani_set);
+	((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(mushroom);
+	mario = NULL;
 }
 
 void CBreakBlock::Render()

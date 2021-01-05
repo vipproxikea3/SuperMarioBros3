@@ -10,6 +10,7 @@
 
 #define BREAKBLOCK_TYPE_DEFAULT	0
 #define BREAKBLOCK_TYPE_SWITCH	1
+#define BREAKBLOCK_TYPE_LIFE	2
 
 #define BREAKBLOCK_BBOX_WIDTH	16
 #define BREAKBLOCK_BBOX_HEIGHT	16
@@ -24,7 +25,9 @@ public:
 		this->type = type;
 	}
 	~CBreakBlock() {}
+	void ShowReward();
 	void ShowSwitchBlock();
+	void ShowSuperMushroomLevel();
 	int GetType() { return type; }
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();

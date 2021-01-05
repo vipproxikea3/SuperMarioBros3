@@ -161,6 +161,7 @@
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Sprites.h" />
+    <ClInclude Include="SuperLeaf.h" />
     <ClInclude Include="SuperMushroom.h" />
     <ClInclude Include="SwitchBlock.h" />
     <ClInclude Include="Textures.h" />
@@ -186,6 +187,7 @@
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Sprites.cpp" />
+    <ClCompile Include="SuperLeaf.cpp" />
     <ClCompile Include="SuperMushroom.cpp" />
     <ClCompile Include="SwitchBlock.cpp" />
     <ClCompile Include="Textures.cpp" />

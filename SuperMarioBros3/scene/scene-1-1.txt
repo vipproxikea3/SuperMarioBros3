@@ -259,7 +259,14 @@
 60005	235	188	251	204	60
 
 # SUPERMUSHROOM
+# supermushroom level
 40001	156	121	172	137	60
+
+# supermushroom life
+40002	286	121	302	137	60
+
+# SUPERLEAF
+13001	180	123	196	137	60
 
 [ANIMATIONS]
 # ani_id sprite_1_id time_1 sprite_2_id time_2 ...
@@ -470,7 +477,14 @@
 901	60005	100
 
 # SUPERMUSHROOM
+# supermushroom level
 300	40001	100
+
+# supermushroom life
+301	40002	100
+
+# SUPERLEAAF
+1500	13001	100
 
 # BLOCK
 
@@ -526,7 +540,7 @@
 
 [ANIMATION_SETS]
 # ani_set_id    ani_1   ani_2   ani_3   ...
-# 1 = Mario | 2 = Block | 3 = MarioFireBullet | 4 = Goomba | 5 = Koopa | 6 = ParaGoomba | 7 = ParaKoopa | 8 = Coin | 9 = BreakBlock | 10 = SwitchBlock | 11 = BrickReward | 12 = SuperMushroom
+# 1 = Mario | 2 = Block | 3 = MarioFireBullet | 4 = Goomba | 5 = Koopa | 6 = ParaGoomba | 7 = ParaKoopa | 8 = Coin | 9 = BreakBlock | 10 = SwitchBlock | 11 = BrickReward | 12 = SuperMushroom | 13 = SuperLeaf
 
 # MARIO
 1	599	402	403	502	503	602	603	400	401	500	501	600	601	610	611	620	621	404	405	504	505	604	605	612	613	622	623	630	631	640	641	406	407	506	507	606	607	614	615	624	625
@@ -561,11 +575,14 @@
 11	900	901
 
 # SUPERMUSHROOM
-12	300
+12	300	301
+
+# SUPERLEAF
+13	1500
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings
-# type: 0 = Mario | 1 = Block | 2 = Goomba | 3 = Koopa | 4 = ParaGoomba | 5 = ParaKoopa | 6 = Coin | 7 = BreakBlock | 8 = SwitchBlock | 9 = BrickReward | 10 = SuperMushroom
+# type: 0 = Mario | 1 = Block | 2 = Goomba | 3 = Koopa | 4 = ParaGoomba | 5 = ParaKoopa | 6 = Coin | 7 = BreakBlock | 8 = SwitchBlock | 9 = BrickReward | 10 = SuperMushroom | 11 = SuperLeaf
 
 # BLOCK
 # type	x	y	ani_set_id	typeBlock
@@ -1037,6 +1054,8 @@
 7	2096	400	9	0
 7	2112	400	9	0
 
+7	1440	128	9	2
+
 # BRICKREWARD
 # type	x	y	ani_set_id	type
 
@@ -1048,13 +1067,12 @@
 
 9	240	304	11	1
 9	656	384	11	1
-9	1440	128	11	1
 9	1472	368	11	1
 
-# SUPERMUSHROOM
+# SUPERLEAF
 # type	x	y	ani_set_id
 
-#10	239	270	12
+#11	239	250	13
 
 # MARIO
 0	16	385	1

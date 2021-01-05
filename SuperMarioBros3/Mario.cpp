@@ -8,6 +8,7 @@
 #include "Coin.h"
 #include "BrickReward.h"
 #include "SuperMushroom.h"
+#include "SuperLeaf.h"
 #include "Koopa.h"
 
 void CMario::CalVx(DWORD dt) {
@@ -170,9 +171,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CBreakBlock* breakBlock = dynamic_cast<CBreakBlock*>(e->obj);
 				BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 
-				if (e->ny == 1 && breakBlock->GetType() == BREAKBLOCK_TYPE_SWITCH && breakBlock->GetState() == BREAKBLOCK_STATE_IDLE) {
+				if (e->ny == 1 && breakBlock->GetType() != BREAKBLOCK_TYPE_DEFAULT && breakBlock->GetState() == BREAKBLOCK_STATE_IDLE) {
 					breakBlock->SetState(BREAKBLOCK_STATE_LOCK);
-					breakBlock->ShowSwitchBlock();
+					breakBlock->ShowReward();
 				}
 			}
 
@@ -495,7 +496,16 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (dynamic_cast<CSuperMushroom*>(e->obj)) {
 				CSuperMushroom* mushroom = dynamic_cast<CSuperMushroom*>(e->obj);
 				mushroom->isDisable = true;
-				this->LvlUp();
+				if (mushroom->GetType() == SUPERMUSHROOM_TYPE_LEVEL)
+					this->LvlUp();
+			}
+
+			// SUPERLEAF
+			if (dynamic_cast<CSuperLeaf*>(e->obj)) {
+				CSuperLeaf* leaf = dynamic_cast<CSuperLeaf*>(e->obj);
+				leaf->isDisable = true;
+				if (this->level == MARIO_LEVEL_BIG)
+					this->LvlUp();
 			}
 		}
 	}

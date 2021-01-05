@@ -15,6 +15,7 @@
 #include "SwitchBlock.h"
 #include "BrickReward.h"
 #include "SuperMushroom.h"
+#include "SuperLeaf.h"
 
 
 class CPlayScene : public CScene
