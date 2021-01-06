@@ -25,10 +25,11 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define SCENE_SECTION_TEXTURES			2
 #define SCENE_SECTION_MAP				3
 #define SCENE_SECTION_ZONE				4
-#define SCENE_SECTION_SPRITES			5
-#define SCENE_SECTION_ANIMATIONS		6
-#define SCENE_SECTION_ANIMATION_SETS	7
-#define SCENE_SECTION_OBJECTS			8
+#define SCENE_SECTION_HUD				5
+#define SCENE_SECTION_SPRITES			6
+#define SCENE_SECTION_ANIMATIONS		7
+#define SCENE_SECTION_ANIMATION_SETS	8
+#define SCENE_SECTION_OBJECTS			9
 
 #define OBJECT_TYPE_MARIO				0
 #define OBJECT_TYPE_BLOCK				1
@@ -43,6 +44,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_SUPERMUSHROOM		10
 #define OBJECT_TYPE_SUPERLEAF			11
 #define OBJECT_TYPE_GATE				12
+#define OBJECT_TYPE_HUD					13
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -94,6 +96,30 @@ void CPlayScene::_ParseSection_ZONE(string line)
 
 	CZone* zone = new CZone(id, left, top, right, bottom);
 	zones.push_back(zone);
+}
+
+void CPlayScene::_ParseSection_HUD(string line)
+{
+	vector<string> tokens = split(line);
+
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+
+	if (tokens.size() < 3) return; // skip invalid lines
+
+	float x = atof(tokens[1].c_str());
+	float y = atof(tokens[2].c_str());
+	int ani_id = atoi(tokens[0].c_str());
+
+	hud = new CHUD();
+	hud->SetPosition(x, y);
+	hud->SetDefaultPosition(x, y);
+
+	LPANIMATION_SET ani_set = animation_sets->Get(15);
+
+	hud->SetAnimationSet(ani_set);
+
+	if (hud)
+		DebugOut(L"[INFO] HUD created!\n");
 }
 
 void CPlayScene::_ParseSection_SPRITES(string line)
@@ -272,6 +298,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CGate(targetX, targetY, targetZone);
 		break;
 	}
+	case OBJECT_TYPE_HUD:
+	{
+		obj = new CHUD();
+		break;
+	}
 	/*case OBJECT_TYPE_PORTAL:
 	{
 		float r = atof(tokens[4].c_str());
@@ -315,6 +346,7 @@ void CPlayScene::Load()
 		if (line == "[TEXTURES]") { section = SCENE_SECTION_TEXTURES; continue; }
 		if (line == "[MAP]") { section = SCENE_SECTION_MAP; continue; }
 		if (line == "[ZONE]") { section = SCENE_SECTION_ZONE; continue; }
+		if (line == "[HUD]") { section = SCENE_SECTION_HUD; continue; }
 		if (line == "[SPRITES]") {
 			section = SCENE_SECTION_SPRITES; continue;
 		}
@@ -337,6 +369,7 @@ void CPlayScene::Load()
 		case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
 		case SCENE_SECTION_MAP: _ParseSection_MAP(line); break;
 		case SCENE_SECTION_ZONE: _ParseSection_ZONE(line); break;
+		case SCENE_SECTION_HUD: _ParseSection_HUD(line); break;
 		case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
 		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
 		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
@@ -398,17 +431,24 @@ void CPlayScene::UpdateCameraPos() {
 	if (cy < zoneTop) cy = zoneTop;
 
 	CGame::GetInstance()->SetCamPos(cx, cy);
+
+	if (hud)
+		hud->SetPosition(cx, cy + game->GetScreenHeight() - 40);
 }
 
 void CPlayScene::Render()
 {
 	if (map)
 		map->Render();
+	
 	for (int i = 0; i < objects.size(); i++)
 	{
 		if (!objects[i]->isDisable)
 			objects[i]->Render();
 	}
+
+	if (hud)
+		hud->Render();
 }
 
 /*
@@ -430,6 +470,9 @@ void CPlayScene::Unload()
 
 	delete map;
 	map = nullptr;
+
+	delete hud;
+	hud = nullptr;
 
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }

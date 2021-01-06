@@ -32,6 +32,9 @@ void CMario::CalVx(DWORD dt) {
 			if (vx > 0)
 				vx = 0;
 	}
+
+	// Update run speed stack
+	UpdateRunSpeedStack();
 }
 
 void CMario::UpdateRunSpeedStack() {
@@ -87,9 +90,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	// Calculate vx
 	CalVx(dt);
-
-	// Update run speed stack
-	UpdateRunSpeedStack();
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;

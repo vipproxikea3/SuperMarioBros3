@@ -8,6 +8,8 @@
 40	textures\misc.png	176	224	248
 50	textures\enemies-3.png	41	88	124
 60	textures\misc-1.png	166	185	255
+70	textures\HUD-BG.png	255	0	0
+80	textures\HUD.png	0	224	142
 
 [MAP]
 # TotalRowsOfMap	TotalColumnsOfMap	TotalRowsOfTileSet		TotalColumnsOfTileSet	TileSetID	MapMatrixPath
@@ -286,6 +288,15 @@
 # GATE
 14001	400	167	416	183	60
 
+# HUD
+# hud background
+15001	0	0	310	40	70
+
+# hud run stack normal
+15011	64	162	72	169	80
+# hud run stack max
+15012	73	162	88	169	80
+
 [ANIMATIONS]
 # ani_id sprite_1_id time_1 sprite_2_id time_2 ...
 
@@ -507,6 +518,16 @@
 # GATE
 1600	14001	100
 
+# HUD
+# hud background
+1700	15001	100
+
+# hud run stack normal
+1701	15011	100
+
+# hud run stack max
+1702	15012	100
+
 # BLOCK
 
 # ground block left
@@ -573,7 +594,7 @@
 
 [ANIMATION_SETS]
 # ani_set_id    ani_1   ani_2   ani_3   ...
-# 1 = Mario | 2 = Block | 3 = MarioFireBullet | 4 = Goomba | 5 = Koopa | 6 = ParaGoomba | 7 = ParaKoopa | 8 = Coin | 9 = BreakBlock | 10 = SwitchBlock | 11 = BrickReward | 12 = SuperMushroom | 13 = SuperLeaf | 14 = Gate
+# 1 = Mario | 2 = Block | 3 = MarioFireBullet | 4 = Goomba | 5 = Koopa | 6 = ParaGoomba | 7 = ParaKoopa | 8 = Coin | 9 = BreakBlock | 10 = SwitchBlock | 11 = BrickReward | 12 = SuperMushroom | 13 = SuperLeaf | 14 = Gate | 15 = HUD
 
 # MARIO
 1	599	402	403	502	503	602	603	400	401	500	501	600	601	610	611	620	621	404	405	504	505	604	605	612	613	622	623	630	631	640	641	406	407	506	507	606	607	614	615	624	625
@@ -616,9 +637,16 @@
 # GATE
 14	1600
 
+# HUD
+15	1700	1701	1702
+
+[HUD]
+# x	y	ani_set_id
+0	0	15
+
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings
-# type: 0 = Mario | 1 = Block | 2 = Goomba | 3 = Koopa | 4 = ParaGoomba | 5 = ParaKoopa | 6 = Coin | 7 = BreakBlock | 8 = SwitchBlock | 9 = BrickReward | 10 = SuperMushroom | 11 = SuperLeaf | 12 = Gate
+# type: 0 = Mario | 1 = Block | 2 = Goomba | 3 = Koopa | 4 = ParaGoomba | 5 = ParaKoopa | 6 = Coin | 7 = BreakBlock | 8 = SwitchBlock | 9 = BrickReward | 10 = SuperMushroom | 11 = SuperLeaf | 12 = Gate | 13 = HUD
 
 # BLOCK
 # type	x	y	ani_set_id	typeBlock

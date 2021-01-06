@@ -18,6 +18,7 @@
 #include "SuperMushroom.h"
 #include "SuperLeaf.h"
 #include "Gate.h"
+#include "HUD.h"
 
 
 class CPlayScene : public CScene
@@ -38,9 +39,12 @@ protected:
 
 	Map* map;
 
+	CHUD* hud;
+
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_MAP(string line);
 	void _ParseSection_ZONE(string line);
+	void _ParseSection_HUD(string line);
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);
 	void _ParseSection_ANIMATION_SETS(string line);
