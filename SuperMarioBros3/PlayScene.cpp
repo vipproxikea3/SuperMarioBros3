@@ -441,9 +441,13 @@ void CPlayScene::Render()
 	if (map)
 		map->Render();
 	
+	CGame* game = CGame::GetInstance();
+	float l, t, r, b;
+
 	for (int i = 0; i < objects.size(); i++)
 	{
-		if (!objects[i]->isDisable)
+		objects[i]->GetBoundingBox(l, t, r, b);
+		if (!objects[i]->isDisable && game->IsInCamera(l, t, r, b))
 			objects[i]->Render();
 	}
 

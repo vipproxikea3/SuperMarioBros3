@@ -14,8 +14,8 @@ void CSwitchBlock::Switch() {
 			CBreakBlock* breakBlock = dynamic_cast<CBreakBlock*>(objects[i]);
 			if (breakBlock->isDisable == false && breakBlock->GetType() == BREAKBLOCK_TYPE_DEFAULT && breakBlock->GetState() == BREAKBLOCK_STATE_IDLE) {
 				CCoin* coin = new CCoin();
-				coin->SetPosition(breakBlock->x + 3.0f, breakBlock->y);
-				coin->SetDefaultPosition(breakBlock->x + 3.0f, breakBlock->y);
+				coin->SetPosition(breakBlock->x + 1.0f, breakBlock->y);
+				coin->SetDefaultPosition(breakBlock->x + 1.0f, breakBlock->y);
 
 				CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 				LPANIMATION_SET ani_set = animation_sets->Get(8);

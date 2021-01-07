@@ -3,6 +3,7 @@
 #include "Goomba.h"
 #include "Mario.h"
 #include "PlayScene.h"
+#include "Point.h"
 
 void CKoopa::lvlDown() {
 	level = KOOPA_LEVEL_SHELL;
@@ -181,6 +182,10 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								this->vx = -SHELL_WALKING_SPEED;
 								breakBlock->isDisable = true;
 							}
+
+							if (e->nx != 0) {
+								breakBlock->ShowPiece();
+							}
 						}
 
 						// BRICKREWARD
@@ -206,6 +211,12 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
 							if (goomba->GetState() != GOOMBA_STATE_DIE_X) {
 								goomba->SetState(GOOMBA_STATE_DIE_X);
+								CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+								LPANIMATION_SET ani_set = animation_sets->Get(17);
+								CPoint* point = new CPoint(1);
+								point->SetPosition(x, y - 16.0f);
+								point->SetAnimationSet(ani_set);
+								((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(point);
 							}
 						}
 
@@ -219,6 +230,12 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							else {
 								paraGoomba->SetState(PARAGOOMBA_STATE_DIE_X);
 							}
+							CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+							LPANIMATION_SET ani_set = animation_sets->Get(17);
+							CPoint* point = new CPoint(1);
+							point->SetPosition(x, y - 16.0f);
+							point->SetAnimationSet(ani_set);
+							((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(point);
 						}
 					}
 				}

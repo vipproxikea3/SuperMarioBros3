@@ -26,16 +26,12 @@ void CParaKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				mario->lvlDown();
 				mario = NULL;
 			}
-			this->SetLevel(PARAKOOPA_LEVEL_KOOPA);
+			this->SetLevel(PARAKOOPA_LEVEL_WING);
 			this->SetState(PARAKOOPA_STATE_WALKING);
 			y -= PARAKOOPA_BBOX_HEIGHT - PARAKOOPA_SHELL_BBOX_HEIGHT;
 		}		
 
 		if (this->level == PARAKOOPA_LEVEL_KOOPA || this->level == PARAKOOPA_LEVEL_WING) {
-			if (GetTickCount64() - last_jump > PARAKOOPA_JUMP_COOLDOWN && this->GetLevel() == PARAKOOPA_LEVEL_WING) {
-				vy = -PARAKOOPA_JUMP_SPEED;
-				last_jump = GetTickCount64();
-			}
 
 			CGameObject::Update(dt, coObjects);
 			vy += PARAKOOPA_GRAVITY * dt;
@@ -65,6 +61,7 @@ void CParaKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				x = x0 + dx;
 				y = y0 + dy;
 
+
 				for (UINT i = 0; i < coEventsResult.size(); i++) {
 					LPCOLLISIONEVENT e = coEventsResult[i];
 
@@ -82,7 +79,7 @@ void CParaKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 
 						if (e->ny == -1 && block->isBlockTop()) {
-							this->vy = 0;
+							this->vy = -PARAKOOPA_JUMP_SPEED;
 							this->y = y0 + min_ty * this->dy + ny * 0.4f;
 						}
 
@@ -288,7 +285,6 @@ void CParaKoopa::ReSet() {
 		this->SetPosition(this->x_start, this->y_start);
 		this->SetState(PARAKOOPA_STATE_WALKING);
 		this->SetLevel(PARAKOOPA_LEVEL_WING);
-		last_jump = GetTickCount64();
 	}
 	if (!game->IsInCamera(this->x_start, this->y_start, this->x_start + r - l, this->y_start + b - t)) {
 		if (this->isDisable) {

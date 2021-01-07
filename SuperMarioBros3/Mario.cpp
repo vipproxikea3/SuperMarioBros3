@@ -12,6 +12,7 @@
 #include "Koopa.h"
 #include "Gate.h"
 #include "PlayScene.h"
+#include "Point.h"
 
 void CMario::CalVx(DWORD dt) {
 	vx += ax * dt;
@@ -78,6 +79,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt);
 
 	// Check flying
+	if (runSpeedStack != 7) {
+		SetStopFly();
+		fly_start = NULL;
+	}
+
 	if (GetTickCount() - fly_start >= MARIO_FLY_TIME) {
 		flyIng = false;
 		fly_start = NULL;
@@ -201,6 +207,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						y = y0 + min_ty * dy + e->ny * 0.4f;
 						goomba->SetState(GOOMBA_STATE_DIE_Y);
 						vy = -MARIO_JUMP_DEFLECT_SPEED;
+						ShowPoint();
 					}
 					else {
 						flyIng = false;
@@ -221,6 +228,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							vx = 0;
 							//x = x0 + min_tx * dx + e->nx * 0.4f;
 							goomba->SetState(GOOMBA_STATE_DIE_X);
+							ShowPoint();
 						}
 						else {
 							if (goomba->GetState() != GOOMBA_STATE_DIE_Y && goomba->GetState() != GOOMBA_STATE_DIE_X)
@@ -256,6 +264,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							paraGoomba->SetState(PARAGOOMBA_STATE_DIE_Y);
 						}
 						vy = -MARIO_JUMP_DEFLECT_SPEED;
+						ShowPoint();
 					}
 					else {
 						flyIng = false;
@@ -282,6 +291,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							else {
 								paraGoomba->SetState(PARAGOOMBA_STATE_DIE_X);
 							}
+							ShowPoint();
 						}
 						else {
 							if (paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_Y && paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_X)
@@ -313,6 +323,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						{
 							koopa->lvlDown();
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							ShowPoint();
 						}
 						else {
 							flyIng = false;
@@ -330,6 +341,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						if (spinning) {
 							if (e->nx * this->nx < 0) {
 								koopa->lvlDown();
+								ShowPoint();
 							}
 							else {
 								lvlDown();
@@ -402,6 +414,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							y = y0 + min_ty * dy + e->ny * 0.4f;
 							paraKoopa->lvlDown();
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							ShowPoint();
 						}
 						else {
 							flyIng = false;
@@ -419,6 +432,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						if (spinning) {
 							if (e->nx * this->nx < 0) {
 								paraKoopa->lvlDown();
+								ShowPoint();
 							}
 							else {
 								lvlDown();
@@ -498,20 +512,31 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 
 			// SUPERMUSHROOM
-			/*if (dynamic_cast<CSuperMushroom*>(e->obj)) {
+			if (dynamic_cast<CSuperMushroom*>(e->obj)) {
 				CSuperMushroom* mushroom = dynamic_cast<CSuperMushroom*>(e->obj);
 				mushroom->isDisable = true;
-				if (mushroom->GetType() == SUPERMUSHROOM_TYPE_LEVEL)
+				if (mushroom->GetType() == SUPERMUSHROOM_TYPE_LEVEL) {
 					this->LvlUp();
-			}*/
+				}
+				if (mushroom->GetType() == SUPERMUSHROOM_TYPE_LIFE) {
+					CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+					LPANIMATION_SET ani_set = animation_sets->Get(17);
+					CPoint* point = new CPoint(0);
+					point->SetPosition(x, y - 16.0f);
+					point->SetAnimationSet(ani_set);
+					((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(point);
+					CGame* game = CGame::GetInstance();
+					game->PushLifeStack();
+				}
+			}
 
 			// SUPERLEAF
-			/*if (dynamic_cast<CSuperLeaf*>(e->obj)) {
+			if (dynamic_cast<CSuperLeaf*>(e->obj)) {
 				CSuperLeaf* leaf = dynamic_cast<CSuperLeaf*>(e->obj);
 				leaf->isDisable = true;
 				if (this->level == MARIO_LEVEL_BIG)
 					this->LvlUp();
-			}*/
+			}
 		}
 	}
 
@@ -593,8 +618,17 @@ void CMario::LvlUp() {
 void CMario::lvlDown() {
 	switch (level) {
 	case MARIO_LEVEL_SMALL:
-		SetState(MARIO_STATE_DIE);
+	{
+		CGame* game = CGame::GetInstance();
+		int life = game->GetLifeStack();
+		if (life == 0)
+			SetState(MARIO_STATE_DIE);
+		else {
+			game->PopLifeStack();
+			ReSet();
+		}
 		break;
+	}
 	case MARIO_LEVEL_BIG:
 		SetLevel(MARIO_LEVEL_SMALL);
 		StartUntouchable();
@@ -651,6 +685,15 @@ void CMario::Fly() {
 			vy = MARIO_FALL_SPEED;
 		}
 	}
+}
+
+void CMario::ShowPoint() {
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+	LPANIMATION_SET ani_set = animation_sets->Get(17);
+	CPoint* point = new CPoint(1);
+	point->SetPosition(x, y - 16.0f);
+	point->SetAnimationSet(ani_set);
+	((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(point);
 }
 
 void CMario::BasicCollision(float min_tx, float min_ty, float nx, float ny, float x0, float y0)

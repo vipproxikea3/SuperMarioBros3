@@ -30,6 +30,31 @@ void CBreakBlock::ShowSwitchBlock() {
 	((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(obj);
 }
 
+void CBreakBlock::ShowPiece() {
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+	LPANIMATION_SET ani_set = animation_sets->Get(16);
+
+	CBreakBlockPiece* piece = new CBreakBlockPiece(BREAKBLOCKPIECE_TYPE_HIGH_LEFT);
+	piece->SetPosition(this->x + 4.0f, this->y + 4.0f);
+	piece->SetAnimationSet(ani_set);
+	((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(piece);
+
+	piece = new CBreakBlockPiece(BREAKBLOCKPIECE_TYPE_LOW_LEFT);
+	piece->SetPosition(this->x + 4.0f, this->y + 4.0f);
+	piece->SetAnimationSet(ani_set);
+	((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(piece);
+
+	piece = new CBreakBlockPiece(BREAKBLOCKPIECE_TYPE_HIGH_RIGHT);
+	piece->SetPosition(this->x + 4.0f, this->y + 4.0f);
+	piece->SetAnimationSet(ani_set);
+	((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(piece);
+
+	piece = new CBreakBlockPiece(BREAKBLOCKPIECE_TYPE_LOW_RIGHT);
+	piece->SetPosition(this->x + 4.0f, this->y + 4.0f);
+	piece->SetAnimationSet(ani_set);
+	((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(piece);
+}
+
 void CBreakBlock::ShowSuperMushroomLevel() {
 	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 	CSuperMushroom* mushroom = new CSuperMushroom(SUPERMUSHROOM_TYPE_LIFE);

@@ -5,55 +5,59 @@ void CCoin::Jump() {
 }
 
 void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
-	// Calculate dx, dy 
-	CGameObject::Update(dt);
+	if (!this->isDisable) {
+		// Calculate dx, dy 
+		CGameObject::Update(dt);
 
-	if (this->state == COIN_STATE_JUMP) {
-		// Simple fall down
-		vy += COIN_GRAVITY * dt;
+		if (this->state == COIN_STATE_JUMP) {
+			// Simple fall down
+			vy += COIN_GRAVITY * dt;
 
-		y += dy;
+			y += dy;
 
-		if (y > y_start) isDisable = true;
-	}
+			if (y > y_start) isDisable = true;
+		}
 
-	vector<LPCOLLISIONEVENT> coEvents;
-	vector<LPCOLLISIONEVENT> coEventsResult;
+		vector<LPCOLLISIONEVENT> coEvents;
+		vector<LPCOLLISIONEVENT> coEventsResult;
 
-	coEvents.clear();
+		coEvents.clear();
 
-	CalcPotentialCollisions(coObjects, coEvents);
+		CalcPotentialCollisions(coObjects, coEvents);
 
-	if (coEvents.size() == 0)
-	{
-		y += dy;
-		x += dx;
-	}
-	else
-	{
-		float min_tx, min_ty, nx = 0, ny = 0;
-		float rdx = 0;
-		float rdy = 0;
+		if (coEvents.size() == 0)
+		{
+			y += dy;
+			x += dx;
+		}
+		else
+		{
+			float min_tx, min_ty, nx = 0, ny = 0;
+			float rdx = 0;
+			float rdy = 0;
 
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
-		float x0 = x;
-		float y0 = y;
+			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+			float x0 = x;
+			float y0 = y;
 
-		x = x0 + dx;
-		y = y0 + dy;
+			x = x0 + dx;
+			y = y0 + dy;
 
-		for (UINT i = 0; i < coEventsResult.size(); i++) {
-			LPCOLLISIONEVENT e = coEventsResult[i];
+			for (UINT i = 0; i < coEventsResult.size(); i++) {
+				LPCOLLISIONEVENT e = coEventsResult[i];
 
-			//MARIO
-			if (dynamic_cast<CMario*>(e->obj)) {
-				this->isDisable = true;
+				//MARIO
+				if (dynamic_cast<CMario*>(e->obj)) {
+					this->isDisable = true;
+					CGame* game = CGame::GetInstance();
+					game->PushCoin();
+				}
 			}
 		}
-	}
 
-	// clean up collision events
-	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+		// clean up collision events
+		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+	}
 }
 
 void CCoin::Render()

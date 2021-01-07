@@ -146,6 +146,7 @@
     <ClInclude Include="Animations.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="BreakBlock.h" />
+    <ClInclude Include="BreakBlockPiece.h" />
     <ClInclude Include="BrickReward.h" />
     <ClInclude Include="Coin.h" />
     <ClInclude Include="Game.h" />
@@ -161,6 +162,7 @@
     <ClInclude Include="ParaGoomba.h" />
     <ClInclude Include="ParaKoopa.h" />
     <ClInclude Include="PlayScene.h" />
+    <ClInclude Include="Point.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="SuperLeaf.h" />
@@ -174,6 +176,7 @@
     <ClCompile Include="Animations.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BreakBlock.cpp" />
+    <ClCompile Include="BreakBlockPiece.cpp" />
     <ClCompile Include="BrickReward.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -190,6 +193,7 @@
     <ClCompile Include="ParaGoomba.cpp" />
     <ClCompile Include="ParaKoopa.cpp" />
     <ClCompile Include="PlayScene.cpp" />
+    <ClCompile Include="Point.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="SuperLeaf.cpp" />

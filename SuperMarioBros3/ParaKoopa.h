@@ -32,7 +32,6 @@
 #define PARAKOOPA_SHELL_BBOX_HEIGHT			16
 
 #define PARAKOOPA_SHELL_TIME				5000
-#define PARAKOOPA_JUMP_COOLDOWN				2000
 
 class CParaKoopa : public CGameObject
 {
@@ -40,14 +39,12 @@ class CParaKoopa : public CGameObject
 	float limitL, limitR;
 	bool isHugging = false;
 	DWORD shell_start;
-	DWORD last_jump;
 public:
 	CParaKoopa(float l, float r) : CGameObject()
 	{
 		this->SetState(PARAKOOPA_STATE_WALKING);
 		this->setAactiveArea(l, r);
 		this->SetLevel(PARAKOOPA_LEVEL_WING);
-		last_jump = GetTickCount64();
 	}
 	~CParaKoopa() {}
 	void lvlDown();

@@ -27,6 +27,7 @@ public:
 	~CBreakBlock() {}
 	void ShowReward();
 	void ShowSwitchBlock();
+	void ShowPiece();
 	void ShowSuperMushroomLevel();
 	int GetType() { return type; }
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

@@ -19,6 +19,7 @@
 #include "SuperLeaf.h"
 #include "Gate.h"
 #include "HUD.h"
+#include "BreakBlockPiece.h"
 
 
 class CPlayScene : public CScene

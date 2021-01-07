@@ -4,18 +4,22 @@
 #include "Coin.h"
 #include "SuperMushroom.h"
 #include "SuperLeaf.h"
+#include "Point.h"
 
 void CBrickReward::ShowReward() {
 	if (this->type == BRICKREWARD_TYPE_COIN) {
 		CCoin* coin = new CCoin();
-		coin->SetPosition(this->x + 3.0f, this->y - 18.0f);
-		coin->SetDefaultPosition(this->x + 3.0f, this->y - 18.0f);
+		coin->SetPosition(this->x + 1.0f, this->y - 18.0f);
+		coin->SetDefaultPosition(this->x + 1.0f, this->y - 18.0f);
 
 		CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 		LPANIMATION_SET ani_set = animation_sets->Get(8);
 		coin->SetAnimationSet(ani_set);
 		((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(coin);
 		coin->Jump();
+		ShowPoint();
+		CGame* game = CGame::GetInstance();
+		game->PushCoin();
 	}
 	if (this->type == BRICKREWARD_TYPE_LEVEL) {
 		CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
@@ -50,6 +54,15 @@ void CBrickReward::ShowReward() {
 		}
 		mario = NULL;
 	}
+}
+
+void CBrickReward::ShowPoint() {
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+	LPANIMATION_SET ani_set = animation_sets->Get(17);
+	CPoint* point = new CPoint(1);
+	point->SetPosition(x, y - 16.0f);
+	point->SetAnimationSet(ani_set);
+	((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(point);
 }
 
 void CBrickReward::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {

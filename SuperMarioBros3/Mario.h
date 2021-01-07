@@ -157,10 +157,16 @@ public:
 	void Spin();
 	void Shot();
 	void Fly();
-	void SetStopFly() { flyIng = false; }
+	void SetStopFly() { flyIng = false; fly_start = NULL; }
 	void SetStopFall() { fallIng = false; }
 	void UpdateHuggingShellPosition();
 	void StopHug();
+	void ShowPoint();
+	void ReSet() {
+		this->SetPosition(x_start, y_start);
+		this->SetState(MARIO_STATE_IDLE);
+		this->SetLevel(MARIO_LEVEL_SMALL);
+	}
 	void BasicCollision(float min_tx, float min_ty, float nx, float ny, float x0, float y0);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();

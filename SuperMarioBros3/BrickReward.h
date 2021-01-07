@@ -29,6 +29,7 @@ public:
 	}
 	~CBrickReward() {}
 	void ShowReward();
+	void ShowPoint();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 	void SetState(int state);

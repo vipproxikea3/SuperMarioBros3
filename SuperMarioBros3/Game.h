@@ -8,6 +8,7 @@
 
 
 #define DIRECTINPUT_VERSION 0x0800
+#define GAMEPLAY_TIME	300000
 #include <dinput.h>
 
 #include "Scene.h"
@@ -41,6 +42,11 @@ class CGame
 	int screen_width;
 	int screen_height;
 
+	int coin = 0;
+	DWORD start_game;
+	int lifeStack = 4;
+	int point = 0;
+
 	unordered_map<int, LPSCENE> scenes;
 	int current_scene;
 
@@ -62,6 +68,16 @@ public:
 
 	float GetScreenWidth() { return screen_width; }
 	float GetScreenHeight() { return screen_height; }
+
+	int GetCoin() { return coin; }
+	void PushCoin() { coin = coin + 1; }
+	int GetLifeStack() { return lifeStack; }
+	void PushLifeStack() { lifeStack = lifeStack + 1; }
+	int GetPoint() { return point; }
+	void PushPoint(int pushPoint) { point += pushPoint; }
+	void PopLifeStack() { lifeStack = lifeStack - 1; }
+	DWORD GetStartGameTime() { return start_game; }
+	DWORD GetGamePlayTime() { return GAMEPLAY_TIME; }
 
 	static void SweptAABB(
 		float ml,			// move left 
