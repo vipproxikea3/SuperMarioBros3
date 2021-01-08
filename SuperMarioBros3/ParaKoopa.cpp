@@ -79,7 +79,8 @@ void CParaKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 
 						if (e->ny == -1 && block->isBlockTop()) {
-							this->vy = -PARAKOOPA_JUMP_SPEED;
+							if (this->GetLevel() == PARAKOOPA_LEVEL_WING)
+								this->vy = -PARAKOOPA_JUMP_SPEED;
 							this->y = y0 + min_ty * this->dy + ny * 0.4f;
 						}
 

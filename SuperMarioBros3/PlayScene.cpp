@@ -295,7 +295,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float targetX = atof(tokens[4].c_str());
 		float targetY = atof(tokens[5].c_str());
 		int targetZone = atoi(tokens[6].c_str());
-		obj = new CGate(targetX, targetY, targetZone);
+		int type = atoi(tokens[7].c_str());
+		obj = new CGate(targetX, targetY, targetZone, type);
 		break;
 	}
 	case OBJECT_TYPE_HUD:
@@ -486,6 +487,8 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
+	if (!mario->canControl) return;
+
 	if (mario->state != MARIO_STATE_DIE) {
 		switch (KeyCode)
 		{
@@ -519,6 +522,8 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
+	if (!mario->canControl) return;
+
 	if (mario->state != MARIO_STATE_DIE) {
 		switch (KeyCode)
 		{
@@ -537,6 +542,8 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 {
 	CGame* game = CGame::GetInstance();
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
+	if (!mario->canControl) return;
+
 	if (mario->state != MARIO_STATE_DIE) {
 		// disable control key when Mario die 
 		if (mario->GetState() == MARIO_STATE_DIE) return;

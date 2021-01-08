@@ -15,6 +15,7 @@
 //#define MARIO_ACCELERATION			0.000075f
 #define MARIO_ACCELERATION				0.00005f
 #define MARIO_WALKING_FRICTION			0.00025f
+#define MARIO_PIPE_WALKING_SPEED		0.01f;
 
 #define MARRIO_RUN_SPEED_STACK_1		0.075
 #define MARRIO_RUN_SPEED_STACK_2		0.085
@@ -138,7 +139,17 @@ class CMario : public CGameObject
 	int untouchable;
 	DWORD untouchable_start;
 
-	int runSpeedStack = 0;
+	int runSpeedStack = 0;	
+
+	bool pipeWalking = false;
+	int typePipeWalking = 0;
+	float targetX;
+	float targetY;
+	int targetZone;
+	float y_pipeWalking_start;
+	float x_pipeWalking_start;
+	bool teleported = false;
+
 public:
 	CMario() : CGameObject()
 	{
@@ -147,7 +158,10 @@ public:
 		lastShotTime = 0;
 		spinning = 0;
 		last_spin = 0;
+		canControl = true;
+		pipeWalking = false;
 	}
+	bool canControl = true;
 	void CalVx(DWORD dt);
 	void UpdateRunSpeedStack();
 	bool canJump = 0;
@@ -162,6 +176,7 @@ public:
 	void UpdateHuggingShellPosition();
 	void StopHug();
 	void ShowPoint();
+	void Teleport();
 	void ReSet() {
 		this->SetPosition(x_start, y_start);
 		this->SetState(MARIO_STATE_IDLE);

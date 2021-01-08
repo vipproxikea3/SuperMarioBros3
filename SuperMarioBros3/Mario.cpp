@@ -94,6 +94,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vy += MARIO_GRAVITY * dt;
 	}
 
+	Teleport();
+
 	// Calculate vx
 	CalVx(dt);
 
@@ -149,6 +151,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			// BLOCK
 			if (dynamic_cast<CBlock*>(e->obj)) {
+				if (pipeWalking) return;
 				CBlock* block = dynamic_cast<CBlock*>(e->obj);
 
 				if (e->nx == -1 && block->isBlockLeft()) {
@@ -494,11 +497,16 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			// GATE
 			if (dynamic_cast<CGate*>(e->obj)) {
-				CGate* gate = dynamic_cast<CGate*>(e->obj);
-				this->x = gate->GetTargetX();
-				this->y = gate->GetTargetY();
-				vx = 0;
-				((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->SwitchZone(gate->GetTargetZone());
+				if (!pipeWalking && e->ny != 0) {
+					CGate* gate = dynamic_cast<CGate*>(e->obj);
+					targetX = gate->GetTargetX();
+					targetY = gate->GetTargetY();
+					targetZone = gate->GetTargetZone();
+					typePipeWalking = gate->GetType();
+					y_pipeWalking_start = gate->y;
+					x_pipeWalking_start = gate->x;
+					pipeWalking = true;
+				}
 			}
 
 			// BRICKREWARD
@@ -550,6 +558,48 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			bullets.erase(bullets.begin() + i);
 			delete p;
 		}	
+	}
+}
+
+void CMario::Teleport() {
+	if (pipeWalking) {
+		if (typePipeWalking == 1) {
+			if (y <= y_pipeWalking_start) {
+				this->SetState(MARIO_STATE_IDLE);
+				this->x = x_pipeWalking_start - 7.0f;
+				canControl = false;
+				vx = 0;
+				vy = MARIO_PIPE_WALKING_SPEED;
+			}
+			else {
+				this->SetPosition(targetX, targetY);
+				((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->SwitchZone(targetZone);
+				this->canControl = true;
+				pipeWalking = false;
+				vy = 0;
+				vx = 0;
+			}
+		}
+		else if (typePipeWalking == -1) {
+			if (!teleported) {
+				this->SetPosition(targetX, targetY);
+				((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->SwitchZone(targetZone);
+				teleported = true;
+			}
+			if (y + 27.0f >= targetY) {
+				this->SetState(MARIO_STATE_IDLE);
+				canControl = false;
+				vx = 0;
+				vy = -MARIO_PIPE_WALKING_SPEED;
+			}
+			else {
+				this->canControl = true;
+				pipeWalking = false;
+				vy = 0;
+				vx = 0;
+				teleported = false;
+			}
+		}
 	}
 }
 

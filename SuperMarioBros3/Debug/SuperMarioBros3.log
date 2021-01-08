@@ -1,9 +1,13 @@
-﻿  HUD.cpp
+﻿  Mario.cpp
 D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Game.h(69,34): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
 D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Game.h(70,35): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Mario.h(177,79): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Mario.h(192,79): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
 D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\BreakBlockPiece.h(33,29): warning C4244: '=': conversion from 'ULONGLONG' to 'float', possible loss of data
 D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\PlayScene.h(66,21): warning C4018: '<': signed/unsigned mismatch
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\HUD.cpp(126,22): warning C4244: 'initializing': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\HUD.cpp(368,16): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Point.h(13,1): warning C4005: 'TIME_ALIVE': macro redefinition
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\BreakBlockPiece.h(24): message : see previous definition of 'TIME_ALIVE'
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Point.h(22,29): warning C4244: '=': conversion from 'ULONGLONG' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Mario.cpp(62,20): warning C4018: '<': signed/unsigned mismatch
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Mario.cpp(555,20): warning C4018: '<': signed/unsigned mismatch
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Mario.cpp(765,20): warning C4018: '<': signed/unsigned mismatch
   SuperMarioBros3.vcxproj -> D:\DATA\UIT\Deadline\Game\SuperMarioBros3\Debug\SuperMarioBros3.exe

@@ -142,9 +142,6 @@ void CHUD::RenderRemainingTime() {
 	units = remainingTime % 10;
 
 	switch (hundreds) {
-	case 0:
-		ani_hundreds = HUD_ANI_NUMBER_0;
-		break;
 	case 1:
 		ani_hundreds = HUD_ANI_NUMBER_1;
 		break;
@@ -171,6 +168,9 @@ void CHUD::RenderRemainingTime() {
 		break;
 	case 9:
 		ani_hundreds = HUD_ANI_NUMBER_9;
+		break;
+	default:
+		ani_hundreds = HUD_ANI_NUMBER_0;
 		break;
 	}
 	animation_set->at(ani_hundreds)->Render(x + TIME_POS_X, y + TIME_POS_Y, 255);
