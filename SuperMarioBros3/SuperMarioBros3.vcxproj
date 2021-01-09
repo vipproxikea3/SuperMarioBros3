@@ -171,6 +171,8 @@
     <ClInclude Include="SwitchBlock.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="VenusFileTrapBullet.h" />
+    <ClInclude Include="VenusFireTrap.h" />
     <ClInclude Include="Zone.h" />
   </ItemGroup>
   <ItemGroup>
@@ -203,6 +205,8 @@
     <ClCompile Include="SwitchBlock.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="VenusFileTrapBullet.cpp" />
+    <ClCompile Include="VenusFireTrap.cpp" />
     <ClCompile Include="Zone.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

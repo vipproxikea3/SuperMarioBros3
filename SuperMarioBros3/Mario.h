@@ -190,6 +190,7 @@ public:
 	void SetLevel(int l) { level = l; }
 	int GetRunSpeedStack() { return runSpeedStack; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
+	bool IsUUntouchable() { if (untouchable == 1) return true; return false; }
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };

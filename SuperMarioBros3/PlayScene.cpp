@@ -46,6 +46,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_GATE				12
 #define OBJECT_TYPE_HUD					13
 #define OBJECT_TYPE_PIRANHAPLANT		14
+#define OBJECT_TYPE_VENUSFIRETRAP		15
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -308,6 +309,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_PIRANHAPLANT:
 	{
 		obj = new CPiranhaPlant();
+		break;
+	}
+	case OBJECT_TYPE_VENUSFIRETRAP:
+	{
+		int type = atoi(tokens[4].c_str());
+		obj = new CVenusFireTrap(type);
 		break;
 	}
 	/*case OBJECT_TYPE_PORTAL:

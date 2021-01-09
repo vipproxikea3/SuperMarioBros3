@@ -1,0 +1,80 @@
+#pragma once
+#pragma once
+#include "GameObject.h"
+#include "Mario.h"
+
+#define VENUSFIRETRAP_SPEED_Y						0.02f
+
+#define VENUSFIRETRAP_BULLET_SPEED_X				0.04f
+#define VENUSFIRETRAP_BULLET_SPEED_Y				0.02f
+
+#define VENUSFIRETRAP_BULLET_ANI_SET_ID				20
+
+#define VENUSFIRETRAP_STATE_IDLE					0
+#define VENUSFIRETRAP_STATE_UP						100
+#define VENUSFIRETRAP_STATE_SHOT					200
+#define VENUSFIRETRAP_STATE_DOWN					300
+#define VENUSFIRETRAP_STATE_DIE						400
+
+#define VENUSFIRETRAP_SIDE_BOTTOM_LEFT				0
+#define VENUSFIRETRAP_SIDE_TOP_LEFT					1
+#define VENUSFIRETRAP_SIDE_TOP_RIGHT				2
+#define VENUSFIRETRAP_SIDE_BOTTOM_RIGHT				3
+
+#define VENUSFIRETRAP_TYPE_GREEN					0
+#define VENUSFIRETRAP_TYPE_RED						1
+
+#define VENUSFIRETRAP_ANI_GREEN_FIRE_BOTTOM_LEFT	0
+#define VENUSFIRETRAP_ANI_GREEN_FIRE_TOP_LEFT		1
+#define VENUSFIRETRAP_ANI_GREEN_FIRE_TOP_RIGHT		2
+#define VENUSFIRETRAP_ANI_GREEN_FIRE_BOTTOM_RIGHT	3
+
+#define VENUSFIRETRAP_ANI_GREEN_IDLE_BOTTOM_LEFT	4
+#define VENUSFIRETRAP_ANI_GREEN_IDLE_TOP_LEFT		5
+#define VENUSFIRETRAP_ANI_GREEN_IDLE_TOP_RIGHT		6
+#define VENUSFIRETRAP_ANI_GREEN_IDLE_BOTTOM_RIGHT	7
+
+#define VENUSFIRETRAP_ANI_RED_FIRE_BOTTOM_LEFT		8
+#define VENUSFIRETRAP_ANI_RED_FIRE_TOP_LEFT			9
+#define VENUSFIRETRAP_ANI_RED_FIRE_TOP_RIGHT		10
+#define VENUSFIRETRAP_ANI_RED_FIRE_BOTTOM_RIGHT		11
+
+#define VENUSFIRETRAP_ANI_RED_IDLE_BOTTOM_LEFT		12
+#define VENUSFIRETRAP_ANI_RED_IDLE_TOP_LEFT			13
+#define VENUSFIRETRAP_ANI_RED_IDLE_TOP_RIGHT		14
+#define VENUSFIRETRAP_ANI_RED_IDLE_BOTTOM_RIGHT		15
+
+#define VENUSFIRETRAP_BBOX_WIDTH					16
+#define VENUSFIRETRAP_BBOX_HEIGHT					32
+
+#define VENUSFIRETRAP_GREEN_RISE_HEIGHT				24
+#define VENUSFIRETRAP_RED_RISE_HEIGHT				32
+
+#define VENUSFIRETRAP_TIME_SHOT						1000
+#define VENUSFIRETRAP_COOLDOWNS						1500
+
+#define VENUSFIRETRAP_SAFE_ZONE						8
+
+class CVenusFireTrap : public CGameObject
+{
+	int type;
+	int side;
+	DWORD last_rise;
+	DWORD start_shot;
+	vector<LPGAMEOBJECT> bullets;
+public:
+	CVenusFireTrap(int type) : CGameObject()
+	{
+		this->type = type;
+		this->SetState(VENUSFIRETRAP_STATE_IDLE);
+		last_rise = GetTickCount64();
+	}
+	~CVenusFireTrap() {}
+	bool CheckMarioInActiveZone();
+	void Shot();
+	void SetSide();
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	virtual void Render();
+	void SetState(int state);
+	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
+};

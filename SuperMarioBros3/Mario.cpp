@@ -14,6 +14,7 @@
 #include "PlayScene.h"
 #include "Point.h"
 #include "PiranhaPlant.h"
+#include "VenusFireTrap.h"
 
 void CMario::CalVx(DWORD dt) {
 	vx += ax * dt;
@@ -199,7 +200,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 
-			// PIRANHA PLANR
+			// PIRANHA PLANT
 			if (dynamic_cast<CPiranhaPlant*>(e->obj))
 			{
 				CPiranhaPlant* plant = dynamic_cast<CPiranhaPlant*>(e->obj);
@@ -224,6 +225,37 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 					else if (this->GetState() != PIRANHAPLANT_STATE_DIE && untouchable == 0)
+					{
+						lvlDown();
+					}
+				}
+			}
+
+			// VENUS FIRE TRAP
+			if (dynamic_cast<CVenusFireTrap*>(e->obj))
+			{
+				CVenusFireTrap* trap = dynamic_cast<CVenusFireTrap*>(e->obj);
+				BasicCollision(min_tx, min_ty, nx, ny, x0, y0);
+
+				if (e->ny != 0 && untouchable == 0) {
+					if (this->GetState() != VENUSFIRETRAP_STATE_DIE && untouchable == 0)
+						lvlDown();
+				}
+
+				if (e->nx != 0) {
+					// raccoon spin
+					if (spinning) {
+						if (e->nx * this->nx < 0) {
+							vx = 0;
+							trap->SetState(VENUSFIRETRAP_STATE_DIE);
+							ShowPoint();
+						}
+						else {
+							if (this->GetState() != VENUSFIRETRAP_STATE_DIE && untouchable == 0)
+								lvlDown();
+						}
+					}
+					else if (this->GetState() != VENUSFIRETRAP_STATE_DIE && untouchable == 0)
 					{
 						lvlDown();
 					}

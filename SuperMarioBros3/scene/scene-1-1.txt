@@ -329,6 +329,51 @@
 18001	0	144	16	176	50
 18002	16	144	32	176	50
 
+# VENUS FIRE TRAP
+
+# VENUS FIRE TRAP GREEN
+
+# green bottom left
+19001	32	144	48	176	50
+19002	48	144	64	176	50
+
+# green top left
+19003	64	144	80	176	50
+19004	80	144	96	176	50
+
+# green top right
+19005	32	208	48	240	50
+19006	48	208	64	240	50
+
+# green bottom right
+19007	64	208	80	240	50
+19008	80	208	96	240	50
+
+# VENUS FIRE TRAP RED
+
+# red bottom left
+19011	128	144	144	176	50
+19012	144	144	160	176	50
+
+# red top left
+19013	160	144	176	176	50
+19014	176	144	192	176	50
+
+# red top right
+19015	128	208	144	240	50
+19016	144	208	160	240	50
+
+# red bottom right
+19017	160	208	176	240	50
+19018	176	208	192	240	50
+
+# VENUS FIRE TRAP BULLET
+21001	164	180	172	188	50
+21002	180	180	188	188	50
+21003	180	196	188	204	50
+21004	164	196	172	204	50
+
+
 [ANIMATIONS]
 # ani_id sprite_1_id time_1 sprite_2_id time_2 ...
 
@@ -585,6 +630,51 @@
 # PIRANHA PLANT
 2000	18001	100	18002	100
 
+# VENUS FIRE TRAP
+
+# venus fire trap green
+
+# green fire bottom left
+2100	19001	100
+# green fire top left
+2101	19003	100
+# green fire top right
+2102	19005	100
+# green fire bottom right
+2103	19007	100
+
+# green idle bottom left
+2104	19001	100	19002	100
+# green idle top left
+2105	19003	100	19004	100
+# green idle top right
+2106	19005	100	19006	100
+# green idle bottom right
+2107	19007	100	19008	100
+
+# venus fire trap red
+
+# red fire bottom left
+2110	19011	100
+# red fire top left
+2111	19013	100
+# red fire top right
+2112	19015	100
+# red fire bottom right
+2113	19017	100
+
+# red idle bottom left
+2114	19011	100	19012	100
+# red idle top left
+2115	19013	100	19014	100
+# red idle top right
+2116	19015	100	19016	100
+# red idle bottom right
+2117	19017	100	19018	100
+
+# VENUS FIRE TRAP BULLET
+2200	21001	50	21002	50	21003	50	21004	50
+
 # BLOCK
 
 # ground block left
@@ -651,7 +741,7 @@
 
 [ANIMATION_SETS]
 # ani_set_id    ani_1   ani_2   ani_3   ...
-# 1 = Mario | 2 = Block | 3 = MarioFireBullet | 4 = Goomba | 5 = Koopa | 6 = ParaGoomba | 7 = ParaKoopa | 8 = Coin | 9 = BreakBlock | 10 = SwitchBlock | 11 = BrickReward | 12 = SuperMushroom | 13 = SuperLeaf | 14 = Gate | 15 = HUD | 16 = BreakBlockPiece | 17 = Point | 18 = Piranha Plant
+# 1 = Mario | 2 = Block | 3 = MarioFireBullet | 4 = Goomba | 5 = Koopa | 6 = ParaGoomba | 7 = ParaKoopa | 8 = Coin | 9 = BreakBlock | 10 = SwitchBlock | 11 = BrickReward | 12 = SuperMushroom | 13 = SuperLeaf | 14 = Gate | 15 = HUD | 16 = BreakBlockPiece | 17 = Point | 18 = Piranha Plant | 19 = Venus Fire Trap | 20 = Venus Fire Trap Bullet
 
 # MARIO
 1	599	402	403	502	503	602	603	400	401	500	501	600	601	610	611	620	621	404	405	504	505	604	605	612	613	622	623	630	631	640	641	406	407	506	507	606	607	614	615	624	625
@@ -706,13 +796,19 @@
 # PIRANHA PLANT
 18	2000
 
+# VENUS FIRE TRAP
+19	2100	2101	2102	2103	2104	2105	2106	2107	2110	2111	2112	2113	2114	2115	2116	2117
+
+# VENUS FIRE TRAP BULLET
+20	2200
+
 [HUD]
 # x	y	ani_set_id
 0	0	15
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings
-# type: 0 = Mario | 1 = Block | 2 = Goomba | 3 = Koopa | 4 = ParaGoomba | 5 = ParaKoopa | 6 = Coin | 7 = BreakBlock | 8 = SwitchBlock | 9 = BrickReward | 10 = SuperMushroom | 11 = SuperLeaf | 12 = Gate | 13 = HUD | 14 = PiranhaPlant
+# type: 0 = Mario | 1 = Block | 2 = Goomba | 3 = Koopa | 4 = ParaGoomba | 5 = ParaKoopa | 6 = Coin | 7 = BreakBlock | 8 = SwitchBlock | 9 = BrickReward | 10 = SuperMushroom | 11 = SuperLeaf | 12 = Gate | 13 = HUD | 14 = PiranhaPlant | 15 = VenusFireTrap
 
 # BLOCK
 # type	x	y	ani_set_id	typeBlock
@@ -1226,6 +1322,12 @@
 # type	x	y	ani_set_id
 
 14	1800	384	18
+
+# VENUSFIRETRAP
+# type	x	y	ani_set_id	type
+
+15	360	368	19	1
+15	1864	368	19	0
 
 # MARIO
 0	16	385	1

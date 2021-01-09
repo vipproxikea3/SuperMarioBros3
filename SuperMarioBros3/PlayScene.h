@@ -21,6 +21,7 @@
 #include "HUD.h"
 #include "BreakBlockPiece.h"
 #include "PiranhaPlant.h"
+#include "VenusFireTrap.h"
 
 
 class CPlayScene : public CScene
