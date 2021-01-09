@@ -13,6 +13,7 @@
 #include "Gate.h"
 #include "PlayScene.h"
 #include "Point.h"
+#include "PiranhaPlant.h"
 
 void CMario::CalVx(DWORD dt) {
 	vx += ax * dt;
@@ -195,6 +196,37 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (e->ny == -1 && switchBlock->GetState() == SWITCHBLOCK_STATE_IDLE) {
 					switchBlock->Switch();
 					vy = -MARIO_JUMP_DEFLECT_SPEED;
+				}
+			}
+
+			// PIRANHA PLANR
+			if (dynamic_cast<CPiranhaPlant*>(e->obj))
+			{
+				CPiranhaPlant* plant = dynamic_cast<CPiranhaPlant*>(e->obj);
+				BasicCollision(min_tx, min_ty, nx, ny, x0, y0);
+
+				if (e->ny != 0 && untouchable == 0) {
+					if (this->GetState() != PIRANHAPLANT_STATE_DIE && untouchable == 0)
+						lvlDown();
+				}
+
+				if (e->nx != 0) {
+					// raccoon spin
+					if (spinning) {
+						if (e->nx * this->nx < 0) {
+							vx = 0;
+							plant->SetState(PIRANHAPLANT_STATE_DIE);
+							ShowPoint();
+						}
+						else {
+							if (this->GetState() != PIRANHAPLANT_STATE_DIE && untouchable == 0)
+								lvlDown();
+						}
+					}
+					else if (this->GetState() != PIRANHAPLANT_STATE_DIE && untouchable == 0)
+					{
+						lvlDown();
+					}
 				}
 			}
 

@@ -161,6 +161,7 @@
     <ClInclude Include="MarioFireBullet.h" />
     <ClInclude Include="ParaGoomba.h" />
     <ClInclude Include="ParaKoopa.h" />
+    <ClInclude Include="PiranhaPlant.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Scene.h" />
@@ -192,6 +193,7 @@
     <ClCompile Include="MarioFireBullet.cpp" />
     <ClCompile Include="ParaGoomba.cpp" />
     <ClCompile Include="ParaKoopa.cpp" />
+    <ClCompile Include="PiranhaPlant.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Scene.cpp" />

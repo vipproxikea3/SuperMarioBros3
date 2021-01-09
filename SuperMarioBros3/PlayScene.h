@@ -20,6 +20,7 @@
 #include "Gate.h"
 #include "HUD.h"
 #include "BreakBlockPiece.h"
+#include "PiranhaPlant.h"
 
 
 class CPlayScene : public CScene
