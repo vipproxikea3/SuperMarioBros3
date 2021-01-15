@@ -64,16 +64,20 @@ public:
 
 	void Load(LPCWSTR gameFile);
 	LPSCENE GetCurrentScene() { return scenes[current_scene]; }
+	int GetCurrentSceneId() { return current_scene; }
 	void SwitchScene(int scene_id);
 
 	float GetScreenWidth() { return screen_width; }
 	float GetScreenHeight() { return screen_height; }
 
 	int GetCoin() { return coin; }
+	void SetCoin(int coin) { this->coin = coin; }
 	void PushCoin() { coin = coin + 1; }
 	int GetLifeStack() { return lifeStack; }
+	void SetLifeStack(int lifeStack) { this->lifeStack = lifeStack; }
 	void PushLifeStack() { lifeStack = lifeStack + 1; }
 	int GetPoint() { return point; }
+	void SetPoint(int point) { this->point = point; }
 	void PushPoint(int pushPoint) { point += pushPoint; }
 	void PopLifeStack() { lifeStack = lifeStack - 1; }
 	DWORD GetStartGameTime() { return start_game; }

@@ -156,16 +156,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (pipeWalking) return;
 				CBlock* block = dynamic_cast<CBlock*>(e->obj);
 
-				if (e->nx == -1 && block->isBlockLeft()) {
-					this->vx = 0;
-					this->x = x0 + min_tx * this->dx + nx * 0.4f;
-				}
-
-				if (e->nx == 1 && block->isBlockRight()) {
-					this->vx = 0;
-					this->x = x0 + min_tx * this->dx + nx * 0.4f;
-				}
-
 				if (e->ny == -1 && block->isBlockTop()) {
 					this->vy = 0;
 					this->y = y0 + min_ty * this->dy + ny * 0.4f;
@@ -176,6 +166,25 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					this->y = y0 + min_ty * this->dy + ny * 0.4f;
 
 					flyIng = false;
+				}
+
+				float height = 27.0f;
+				if (level == MARIO_LEVEL_SMALL) height = 13.0f;
+
+				if (e->nx == -1 && block->isBlockLeft()) {
+					if (this->y + height > block->y)
+					{
+						this->vx = 0;
+						this->x = x0 + min_tx * this->dx + nx * 0.4f;
+					}
+				}
+
+				if (e->nx == 1 && block->isBlockRight()) {
+					if (this->y + height > block->y)
+					{
+						this->vx = 0;
+						this->x = x0 + min_tx * this->dx + nx * 0.4f;
+					}
 				}
 			}
 
@@ -612,6 +621,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
+	// Check out zone
+	if (x < zoneLeft) x = zoneLeft;
+	if (x + MARIO_BIG_BBOX_WIDTH > zoneRight) x = zoneRight - MARIO_BIG_BBOX_WIDTH;
+	if (y > zoneBottom) {
+		lvlDown();
+		ReSet();
+	}
+
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
@@ -621,7 +638,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			CGameObject* p = bullets[i];
 			bullets.erase(bullets.begin() + i);
 			delete p;
-		}	
+		}
 	}
 }
 
@@ -734,11 +751,12 @@ void CMario::lvlDown() {
 	case MARIO_LEVEL_SMALL:
 	{
 		CGame* game = CGame::GetInstance();
+		game->PopLifeStack();
 		int life = game->GetLifeStack();
-		if (life == 0)
+		if (life <= 0) {
 			SetState(MARIO_STATE_DIE);
+		}
 		else {
-			game->PopLifeStack();
 			ReSet();
 		}
 		break;

@@ -150,6 +150,8 @@ class CMario : public CGameObject
 	float x_pipeWalking_start;
 	bool teleported = false;
 
+	float zoneLeft, zoneRight, zoneBottom;
+
 public:
 	CMario() : CGameObject()
 	{
@@ -177,6 +179,11 @@ public:
 	void StopHug();
 	void ShowPoint();
 	void Teleport();
+	void SetZone(float l, float r, float b) {
+		zoneLeft = l;
+		zoneRight = r;
+		zoneBottom = b;
+	}
 	void ReSet() {
 		this->SetPosition(x_start, y_start);
 		this->SetState(MARIO_STATE_IDLE);

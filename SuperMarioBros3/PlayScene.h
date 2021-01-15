@@ -22,12 +22,16 @@
 #include "BreakBlockPiece.h"
 #include "PiranhaPlant.h"
 #include "VenusFireTrap.h"
+#include "Bush.h"
+#include "MarioWorldMap.h"
+#include "Station.h"
 
 
 class CPlayScene : public CScene
 {
 protected:
-	CMario* player;					// A play scene has to have player, right? 
+	CMario* player;					// A play scene has to have player, right?
+	CMarioWorldMap* marioWorldMap;
 
 	vector<LPGAMEOBJECT> objects;
 	vector<CZone*> zones;
@@ -76,21 +80,27 @@ public:
 				break;
 			}
 		}
+
+		if (player) {
+			player->SetZone(zoneLeft, zoneRight, zoneBottom);
+		}
 	}
+
 	void UpdateCameraPos();
 	void PushBackObj(CGameObject* obj);
 	vector<LPGAMEOBJECT> GetListObj() { return objects; }
 
 	CMario* GetPlayer() { return player; }
+	CMarioWorldMap* GetMarioWorldMap() { return marioWorldMap; }
 
 	//friend class CPlayScenceKeyHandler;
 };
 
-class CPlayScenceKeyHandler : public CScenceKeyHandler
+class CPlayScenceKeyHandler : public CSceneKeyHandler
 {
 public:
 	virtual void KeyState(BYTE* states);
 	virtual void OnKeyDown(int KeyCode);
 	virtual void OnKeyUp(int KeyCode);
-	CPlayScenceKeyHandler(CScene* s) :CScenceKeyHandler(s) {};
+	CPlayScenceKeyHandler(CScene* s) :CSceneKeyHandler(s) {};
 };

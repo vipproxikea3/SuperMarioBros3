@@ -3,7 +3,9 @@
 #include "Textures.h"
 #include "Game.h"
 
-Map::Map(int TotalRowsOfMap, int TotalColumnsOfMap, int TotalRowsOfTileSet, int TotalColumnsOfTileSet, int TileSetID, wstring mapMatrixPath) {
+Map::Map(float posX, float posY, int TotalRowsOfMap, int TotalColumnsOfMap, int TotalRowsOfTileSet, int TotalColumnsOfTileSet, int TileSetID, wstring mapMatrixPath) {
+	this->posx = posX;
+	this->posy = posY;
 	this->TotalRowsOfTileSet = TotalRowsOfTileSet;
 	this->TotalColumnsOfTileSet = TotalColumnsOfTileSet;
 	this->TotalRowsOfMap = TotalRowsOfMap;
@@ -35,7 +37,7 @@ void Map::DrawTile(int idOfTile, float x, float y) {
 	xOfTile = colOfTile * TILE_WIDTH;
 	yOfTile = rowOfTile * TILE_HEIGHT;
 
-	CGame::GetInstance()->Draw(x, y, TileSetImg, xOfTile, yOfTile, xOfTile + TILE_WIDTH, yOfTile + TILE_HEIGHT);
+	CGame::GetInstance()->Draw(posx + x, posy + y, TileSetImg, xOfTile, yOfTile, xOfTile + TILE_WIDTH, yOfTile + TILE_HEIGHT);
 }
 
 float Map::getMapWidth() {

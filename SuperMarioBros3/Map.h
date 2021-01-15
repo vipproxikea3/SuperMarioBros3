@@ -10,13 +10,14 @@ using namespace std;
 
 class Map
 {
+	float posx, posy;
 	int TotalRowsOfTileSet, TotalColumnsOfTileSet;
 	LPDIRECT3DTEXTURE9 TileSetImg;
 	int TotalRowsOfMap, TotalColumnsOfMap;
 	vector<int> MapData;
 
 public:
-	Map(int TotalRowsOfMap, int TotalColumnsOfMap, int TotalRowsOfTileSet, int TotalColumnsOfTileSet, int TileSetID, wstring mapMatrixPath);
+	Map(float posx, float posy, int TotalRowsOfMap, int TotalColumnsOfMap, int TotalRowsOfTileSet, int TotalColumnsOfTileSet, int TileSetID, wstring mapMatrixPath);
 	~Map();
 	void LoadMapMatrix(wstring mapMatrixPath);
 	void DrawTile(int idOfTile, float x, float y);

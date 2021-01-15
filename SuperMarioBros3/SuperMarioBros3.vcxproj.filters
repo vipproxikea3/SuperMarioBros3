@@ -108,6 +108,18 @@
     <ClInclude Include="VenusFileTrapBullet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Bush.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlaySceneKeyHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MarioWorldMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Station.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -204,6 +216,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="VenusFileTrapBullet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bush.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlaySceneKeyHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MarioWorldMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Station.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

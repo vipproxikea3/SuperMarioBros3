@@ -391,6 +391,12 @@ void CGame::SwitchScene(int scene_id)
 {
 	DebugOut(L"[INFO] Switching to scene %d\n", scene_id);
 
+	LPSCENE s = scenes[scene_id];
+	if (s == nullptr) {
+		DebugOut(L"[INFO] Scene %d not found\n", scene_id);
+		return;
+	}
+
 	scenes[current_scene]->Unload();
 
 	start_game = GetTickCount64();
@@ -400,7 +406,7 @@ void CGame::SwitchScene(int scene_id)
 	CAnimations::GetInstance()->Clear();
 
 	current_scene = scene_id;
-	LPSCENE s = scenes[scene_id];
 	CGame::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
+	CGame::GetInstance()->SetCamPos(0, 0);
 	s->Load();
 }

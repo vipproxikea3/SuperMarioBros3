@@ -124,6 +124,9 @@ void CHUD::RenderRemainingTime() {
 	DWORD start_game = game->GetStartGameTime();
 	DWORD gamePlayTime = game->GetGamePlayTime();
 	DWORD remainingTime = gamePlayTime - (GetTickCount64() - start_game);
+	if (CGame::GetInstance()->GetCurrentSceneId() == 2) {
+		remainingTime = 300000;
+	}
 	
 	if (remainingTime % 1000 == 0) {
 		remainingTime = remainingTime/1000;

@@ -1,0 +1,203 @@
+[TEXTURES]
+# id	file_path			red 	green	blue
+
+70	textures\HUD-BG.png	255	0	0
+80	textures\HUD.png	0	224	142
+90	Map\World-1_bank.png	163	73	164
+100	textures\World-map.png	166	185	255
+
+[MAP]
+# PosX	PosY	TotalRowsOfMap	TotalColumnsOfMap	TotalRowsOfTileSet		TotalColumnsOfTileSet	TileSetID	MapMatrixPath
+
+#0	0	27	208	13	11	0	Map\map1-1.txt
+25	10	11	16	3	11	90	Map\world-1_map.txt
+
+[ZONE]
+# id	left	top	right	bottom
+
+1	0	0	1000	432
+
+[SPRITES]
+# ID left top right bottom texID
+
+# HUD
+# hud background
+15001	0	0	310	40	70
+
+# hud number
+15020	77	31	85	38	80
+15021	87	31	95	38	80
+15022	97	31	105	38	80
+15023	107	31	115	38	80
+15024	117	31	125	38	80
+15025	127	31	135	38	80
+15026	137	31	145	38	80
+15027	147	31	155	38	80
+15028	157	31	165	38	80
+15029	167	31	175	38	80
+
+
+# hud run stack normal
+15011	64	162	72	169	80
+# hud run stack max
+15012	73	162	88	169	80
+
+# BUSH
+# bush idle
+22001	252	14	268	30	100
+22002	272	14	288	30	100
+22003	292	14	308	30	100
+
+# MARIOWORLDMAP
+# mario world map idle
+23001	251	116	267	132	100
+23002	271	116	287	132	100
+
+# STATION
+#24001	460	140	476	156	100
+24001	333	75	349	91	100
+
+[ANIMATIONS]
+# ani_id sprite_1_id time_1 sprite_2_id time_2 ...
+
+# HUD
+# hud background
+1700	15001	100
+
+# hud run stack normal
+1701	15011	100
+
+# hud run stack max
+1702	15012	100
+
+# hud number
+1710	15020	100
+1711	15021	100
+1712	15022	100
+1713	15023	100
+1714	15024	100
+1715	15025	100
+1716	15026	100
+1717	15027	100
+1718	15028	100
+1719	15029	100
+
+# BUSH
+# bush idle
+2300	22002	250	22001	250	22002	250	22003	250
+
+# MARIOWORLDMAP
+# mario world map idle
+2400	23001	100	23002	100
+
+# STATION
+2500	24001	1000
+
+[ANIMATION_SETS]
+# ani_set_id    ani_1   ani_2   ani_3   ...
+15 = HUD | 21 = Bush | 22 = Mario World Map | 23 = Station
+
+# HUD
+15	1700	1701	1702	1710	1711	1712	1713	1714	1715	1716	1717	1718	1719
+
+# BUSH
+21	2300
+
+# MARIO WORLD MAP
+22	2400
+
+# STATION
+23	2500
+
+[HUD]
+# x	y	ani_set_id
+0	0	15
+
+[OBJECTS]
+# type	x	y	ani_set_id	extra_settings
+# type: 0 = Mario | 1 = Block | 2 = Goomba | 3 = Koopa | 4 = ParaGoomba | 5 = ParaKoopa | 6 = Coin | 7 = BreakBlock | 8 = SwitchBlock | 9 = BrickReward | 10 = SuperMushroom | 11 = SuperLeaf | 12 = Gate | 13 = HUD | 14 = PiranhaPlant | 15 = VenusFireTrap | 16 = Bush | 17 = Mario World Map | 18 = Station
+
+# BUSH
+
+16	41	26	21
+16	57	26	21
+16	73	26	21
+16	41	42	21
+16	57	42	21
+16	73	42	21
+
+16	41	74	21
+16	57	74	21
+16	73	74	21
+16	41	90	21
+16	57	90	21
+16	73	90	21
+16	41	106	21
+
+16	105	42	21
+16	121	42	21
+16	137	42	21
+16	105	58	21
+16	121	58	21
+16	137	58	21
+16	105	74	21
+16	121	74	21
+16	137	74	21
+
+16	169	42	21
+16	185	42	21
+16	201	42	21
+
+16	121	106	21
+16	137	106	21
+16	153	106	21
+
+16	169	74	21
+16	185	74	21
+16	201	74	21
+16	217	74	21
+16	169	90	21
+16	185	90	21
+
+16	233	26	21
+16	233	42	21
+16	233	58	21
+16	233	74	21
+
+16	249	26	21
+16	249	42	21
+16	249	58	21
+16	249	74	21
+16	249	90	21
+16	249	106	21
+16	249	122	21
+16	249	138	21
+16	249	154	21
+
+# STATION
+# type	x	y	ani_set_id	canLeft	canUp	canRight	canDown	targetScene
+18	57	58	23	0	0	1	0	0
+18	89	58	23	1	1	0	0	0
+18	89	26	23	0	0	1	1	3
+18	121	26	23	1	0	1	0	0
+18	153	26	23	1	0	1	1	0
+18	185	26	23	1	0	1	0	0
+18	217	26	23	1	0	0	1	0
+18	217	58	23	1	1	0	0	0
+18	185	58	23	1	0	1	0	0
+18	153	58	23	0	1	1	1	0
+18	153	90	23	1	1	0	0	0
+18	153	90	23	1	1	0	0	0
+18	121	90	23	1	0	1	0	0
+18	89	90	23	0	0	1	1	0
+18	89	122	23	0	1	0	1	0
+18	89	154	23	0	1	1	0	0
+18	121	154	23	1	0	1	0	0
+18	153	154	23	1	1	0	0	0
+18	153	122	23	1	0	1	1	0
+18	121	122	23	0	0	1	0	0
+18	185	122	23	1	0	1	0	0
+18	217	122	23	1	0	0	0	0
+
+# MARIO WORLD MAP
+17	57	58	22

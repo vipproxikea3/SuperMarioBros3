@@ -22,23 +22,6 @@
 
 CGame* game;
 
-//Map* map;
-//
-//CMario* mario;
-//CBlock* block;
-//CGoomba* goomba;
-//CCoin* coin;
-//CBrickReward* brickReward;
-//CSuperMushroom* superMushroom;
-//CShell* shell;
-//CKoopa* koopa;
-
-//vector<LPGAMEOBJECT> superMushrooms;
-//vector<LPGAMEOBJECT> coins;
-//vector<LPGAMEOBJECT> brickRewards;
-//vector<LPGAMEOBJECT> blocks;
-//vector<LPGAMEOBJECT> objects;
-
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message) {

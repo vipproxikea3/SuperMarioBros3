@@ -12,9 +12,9 @@
 80	textures\HUD.png	0	224	142
 
 [MAP]
-# TotalRowsOfMap	TotalColumnsOfMap	TotalRowsOfTileSet		TotalColumnsOfTileSet	TileSetID	MapMatrixPath
+# PosX	PosY	TotalRowsOfMap	TotalColumnsOfMap	TotalRowsOfTileSet		TotalColumnsOfTileSet	TileSetID	MapMatrixPath
 
-27	208	13	11	0	Map\map1-1.txt
+0	0	27	208	13	11	0	Map\map1-1.txt
 
 [ZONE]
 # id	left	top	right	bottom
