@@ -120,6 +120,9 @@
     <ClInclude Include="Station.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Lottery.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -228,6 +231,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Station.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Lottery.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

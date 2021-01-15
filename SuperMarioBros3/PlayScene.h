@@ -25,6 +25,7 @@
 #include "Bush.h"
 #include "MarioWorldMap.h"
 #include "Station.h"
+#include "Lottery.h"
 
 
 class CPlayScene : public CScene

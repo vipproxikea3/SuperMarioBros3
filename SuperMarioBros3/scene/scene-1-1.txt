@@ -296,6 +296,11 @@
 # hud background
 15001	0	0	310	40	70
 
+# hud run stack normal
+15011	64	162	72	169	80
+# hud run stack max
+15012	73	162	88	169	80
+
 # hud number
 15020	77	31	85	38	80
 15021	87	31	95	38	80
@@ -308,11 +313,14 @@
 15028	157	31	165	38	80
 15029	167	31	175	38	80
 
+# hud lottery mushroom
+15031	184	159	208	187	80
 
-# hud run stack normal
-15011	64	162	72	169	80
-# hud run stack max
-15012	73	162	88	169	80
+# hud lottery flower
+15032	208	159	232	187	80
+
+# hud lottery star
+15033	232	159	256	187	80
 
 # BREAK BLOCK PIECE
 16001	386	144	394	152	60
@@ -373,6 +381,11 @@
 21003	180	196	188	204	50
 21004	164	196	172	204	50
 
+
+# LOTTERY
+25001	154	359	170	375	60
+25002	174	359	190	375	60
+25003	194	359	210	375	60
 
 [ANIMATIONS]
 # ani_id sprite_1_id time_1 sprite_2_id time_2 ...
@@ -617,6 +630,11 @@
 1718	15028	100
 1719	15029	100
 
+# hud lottery
+17021	15031	100
+17022	15032	100
+17023	15033	100
+
 # BREAK BLOCK PIECE
 1800	16001	100	16002	100
 
@@ -674,6 +692,11 @@
 
 # VENUS FIRE TRAP BULLET
 2200	21001	50	21002	50	21003	50	21004	50
+
+# LOTTERY
+2600	25001	100
+2601	25002	100
+2602	25003	100
 
 # BLOCK
 
@@ -741,7 +764,7 @@
 
 [ANIMATION_SETS]
 # ani_set_id    ani_1   ani_2   ani_3   ...
-# 1 = Mario | 2 = Block | 3 = MarioFireBullet | 4 = Goomba | 5 = Koopa | 6 = ParaGoomba | 7 = ParaKoopa | 8 = Coin | 9 = BreakBlock | 10 = SwitchBlock | 11 = BrickReward | 12 = SuperMushroom | 13 = SuperLeaf | 14 = Gate | 15 = HUD | 16 = BreakBlockPiece | 17 = Point | 18 = Piranha Plant | 19 = Venus Fire Trap | 20 = Venus Fire Trap Bullet
+# 1 = Mario | 2 = Block | 3 = MarioFireBullet | 4 = Goomba | 5 = Koopa | 6 = ParaGoomba | 7 = ParaKoopa | 8 = Coin | 9 = BreakBlock | 10 = SwitchBlock | 11 = BrickReward | 12 = SuperMushroom | 13 = SuperLeaf | 14 = Gate | 15 = HUD | 16 = BreakBlockPiece | 17 = Point | 18 = Piranha Plant | 19 = Venus Fire Trap | 20 = Venus Fire Trap Bullet | 21 = Bush | 22 = Mario World Map | 23 = Station | 24 = Lottery
 
 # MARIO
 1	599	402	403	502	503	602	603	400	401	500	501	600	601	610	611	620	621	404	405	504	505	604	605	612	613	622	623	630	631	640	641	406	407	506	507	606	607	614	615	624	625
@@ -785,7 +808,7 @@
 14	1600
 
 # HUD
-15	1700	1701	1702	1710	1711	1712	1713	1714	1715	1716	1717	1718	1719
+15	1700	1701	1702	1710	1711	1712	1713	1714	1715	1716	1717	1718	1719	17021	17022	17023
 
 # BREAK BLOCK PIECE
 16	1800
@@ -802,13 +825,16 @@
 # VENUS FIRE TRAP BULLET
 20	2200
 
+# LOTTERY
+24	2600	2601	2602
+
 [HUD]
 # x	y	ani_set_id
 0	0	15
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings
-# type: 0 = Mario | 1 = Block | 2 = Goomba | 3 = Koopa | 4 = ParaGoomba | 5 = ParaKoopa | 6 = Coin | 7 = BreakBlock | 8 = SwitchBlock | 9 = BrickReward | 10 = SuperMushroom | 11 = SuperLeaf | 12 = Gate | 13 = HUD | 14 = PiranhaPlant | 15 = VenusFireTrap
+# type: 0 = Mario | 1 = Block | 2 = Goomba | 3 = Koopa | 4 = ParaGoomba | 5 = ParaKoopa | 6 = Coin | 7 = BreakBlock | 8 = SwitchBlock | 9 = BrickReward | 10 = SuperMushroom | 11 = SuperLeaf | 12 = Gate | 13 = HUD | 14 = PiranhaPlant | 15 = VenusFireTrap | 19 = Lottery
 
 # BLOCK
 # type	x	y	ani_set_id	typeBlock
@@ -1328,6 +1354,9 @@
 
 15	360	368	19	1
 15	1864	368	19	0
+
+# LOTTERY
+19	2688	336	24
 
 # MARIO
 0	16	385	1

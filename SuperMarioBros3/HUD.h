@@ -16,6 +16,11 @@
 #define HUD_ANI_NUMBER_8		11
 #define HUD_ANI_NUMBER_9		12
 
+#define HUD_ANI_LOTTERY_MUSHROOM	13
+#define HUD_ANI_LOTTERY_FLOWER		14
+#define HUD_ANI_LOTTERY_STAR		15
+
+
 #define RUNSTACK_NORMAL_POS_X	88
 #define RUNSTACK_NORMAL_POS_Y	13
 #define RUNSTACK_NORMAL_WIDTH	8
@@ -34,6 +39,15 @@
 #define POINT_POS_X				88
 #define POINT_POS_Y				21
 
+#define LOTTERY_SLOT_1_POS_X	197
+#define LOTTERY_SLOT_1_POS_Y	6
+
+#define LOTTERY_SLOT_2_POS_X	221
+#define LOTTERY_SLOT_2_POS_Y	6
+
+#define LOTTERY_SLOT_3_POS_X	245
+#define LOTTERY_SLOT_3_POS_Y	6
+
 class CHUD : public CGameObject
 {
 public:
@@ -49,6 +63,7 @@ public:
 	void RenderRemainingTime();
 	void RenderLifeStack();
 	void RenderPoint();
+	void RenderLottery();
 
 	void SetState(int state);
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);

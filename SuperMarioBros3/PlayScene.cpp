@@ -50,6 +50,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_BUSH				16
 #define OBJECT_TYPE_MARIOWORLDMAP		17
 #define OBJECT_TYPE_STATION				18
+#define OBJECT_TYPE_LOTTERY				19
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -343,6 +344,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		bool b = atoi(tokens[7].c_str());
 		int sceneId = atoi(tokens[8].c_str());
 		obj = new CStation(l, t, r, b, sceneId);
+		break;
+	}
+	case OBJECT_TYPE_LOTTERY:
+	{
+		obj = new CLottery();
 		break;
 	}
 	default:

@@ -18,6 +18,7 @@ void CHUD::Render()
 	RenderRemainingTime();
 	RenderLifeStack();
 	RenderPoint();
+	RenderLottery();
 }
 
 void CHUD::RenderRunSpeedStack() {
@@ -369,6 +370,55 @@ void CHUD::RenderPoint() {
 		}
 		animation_set->at(ani)->Render(x + pos_x, y + POINT_POS_Y, 255);
 		pos_x += 8.0f;
+	}
+}
+
+void CHUD::RenderLottery() {
+	CGame* game = CGame::GetInstance();
+	int slot1 = game->GetLotterySlot1();
+	if (slot1 != 0) {
+		switch (slot1)
+		{
+		case 100:
+			animation_set->at(HUD_ANI_LOTTERY_MUSHROOM)->Render(x + LOTTERY_SLOT_1_POS_X, y + LOTTERY_SLOT_1_POS_Y, 255);
+			break;
+		case 200:
+			animation_set->at(HUD_ANI_LOTTERY_FLOWER)->Render(x + LOTTERY_SLOT_1_POS_X, y + LOTTERY_SLOT_1_POS_Y, 255);
+			break;
+		case 300:
+			animation_set->at(HUD_ANI_LOTTERY_STAR)->Render(x + LOTTERY_SLOT_1_POS_X, y + LOTTERY_SLOT_1_POS_Y, 255);
+			break;
+		}
+	}
+	int slot2 = game->GetLotterySlot2();
+	if (slot2 != 0) {
+		switch (slot2)
+		{
+		case 100:
+			animation_set->at(HUD_ANI_LOTTERY_MUSHROOM)->Render(x + LOTTERY_SLOT_2_POS_X, y + LOTTERY_SLOT_2_POS_Y, 255);
+			break;
+		case 200:
+			animation_set->at(HUD_ANI_LOTTERY_FLOWER)->Render(x + LOTTERY_SLOT_2_POS_X, y + LOTTERY_SLOT_2_POS_Y, 255);
+			break;
+		case 300:
+			animation_set->at(HUD_ANI_LOTTERY_STAR)->Render(x + LOTTERY_SLOT_2_POS_X, y + LOTTERY_SLOT_2_POS_Y, 255);
+			break;
+		}
+	}
+	int slot3 = game->GetLotterySlot3();
+	if (slot3 != 0) {
+		switch (slot3)
+		{
+		case 100:
+			animation_set->at(HUD_ANI_LOTTERY_MUSHROOM)->Render(x + LOTTERY_SLOT_3_POS_X, y + LOTTERY_SLOT_3_POS_Y, 255);
+			break;
+		case 200:
+			animation_set->at(HUD_ANI_LOTTERY_FLOWER)->Render(x + LOTTERY_SLOT_3_POS_X, y + LOTTERY_SLOT_3_POS_Y, 255);
+			break;
+		case 300:
+			animation_set->at(HUD_ANI_LOTTERY_STAR)->Render(x + LOTTERY_SLOT_3_POS_X, y + LOTTERY_SLOT_3_POS_Y, 255);
+			break;
+		}
 	}
 }
 

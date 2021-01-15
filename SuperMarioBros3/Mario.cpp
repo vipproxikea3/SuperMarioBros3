@@ -618,6 +618,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (this->level == MARIO_LEVEL_BIG)
 					this->LvlUp();
 			}
+
+			// LOTTERY
+			if (dynamic_cast<CLottery*>(e->obj)) {
+				CLottery* lottery = dynamic_cast<CLottery*>(e->obj);
+				CGame* game = CGame::GetInstance();
+				game->SetLottery(lottery->GetState() + 100);
+				game->SwitchScene(2);
+			}
 		}
 	}
 
