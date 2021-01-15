@@ -26,6 +26,8 @@
 #include "MarioWorldMap.h"
 #include "Station.h"
 #include "Lottery.h"
+#include "Logo.h"
+#include "Menu.h"
 
 
 class CPlayScene : public CScene
@@ -33,6 +35,7 @@ class CPlayScene : public CScene
 protected:
 	CMario* player;					// A play scene has to have player, right?
 	CMarioWorldMap* marioWorldMap;
+	CMenu* introMenu;
 
 	vector<LPGAMEOBJECT> objects;
 	vector<CZone*> zones;
@@ -93,6 +96,7 @@ public:
 
 	CMario* GetPlayer() { return player; }
 	CMarioWorldMap* GetMarioWorldMap() { return marioWorldMap; }
+	CMenu* GetIntroMenu() { return introMenu; }
 
 	//friend class CPlayScenceKeyHandler;
 };

@@ -51,6 +51,8 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_MARIOWORLDMAP		17
 #define OBJECT_TYPE_STATION				18
 #define OBJECT_TYPE_LOTTERY				19
+#define OBJECT_TYPE_LOGO				20
+#define OBJECT_TYPE_MENU				21
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -351,6 +353,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CLottery();
 		break;
 	}
+	case OBJECT_TYPE_LOGO:
+	{
+		obj = new CLogo();
+		break;
+	}
+	case OBJECT_TYPE_MENU:
+	{
+		obj = new CMenu();
+		introMenu = (CMenu*)obj;
+
+		DebugOut(L"[INFO] Intro Menu object created!\n");
+		break;
+	}
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -517,8 +532,8 @@ void CPlayScene::Unload()
 	zones.clear();
 
 	player = NULL;
-
 	marioWorldMap = nullptr;
+	introMenu = nullptr;
 
 	delete map;
 	map = nullptr;
@@ -602,6 +617,21 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 				mario->SwitchScene();
 				break;
 			}
+		}
+	}
+
+	if (game->GetCurrentSceneId() == 1) {
+		CMenu* introMenu = ((CPlayScene*)scene)->GetIntroMenu();
+		if (!introMenu) return;
+
+		switch (KeyCode)
+		{
+		case DIK_A:
+			introMenu->PlayOption();
+			break;
+		case DIK_S:
+			introMenu->ChangeOption();
+			break;
 		}
 	}
 }
