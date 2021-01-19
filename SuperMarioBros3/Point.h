@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Backup.h"
 
 #define POINT_TYPE_LVLUP	0
 #define POINT_TYPE_100		1
@@ -22,11 +23,11 @@ public:
 		createdAt = GetTickCount64();
 		this->type = type;
 
-		CGame* game = CGame::GetInstance();
+		CBackup* backup = CBackup::GetInstance();
 		switch (type)
 		{
 		case POINT_TYPE_100:
-			game->PushPoint(100);
+			backup->PushPoint(100);
 			break;
 		}
 	}

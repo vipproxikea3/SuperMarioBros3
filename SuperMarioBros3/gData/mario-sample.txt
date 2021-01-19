@@ -1,5 +1,5 @@
 [SETTINGS]
-start	1
+start	3
 [SCENES]
 1	scene\intro_scene.txt
 2	scene\world-map-1.txt

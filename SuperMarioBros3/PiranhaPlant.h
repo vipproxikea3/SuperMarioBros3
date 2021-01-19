@@ -20,7 +20,7 @@
 #define PIRANHAPLANT_TIME_BITE		500
 #define PIRANHAPLANT_COOLDOWNS		1000
 
-#define PIRANHAPLANT_SAFE_ZONE		8
+#define PIRANHAPLANT_SAFE_ZONE		12
 
 class CPiranhaPlant : public CGameObject
 {

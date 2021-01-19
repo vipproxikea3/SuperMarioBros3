@@ -486,12 +486,13 @@ void CPlayScene::UpdateCameraPos() {
 	if (hud)
 		hud->SetPosition(cx, cy + game->GetScreenHeight() - 40);
 
-	int life = game->GetLifeStack();
+	int life = CBackup::GetInstance()->GetLifeStack();
 	if (life <= 0) {
 		CGame* game = CGame::GetInstance();
-		game->SetLifeStack(4);
-		game->SetCoin(0);
-		game->SetPoint(0);
+		CBackup* backup = CBackup::GetInstance();
+		backup->SetLifeStack(4);
+		backup->SetCoin(0);
+		backup->SetPoint(0);
 		game->SwitchScene(2);
 		return;
 	}

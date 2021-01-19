@@ -49,8 +49,8 @@ void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 				//MARIO
 				if (dynamic_cast<CMario*>(e->obj)) {
 					this->isDisable = true;
-					CGame* game = CGame::GetInstance();
-					game->PushCoin();
+					CBackup* backup = CBackup::GetInstance();
+					backup->PushCoin();
 				}
 			}
 		}

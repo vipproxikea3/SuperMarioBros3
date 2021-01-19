@@ -8,7 +8,7 @@ bool CVenusFireTrap::CheckMarioInActiveZone() {
 	float l, t, r, b;
 	mario->GetBoundingBox(l, t, r, b);
 
-	if (r < x - PIRANHAPLANT_SAFE_ZONE || l > x + PIRANHAPLANT_BBOX_WIDTH + PIRANHAPLANT_SAFE_ZONE) return true;
+	if (r < x - VENUSFIRETRAP_SAFE_ZONE || l > x + VENUSFIRETRAP_BBOX_WIDTH + VENUSFIRETRAP_SAFE_ZONE) return true;
 	return false;
 }
 

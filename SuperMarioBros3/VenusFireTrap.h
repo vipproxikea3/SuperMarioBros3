@@ -53,7 +53,7 @@
 #define VENUSFIRETRAP_TIME_SHOT						1000
 #define VENUSFIRETRAP_COOLDOWNS						1500
 
-#define VENUSFIRETRAP_SAFE_ZONE						8
+#define VENUSFIRETRAP_SAFE_ZONE						12
 
 class CVenusFireTrap : public CGameObject
 {

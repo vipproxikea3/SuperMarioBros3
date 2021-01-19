@@ -2,6 +2,7 @@
 #include "Block.h"
 #include "BrickReward.h"
 #include "Game.h"
+#include "Backup.h"
 #include "BreakBlock.h"
 #include "Point.h"
 #include "PlayScene.h"
@@ -97,8 +98,7 @@ void CSuperMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						point->SetPosition(x, y - 16.0f);
 						point->SetAnimationSet(ani_set);
 						((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(point);
-						CGame* game = CGame::GetInstance();
-						game->PushLifeStack();
+						CBackup::GetInstance()->PushLifeStack();
 					}
 				}
 			}

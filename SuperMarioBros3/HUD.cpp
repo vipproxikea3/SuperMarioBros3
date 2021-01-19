@@ -1,6 +1,7 @@
 #include "HUD.h"
 #include "Mario.h"
 #include "PlayScene.h"
+#include "Backup.h"
 
 void CHUD::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 }
@@ -44,8 +45,8 @@ void CHUD::RenderCoin() {
 	int ani_tens, ani_units;
 	int coin, tens, units;
 
-	CGame* game = CGame::GetInstance();
-	coin = game->GetCoin();
+	CBackup* backup = CBackup::GetInstance();
+	coin = backup->GetCoin();
 
 	units = coin % 10;
 	tens = coin / 10;
@@ -252,8 +253,7 @@ void CHUD::RenderLifeStack() {
 	int ani_tens, ani_units;
 	int life, tens, units;
 
-	CGame* game = CGame::GetInstance();
-	life = game->GetLifeStack();
+	life = CBackup::GetInstance()->GetLifeStack();
 
 	units = life % 10;
 	tens = life / 10;
@@ -329,8 +329,8 @@ void CHUD::RenderLifeStack() {
 }
 
 void CHUD::RenderPoint() {
-	CGame* game = CGame::GetInstance();
-	int point = game->GetPoint();
+	CBackup* backup = CBackup::GetInstance();
+	int point = backup->GetPoint();
 
 	int pos_x = POINT_POS_X;
 	for (int i = 1000000; i > 0; i = i / 10) {
@@ -374,8 +374,8 @@ void CHUD::RenderPoint() {
 }
 
 void CHUD::RenderLottery() {
-	CGame* game = CGame::GetInstance();
-	int slot1 = game->GetLotterySlot1();
+	CBackup* backup = CBackup::GetInstance();
+	int slot1 = backup->GetLotterySlot1();
 	if (slot1 != 0) {
 		switch (slot1)
 		{
@@ -390,7 +390,7 @@ void CHUD::RenderLottery() {
 			break;
 		}
 	}
-	int slot2 = game->GetLotterySlot2();
+	int slot2 = backup->GetLotterySlot2();
 	if (slot2 != 0) {
 		switch (slot2)
 		{
@@ -405,7 +405,7 @@ void CHUD::RenderLottery() {
 			break;
 		}
 	}
-	int slot3 = game->GetLotterySlot3();
+	int slot3 = backup->GetLotterySlot3();
 	if (slot3 != 0) {
 		switch (slot3)
 		{

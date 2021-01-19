@@ -7,6 +7,7 @@
 #include "Game.h"
 #include "GameObject.h"
 #include "Sprites.h"
+#include "PlayScene.h"
 
 CGameObject::CGameObject()
 {
@@ -63,16 +64,45 @@ LPCOLLISIONEVENT CGameObject::SweptAABBEx(LPGAMEOBJECT coO)
 	coObjects: the list of colliable objects
 	coEvents: list of potential collisions
 */
-void CGameObject::CalcPotentialCollisions(
-	vector<LPGAMEOBJECT>* coObjects,
-	vector<LPCOLLISIONEVENT>& coEvents)
+void CGameObject::CalcPotentialCollisions(vector<LPGAMEOBJECT>* coObjects, vector<LPCOLLISIONEVENT>& coEvents)
 {
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
-		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
+		LPGAMEOBJECT object = coObjects->at(i);
+		CScene* s = CGame::GetInstance()->GetCurrentScene();
+		if (dynamic_cast<CPlayScene*>(s)) {
+			float l, t, r, b;
+			this->GetBoundingBox(l, t, r, b);
+			if (!CGame::GetInstance()->IsInCamera(l, t, r, b))
+				continue;
+		}
+
+		LPCOLLISIONEVENT e = SweptAABBEx(object);
 
 		if (e->t > 0 && e->t <= 1.0f)
+		{
+			float mleft, mtop, mright, mbottom;
+			GetBoundingBox(mleft, mtop, mright, mbottom);
+			float oleft, otop, obottom, oright;
+			e->obj->GetBoundingBox(oleft, otop, oright, obottom);
+			if (e->nx != 0)
+			{
+				if (ceil(mbottom) == otop)
+				{
+					continue;
+				}
+				if (ceil(mtop) == obottom)
+				{
+					continue;
+				}
+			}
+			/*else if (e->ny != 0)
+			{
+				if (ceil(mleft) == oright || ceil(mright) == oleft)
+					continue;
+			}*/
 			coEvents.push_back(e);
+		}
 		else
 			delete e;
 	}
@@ -104,12 +134,28 @@ void CGameObject::FilterCollision(
 			min_tx = c->t; nx = c->nx; min_ix = i; rdx = c->dx;
 		}
 
-		if (c->t < min_ty && c->ny != 0) {
+		if (c->t < min_ty && c->ny > 0) {
 			min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
 		}
 	}
 
 	if (min_ix >= 0) coEventsResult.push_back(coEvents[min_ix]);
+	if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
+
+	float min_ty0 = min_ty;
+	min_ty = 1.0f;
+	min_iy = -1;
+
+	for (UINT i = 0; i < coEvents.size(); i++)
+	{
+		LPCOLLISIONEVENT c = coEvents[i];
+
+		if (c->t < min_ty && c->ny < 0) {
+			min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
+		}
+	}
+	if (min_ty == 1.0f)
+		min_ty = min_ty0;
 	if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
 }
 

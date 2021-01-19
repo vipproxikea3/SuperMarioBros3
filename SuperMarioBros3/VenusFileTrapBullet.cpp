@@ -45,7 +45,7 @@ void CVenusFireTrapBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 				{
 					this->isDisable = true;
 					CMario* mario = dynamic_cast<CMario*>(e->obj);
-					if (!mario->IsUUntouchable()) {
+					if (!mario->IsUntouchable()) {
 						mario->lvlDown();
 					}
 				}

@@ -18,8 +18,8 @@ void CBrickReward::ShowReward() {
 		((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(coin);
 		coin->Jump();
 		ShowPoint();
-		CGame* game = CGame::GetInstance();
-		game->PushCoin();
+		CBackup* backup = CBackup::GetInstance();
+		backup->PushCoin();
 	}
 	if (this->type == BRICKREWARD_TYPE_LEVEL) {
 		CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();

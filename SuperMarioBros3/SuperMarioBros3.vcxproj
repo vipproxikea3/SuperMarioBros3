@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Animations.h" />
+    <ClInclude Include="Backup.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="BreakBlock.h" />
     <ClInclude Include="BreakBlockPiece.h" />
@@ -184,6 +185,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animations.cpp" />
+    <ClCompile Include="Backup.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BreakBlock.cpp" />
     <ClCompile Include="BreakBlockPiece.cpp" />

@@ -94,22 +94,23 @@
 #define MARIO_LEVEL_RACCOON				3
 #define MARIO_LEVEL_FIRE				4
 
-#define MARIO_FIRE_BBOX_WIDTH			15
-#define MARIO_FIRE_BBOX_HEIGHT			27
+#define MARIO_FIRE_BBOX_WIDTH			16
+#define MARIO_FIRE_BBOX_HEIGHT			28
 
-#define MARIO_RACCOON_BBOX_WIDTH		15
-#define MARIO_RACCOON_BBOX_HEIGHT		27
+#define MARIO_RACCOON_BBOX_WIDTH		16
+#define MARIO_RACCOON_BBOX_HEIGHT		28
 
-#define MARIO_BIG_BBOX_WIDTH			15
-#define MARIO_BIG_BBOX_HEIGHT			27
+#define MARIO_BIG_BBOX_WIDTH			16
+#define MARIO_BIG_BBOX_HEIGHT			28
 
-#define MARIO_SMALL_BBOX_WIDTH			13
-#define MARIO_SMALL_BBOX_HEIGHT			15
+#define MARIO_SMALL_BBOX_WIDTH			16
+#define MARIO_SMALL_BBOX_HEIGHT			16
 
 #define MARIO_UNTOUCHABLE_TIME			5000
 #define MARIO_FLY_TIME					3500
 #define MARIO_SHOT_COOLDOWN_TIME		500
 #define MARIO_SPIN_TIME					300
+#define MARIO_SPIN_COOLDOWN_TIME		50
 
 
 class CMario : public CGameObject
@@ -125,7 +126,6 @@ class CMario : public CGameObject
 
 	bool spinning;
 	DWORD spin_start;
-	DWORD last_spin;
 
 	int level;
 
@@ -153,21 +153,22 @@ class CMario : public CGameObject
 	float zoneLeft, zoneRight, zoneBottom;
 
 public:
+	bool canControl = true;
+	bool canJump = 0;
+	bool isReadyHug = false;
+
 	CMario() : CGameObject()
 	{
 		level = MARIO_LEVEL_SMALL;
 		untouchable = 0;
 		lastShotTime = 0;
+		spin_start = NULL;
 		spinning = 0;
-		last_spin = 0;
 		canControl = true;
 		pipeWalking = false;
-	}
-	bool canControl = true;
+	}	
 	void CalVx(DWORD dt);
 	void UpdateRunSpeedStack();
-	bool canJump = 0;
-	bool isReadyHug = false;
 	void LvlUp();
 	void lvlDown();
 	void Spin();
@@ -197,7 +198,7 @@ public:
 	void SetLevel(int l) { level = l; }
 	int GetRunSpeedStack() { return runSpeedStack; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
-	bool IsUUntouchable() { if (untouchable == 1) return true; return false; }
+	bool IsUntouchable() { if (untouchable == 1) return true; return false; }
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };
