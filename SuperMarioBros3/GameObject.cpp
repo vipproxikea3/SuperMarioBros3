@@ -8,6 +8,7 @@
 #include "GameObject.h"
 #include "Sprites.h"
 #include "PlayScene.h"
+#include "Point.h"
 
 CGameObject::CGameObject()
 {
@@ -96,11 +97,11 @@ void CGameObject::CalcPotentialCollisions(vector<LPGAMEOBJECT>* coObjects, vecto
 					continue;
 				}
 			}
-			/*else if (e->ny != 0)
+			else if (e->ny != 0)
 			{
-				if (ceil(mleft) == oright || ceil(mright) == oleft)
+				if (ceil(mleft) == oright || floor(mright) == oleft)
 					continue;
-			}*/
+			}
 			coEvents.push_back(e);
 		}
 		else
@@ -159,6 +160,35 @@ void CGameObject::FilterCollision(
 	if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
 }
 
+void CGameObject::ShowPoint() {
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+	LPANIMATION_SET ani_set = animation_sets->Get(17);
+	CPoint* point = new CPoint(1);
+	point->SetPosition(x, y - 16.0f);
+	point->SetAnimationSet(ani_set);
+	((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(point);
+}
+
+bool CGameObject::BeAttackByTail() {
+	float ml, mt, mr, mb;
+	float ol, ot, or , ob;
+
+	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+	if (!mario) return false;
+	if (!mario->IsSpinning()) return false;
+
+	mario->GetBoundingBox(ml, mt, mr, mb);
+	this->GetBoundingBox(ol, ot, or, ob);
+	mt += 14.0f;
+	if (mario->nx > 0)
+		mr += 8.0f;
+	else
+		ml -= 8.0f;
+
+	if (ol > mr || or < ml || ot > mb || ob < mt)
+		return false;
+	return true;
+}
 
 void CGameObject::RenderBoundingBox()
 {

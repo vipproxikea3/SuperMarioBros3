@@ -34,6 +34,14 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 			last_rise = GetTickCount64();
 			this->SetState(PIRANHAPLANT_STATE_IDLE);
 		}
+
+		if (this->isDisable == false && this->GetState() != PIRANHAPLANT_STATE_IDLE && this->GetState() != PIRANHAPLANT_STATE_DIE)
+		{
+			if (this->BeAttackByTail()) {
+				this->SetState(PIRANHAPLANT_STATE_DIE);
+				ShowPoint();
+			}
+		}
 	}
 }
 

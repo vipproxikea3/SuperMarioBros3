@@ -1,12 +1,14 @@
 #include "ParaGoomba.h"
 #include "Block.h"
 #include "Game.h"
+#include "BrickReward.h"
+#include "BreakBlock.h"
+#include "PlayScene.h"
 
-CParaGoomba::CParaGoomba(float l, float r) {
-	this->SetState(PARAGOOMBA_STATE_WALKING);
+CParaGoomba::CParaGoomba() {
+	this->SetState(PARAGOOMBA_STATE_WALKING_LEFT);
 	this->SetLevel(PARAGOOMBA_LEVEL_WING);
 	last_jump = GetTickCount64();
-	this->SetActiveArea(l, r);
 }
 
 CParaGoomba::~CParaGoomba() {}
@@ -17,6 +19,13 @@ void CParaGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (!this->isDisable) {
 
 		if (GetTickCount64() - last_jump > PARAGOOMBA_JUMP_COOLDOWN && this->GetLevel() == PARAGOOMBA_LEVEL_WING) {
+			CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+			if (mario->x < this->x) {
+				this->SetState(PARAGOOMBA_STATE_WALKING_LEFT);
+			}
+			else {
+				this->SetState(PARAGOOMBA_STATE_WALKING_RIGHT);
+			}
 			vy = -PARAGOOMBA_JUMP_SPEED;
 			last_jump = GetTickCount64();
 		}
@@ -79,20 +88,56 @@ void CParaGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						this->y = y0 + min_ty * this->dy + ny * 0.4f;
 					}
 				}
+
+				if (dynamic_cast<CBrickReward*>(e->obj)) {
+					CBrickReward* brick = dynamic_cast<CBrickReward*>(e->obj);
+					BasicCollision(min_tx, min_ty, nx, ny, x0, y0);
+					if (brick->nx != 0) {
+						if (this->GetState() == PARAGOOMBA_STATE_WALKING_LEFT)
+							this->SetState(PARAGOOMBA_STATE_WALKING_RIGHT);
+						else if (this->GetState() == PARAGOOMBA_STATE_WALKING_RIGHT)
+							this->SetState(PARAGOOMBA_STATE_WALKING_LEFT);
+					}
+				}
+
+				if (dynamic_cast<CBreakBlock*>(e->obj)) {
+					CBreakBlock* brick = dynamic_cast<CBreakBlock*>(e->obj);
+					BasicCollision(min_tx, min_ty, nx, ny, x0, y0);
+					if (brick->nx != 0) {
+						if (this->GetState() == PARAGOOMBA_STATE_WALKING_LEFT)
+							this->SetState(PARAGOOMBA_STATE_WALKING_RIGHT);
+						else if (this->GetState() == PARAGOOMBA_STATE_WALKING_RIGHT)
+							this->SetState(PARAGOOMBA_STATE_WALKING_LEFT);
+					}
+				}
 			}
 		}
 
-		if (this->x <= this->lLimit) {
-			this->x = this->lLimit;
-			this->vx = -this->vx;
-		}
-		if (this->x >= this->rLimit - PARAGOOMBA_BBOX_WIDTH) {
-			this->x = this->rLimit - PARAGOOMBA_BBOX_WIDTH;
-			this->vx = -this->vx;
+		if (this->isDisable == false && this->GetState() != PARAGOOMBA_STATE_DIE_X && this->GetState() != PARAGOOMBA_STATE_DIE_Y)
+		{
+			if (this->BeAttackByTail()) {
+				this->SetLevel(PARAGOOMBA_LEVEL_GOOMBA);
+				this->SetState(PARAGOOMBA_STATE_DIE_X);
+				ShowPoint();
+			}
 		}
 
 		// clean up collision events
 		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+	}
+}
+
+void CParaGoomba::BasicCollision(float min_tx, float min_ty, float nx, float ny, float x0, float y0)
+{
+	if (nx != 0)
+	{
+		this->vx = 0;
+		this->x = x0 + min_tx * this->dx + nx * 0.4f;
+	}
+	if (ny != 0)
+	{
+		this->vy = 0;
+		this->y = y0 + min_ty * this->dy + ny * 0.4f;
 	}
 }
 
@@ -122,26 +167,35 @@ void CParaGoomba::Render()
 }
 
 void CParaGoomba::ReSet() {
-	float l, t, r, b;
-	this->GetBoundingBox(l, t, r, b);
-	CGame* game = CGame::GetInstance();
-	if (!game->IsInCamera(l, t, r, b)) {
-		this->isDisable = true;
-		this->isReadyReset = false;
-		this->SetPosition(this->x_start, this->y_start);
-		this->SetState(PARAGOOMBA_STATE_WALKING);
-		this->SetLevel(PARAGOOMBA_LEVEL_WING);
-		last_jump = GetTickCount64();
-	}
-	if (!game->IsInCamera(this->x_start, this->y_start, this->x_start + r - l, this->y_start + b - t)) {
-		if (this->isDisable) {
-			this->isReadyReset = true;
+	if (this->GetState() != PARAGOOMBA_STATE_DIE_X && this->GetState() != PARAGOOMBA_STATE_DIE_Y)
+	{
+		float l, t, r, b;
+		this->GetBoundingBox(l, t, r, b);
+		CGame* game = CGame::GetInstance();
+		if (!game->IsInCamera(l, t, r, b)) {
+			this->isDisable = true;
+			this->isReadyReset = false;
+			this->SetPosition(this->x_start, this->y_start);
+			CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+			if (mario->x < this->x) {
+				this->SetState(PARAGOOMBA_STATE_WALKING_LEFT);
+			}
+			else {
+				this->SetState(PARAGOOMBA_STATE_WALKING_RIGHT);
+			}
+			this->SetLevel(PARAGOOMBA_LEVEL_WING);
+			last_jump = GetTickCount64();
 		}
-	}
-	if (game->IsInCamera(l, t, r, b)) {
-		if (this->isReadyReset)
-			this->isDisable = false;
-	}
+		if (!game->IsInCamera(this->x_start, this->y_start, this->x_start + r - l, this->y_start + b - t)) {
+			if (this->isDisable) {
+				this->isReadyReset = true;
+			}
+		}
+		if (game->IsInCamera(l, t, r, b)) {
+			if (this->isReadyReset)
+				this->isDisable = false;
+		}
+	}	
 }
 
 void CParaGoomba::SetState(int state)
@@ -159,10 +213,16 @@ void CParaGoomba::SetState(int state)
 		vy = 0;
 		die_start = GetTickCount64();
 		break;
-	case PARAGOOMBA_STATE_WALKING:
+	case PARAGOOMBA_STATE_WALKING_RIGHT:
+		die_start = NULL;
+		vx = PARAGOOMBA_WALKING_SPEED;
+		vy = 0;
+		break;
+	case PARAGOOMBA_STATE_WALKING_LEFT:
 		die_start = NULL;
 		vx = -PARAGOOMBA_WALKING_SPEED;
 		vy = 0;
+		break;
 	}
 }
 
@@ -170,7 +230,13 @@ void CParaGoomba::GetBoundingBox(float& left, float& top, float& right, float& b
 {
 	switch (this->GetState())
 	{
-	case PARAGOOMBA_STATE_WALKING:
+	case PARAGOOMBA_STATE_WALKING_RIGHT:
+		left = x;
+		top = y;
+		right = x + PARAGOOMBA_BBOX_WIDTH;
+		bottom = y + PARAGOOMBA_BBOX_HEIGHT;
+		break;
+	case PARAGOOMBA_STATE_WALKING_LEFT:
 		left = x;
 		top = y;
 		right = x + PARAGOOMBA_BBOX_WIDTH;

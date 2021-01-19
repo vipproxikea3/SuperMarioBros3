@@ -9,8 +9,8 @@
 void CBrickReward::ShowReward() {
 	if (this->type == BRICKREWARD_TYPE_COIN) {
 		CCoin* coin = new CCoin();
-		coin->SetPosition(this->x + 1.0f, this->y - 18.0f);
-		coin->SetDefaultPosition(this->x + 1.0f, this->y - 18.0f);
+		coin->SetPosition(this->x, this->y - 18.0f);
+		coin->SetDefaultPosition(this->x, this->y - 18.0f);
 
 		CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 		LPANIMATION_SET ani_set = animation_sets->Get(8);
@@ -77,6 +77,11 @@ void CBrickReward::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 			y = y_start;
 			vy = 0;
 			this->SetState(BRICKREWARD_STATE_LOCK);
+		}
+	}
+	else if (this->GetState() == BRICKREWARD_STATE_IDLE) {
+		if (BeAttackByTail()) {
+			this->SetState(BRICKREWARD_STATE_JUMP);
 		}
 	}
 }

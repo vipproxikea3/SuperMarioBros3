@@ -6,9 +6,10 @@
 #define PARAGOOMBA_GRAVITY					0.0005f
 #define PARAGOOMBA_DIE_DEFLECT_SPEED		0.15f
 
-#define PARAGOOMBA_STATE_WALKING			100
-#define PARAGOOMBA_STATE_DIE_Y				200
-#define PARAGOOMBA_STATE_DIE_X				300
+#define PARAGOOMBA_STATE_WALKING_LEFT		100
+#define PARAGOOMBA_STATE_WALKING_RIGHT		200
+#define PARAGOOMBA_STATE_DIE_Y				300
+#define PARAGOOMBA_STATE_DIE_X				400
 
 #define PARAGOOMBA_ANI_WALKING				0
 #define PARAGOOMBA_ANI_DIE_X				1
@@ -30,8 +31,6 @@
 
 class CParaGoomba : public CGameObject
 {
-	float lLimit = -999999;
-	float rLimit = 999999;
 	int level;
 	DWORD die_start;
 	DWORD last_jump;
@@ -40,14 +39,11 @@ class CParaGoomba : public CGameObject
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 	void ReSet();
+	void BasicCollision(float min_tx, float min_ty, float nx, float ny, float x0, float y0);
 public:
-	CParaGoomba(float l, float r);
+	CParaGoomba();
 	~CParaGoomba();
 	virtual void SetState(int state);
 	void SetLevel(int l) { level = l; }
 	int GetLevel() { return level; }
-	void SetActiveArea(float l, float r) {
-		this->lLimit = l;
-		this->rLimit = r;
-	}
 };

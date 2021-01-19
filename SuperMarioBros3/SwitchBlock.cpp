@@ -14,8 +14,9 @@ void CSwitchBlock::Switch() {
 			CBreakBlock* breakBlock = dynamic_cast<CBreakBlock*>(objects[i]);
 			if (breakBlock->isDisable == false && breakBlock->GetType() == BREAKBLOCK_TYPE_DEFAULT && breakBlock->GetState() == BREAKBLOCK_STATE_IDLE) {
 				CCoin* coin = new CCoin();
-				coin->SetPosition(breakBlock->x + 1.0f, breakBlock->y);
-				coin->SetDefaultPosition(breakBlock->x + 1.0f, breakBlock->y);
+				coin->SetPosition(breakBlock->x, breakBlock->y);
+				coin->SetDefaultPosition(breakBlock->x, breakBlock->y);
+				coin->SetStartComvert();
 
 				CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 				LPANIMATION_SET ani_set = animation_sets->Get(8);
@@ -55,6 +56,7 @@ void CSwitchBlock::GetBoundingBox(float& left, float& top, float& right, float& 
 	right = x + SWITCHBLOCK_BBOX_WIDTH;
 	bottom = y + SWITCHBLOCK_BBOX_HEIGHT;
 	if (this->GetState() == SWITCHBLOCK_STATE_ACTIVED) {
-		bottom = y + SWITCHBLOCK_ACTIVED_BBOX_HEIGHT;
+		top = y + SWITCHBLOCK_BBOX_HEIGHT;
+		bottom = y + SWITCHBLOCK_BBOX_HEIGHT;
 	}
 }

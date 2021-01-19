@@ -2,17 +2,33 @@
 #include "PlayScene.h"
 
 void CBreakBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
-	
+	if (this->isDisable == false && this->GetState() == BREAKBLOCK_STATE_IDLE)
+	{
+		if (this->BeAttackByTail()) {
+			ShowReward();
+		}
+	}
 }
 
 void CBreakBlock::ShowReward() {
 	switch (type)
 	{
+	case BREAKBLOCK_TYPE_DEFAULT:
+	{
+		CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+		if (mario->GetLevel() != MARIO_LEVEL_SMALL) {
+			ShowPiece();
+			this->isDisable = true;
+		}
+		break;
+	}
 	case BREAKBLOCK_TYPE_SWITCH:
 		ShowSwitchBlock();
+		this->SetState(BREAKBLOCK_STATE_LOCK);
 		break;
 	case BREAKBLOCK_TYPE_LIFE:
 		ShowSuperMushroomLevel();
+		this->SetState(BREAKBLOCK_STATE_LOCK);
 		break;
 	}
 }

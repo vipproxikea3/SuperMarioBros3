@@ -1,7 +1,26 @@
 #include "Coin.h"
+#include "PlayScene.h"
 
 void CCoin::Jump() {
 	this->SetState(COIN_STATE_JUMP);
+}
+
+void CCoin::SetStartComvert() {
+	start_convert = GetTickCount64();
+	CanConvert = true;
+}
+
+void CCoin::ConvertToBreakBlock() {
+	CBreakBlock* brick = new CBreakBlock(0);
+	brick->SetPosition(this->x, this->y);
+	brick->SetDefaultPosition(this->x, this->y);
+
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+	LPANIMATION_SET ani_set = animation_sets->Get(9);
+	brick->SetAnimationSet(ani_set);
+
+	((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(brick);
+	this->isDisable = true;
 }
 
 void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
@@ -54,6 +73,9 @@ void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 				}
 			}
 		}
+
+		if (this->isDisable == false && GetTickCount64() - start_convert >= COIN_TIME_CONVERT && CanConvert == true)
+			ConvertToBreakBlock();
 
 		// clean up collision events
 		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];

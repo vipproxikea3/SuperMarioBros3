@@ -7,12 +7,9 @@
 #include "BreakBlock.h"
 #include "SwitchBlock.h"
 
-//#define MARIO_WALKING_SPEED_BASE		0.05f
 #define MARIO_WALKING_SPEED_BASE		0.04f
-//#define MARIO_WALKING_SPEED				0.1f
 #define MARIO_WALKING_SPEED				0.075f
 #define MARIO_RUN_SPEED					0.145f
-//#define MARIO_ACCELERATION			0.000075f
 #define MARIO_ACCELERATION				0.00005f
 #define MARIO_WALKING_FRICTION			0.00025f
 #define MARIO_PIPE_WALKING_SPEED		0.01f;
@@ -166,20 +163,21 @@ public:
 		spinning = 0;
 		canControl = true;
 		pipeWalking = false;
-	}	
+	}
+	void Jump();
 	void CalVx(DWORD dt);
 	void UpdateRunSpeedStack();
 	void LvlUp();
 	void lvlDown();
 	void Spin();
+	bool IsSpinning() { return spinning; }
 	void Shot();
 	void Fly();
 	void SetStopFly() { flyIng = false; fly_start = NULL; }
 	void SetStopFall() { fallIng = false; }
 	void UpdateHuggingShellPosition();
 	void StopHug();
-	void ShowPoint();
-	void Teleport();
+	void PipeWalking();
 	void SetZone(float l, float r, float b) {
 		zoneLeft = l;
 		zoneRight = r;

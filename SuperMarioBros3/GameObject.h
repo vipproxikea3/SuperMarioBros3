@@ -76,6 +76,8 @@ public:
 	void GetSpeed(float& vx, float& vy) { vx = this->vx; vy = this->vy; }
 
 	void ReSet();
+	void ShowPoint();
+	bool BeAttackByTail();
 
 	int GetState() { return this->state; }
 

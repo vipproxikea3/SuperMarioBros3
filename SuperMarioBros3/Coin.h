@@ -11,11 +11,15 @@
 
 #define COIN_ANI_IDLE			0
 
-#define COIN_BBOX_WIDTH			14
+#define COIN_BBOX_WIDTH			16
 #define COIN_BBOX_HEIGHT		16
+
+#define COIN_TIME_CONVERT		10000
 
 class CCoin : public CGameObject
 {
+	DWORD start_convert;
+	bool CanConvert = false;
 public:
 	CCoin() : CGameObject()
 	{
@@ -23,6 +27,8 @@ public:
 	}
 	~CCoin() {}
 	void Jump();
+	void SetStartComvert();
+	void ConvertToBreakBlock();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 	void SetState(int state);

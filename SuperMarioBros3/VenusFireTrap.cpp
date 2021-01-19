@@ -122,6 +122,14 @@ void CVenusFireTrap::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 			last_rise = GetTickCount64();
 			this->SetState(VENUSFIRETRAP_STATE_IDLE);
 		}
+
+		if (this->isDisable == false && this->GetState() != VENUSFIRETRAP_STATE_IDLE && this->GetState() != VENUSFIRETRAP_STATE_DIE)
+		{
+			if (this->BeAttackByTail()) {
+				this->SetState(VENUSFIRETRAP_STATE_DIE);
+				ShowPoint();
+			}
+		}
 	}
 }
 

@@ -102,12 +102,10 @@ void CMarioFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						if (koopa->GetState() == SHELL_STATE_IDLE) {
 							if (e->nx != 0) {
 								if (e->nx < 0) {
-									koopa->SetState(SHELL_STATE_WALKING);
-									koopa->SetSpeed(SHELL_WALKING_SPEED, 0);
+									koopa->SetState(SHELL_STATE_WALKING_RIGHT);
 								}
 								else {
-									koopa->SetState(SHELL_STATE_WALKING);
-									koopa->SetSpeed(-SHELL_WALKING_SPEED, 0);
+									koopa->SetState(SHELL_STATE_WALKING_LEFT);
 								}
 							}
 						}

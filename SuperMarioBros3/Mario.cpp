@@ -95,7 +95,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vy += MARIO_GRAVITY * dt;
 	}
 
-	Teleport();
+	PipeWalking();
 
 	// Calculate vx
 	CalVx(dt);
@@ -192,8 +192,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CBreakBlock* breakBlock = dynamic_cast<CBreakBlock*>(e->obj);
 				BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 
-				if (e->ny == 1 && breakBlock->GetType() != BREAKBLOCK_TYPE_DEFAULT && breakBlock->GetState() == BREAKBLOCK_STATE_IDLE) {
-					breakBlock->SetState(BREAKBLOCK_STATE_LOCK);
+				if (e->ny == 1 && breakBlock->GetState() == BREAKBLOCK_STATE_IDLE) {
 					breakBlock->ShowReward();
 				}
 			}
@@ -251,19 +250,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 
 				if (e->nx != 0) {
-					// raccoon spin
-					if (spinning) {
-						if (e->nx * this->nx < 0) {
-							vx = 0;
-							trap->SetState(VENUSFIRETRAP_STATE_DIE);
-							ShowPoint();
-						}
-						else {
-							if (this->GetState() != VENUSFIRETRAP_STATE_DIE && untouchable == 0)
-								lvlDown();
-						}
-					}
-					else if (this->GetState() != VENUSFIRETRAP_STATE_DIE && untouchable == 0)
+					if (this->GetState() != VENUSFIRETRAP_STATE_DIE && this->GetState() != VENUSFIRETRAP_STATE_IDLE && untouchable == 0)
 					{
 						lvlDown();
 					}
@@ -280,9 +267,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						vy = 0;
 						y = y0 + min_ty * dy + e->ny * 0.4f;
-						goomba->SetState(GOOMBA_STATE_DIE_Y);
-						vy = -MARIO_JUMP_DEFLECT_SPEED;
-						ShowPoint();
+						if (goomba->GetState() != GOOMBA_STATE_DIE_Y) {
+							goomba->SetState(GOOMBA_STATE_DIE_Y);
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							ShowPoint();
+						}
 					}
 					else {
 						flyIng = false;
@@ -297,22 +286,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 
 				if (e->nx != 0) {
-					// raccoon spin
-					if (spinning) {
-						if (e->nx * this->nx < 0) {
-							vx = 0;
-							//x = x0 + min_tx * dx + e->nx * 0.4f;
-							goomba->SetState(GOOMBA_STATE_DIE_X);
-							ShowPoint();
-						}
-						else {
-							if (goomba->GetState() != GOOMBA_STATE_DIE_Y && goomba->GetState() != GOOMBA_STATE_DIE_X)
-							{
-								lvlDown();
-							}
-						}
-					}
-					else if (untouchable == 0)
+					if (untouchable == 0)
 					{
 						if (goomba->GetState() != GOOMBA_STATE_DIE_Y && goomba->GetState() != GOOMBA_STATE_DIE_X)
 						{
@@ -332,14 +306,17 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (e->ny < 0)
 					{
 						y = y0 + min_ty * dy + e->ny * 0.4f;
-						if (paraGoomba->GetLevel() == PARAGOOMBA_LEVEL_WING) {
-							paraGoomba->SetLevel(PARAGOOMBA_LEVEL_GOOMBA);
+						if (paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_X && paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_Y)
+						{
+							if (paraGoomba->GetLevel() == PARAGOOMBA_LEVEL_WING) {
+								paraGoomba->SetLevel(PARAGOOMBA_LEVEL_GOOMBA);
+							}
+							else {
+								paraGoomba->SetState(PARAGOOMBA_STATE_DIE_Y);
+							}
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							ShowPoint();
 						}
-						else {
-							paraGoomba->SetState(PARAGOOMBA_STATE_DIE_Y);
-						}
-						vy = -MARIO_JUMP_DEFLECT_SPEED;
-						ShowPoint();
 					}
 					else {
 						flyIng = false;
@@ -355,27 +332,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				if (e->nx != 0) {
 					vx = 0;
-					//x = x0 + min_tx * dx + e->nx * 0.4f;
+					x = x0 + min_tx * dx + e->nx * 0.4f;
 
-					// raccoon spin
-					if (spinning) {
-						if (e->nx * this->nx < 0) {
-							if (paraGoomba->GetLevel() == PARAGOOMBA_LEVEL_WING) {
-								paraGoomba->SetLevel(PARAGOOMBA_LEVEL_GOOMBA);
-							}
-							else {
-								paraGoomba->SetState(PARAGOOMBA_STATE_DIE_X);
-							}
-							ShowPoint();
-						}
-						else {
-							if (paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_Y && paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_X)
-							{
-								lvlDown();
-							}
-						}
-					}
-					else if (untouchable == 0)
+					if (untouchable == 0)
 					{
 						if (paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_Y && paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_X)
 						{
@@ -441,28 +400,34 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							}
 							else {
 								if (e->nx < 0) {
-									koopa->SetState(SHELL_STATE_WALKING);
-									koopa->SetSpeed(SHELL_WALKING_SPEED, 0);
+									koopa->SetState(SHELL_STATE_WALKING_RIGHT);
 								}
 								else {
-									koopa->SetState(SHELL_STATE_WALKING);
-									koopa->SetSpeed(-SHELL_WALKING_SPEED, 0);
+									koopa->SetState(SHELL_STATE_WALKING_LEFT);
 								}
 							}
 						}
 						if (e->ny == -1) {
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
 							if (this->x < koopa->x + (SHELL_BBOX_WIDTH / 2)) {
-								koopa->SetState(SHELL_STATE_WALKING);
-								koopa->SetSpeed(SHELL_WALKING_SPEED, 0);
+								koopa->SetState(SHELL_STATE_WALKING_RIGHT);
 							}
 							else {
-								koopa->SetState(SHELL_STATE_WALKING);
-								koopa->SetSpeed(-SHELL_WALKING_SPEED, 0);
+								koopa->SetState(SHELL_STATE_WALKING_LEFT);
 							}
 						}
 						break;
-					case SHELL_STATE_WALKING:
+					case SHELL_STATE_WALKING_LEFT:
+						if (e->ny == -1) {
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							koopa->SetState(SHELL_STATE_IDLE);
+						}
+						else if (untouchable == 0)
+						{
+							lvlDown();
+						}
+						break;
+					case SHELL_STATE_WALKING_RIGHT:
 						if (e->ny == -1) {
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
 							koopa->SetState(SHELL_STATE_IDLE);
@@ -649,7 +614,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 }
 
-void CMario::Teleport() {
+void CMario::PipeWalking() {
 	if (pipeWalking) {
 		float height = MARIO_SMALL_BBOX_HEIGHT;
 		if (level != MARIO_LEVEL_SMALL)
@@ -701,27 +666,15 @@ void CMario::UpdateHuggingShellPosition() {
 	{
 	case MARIO_LEVEL_SMALL:
 		if (nx > 0)
-			huggingShell->SetPosition(this->x + 11.0f, this->y - 1.0f);
+			huggingShell->SetPosition(this->x + 12.0f, this->y - 1.0f);
 		else
-			huggingShell->SetPosition(this->x - 14.0f, this->y - 1.0f);
+			huggingShell->SetPosition(this->x - 12.0f, this->y - 1.0f);
 		break;
-	case MARIO_LEVEL_BIG:
+	default:
 		if (nx > 0)
-			huggingShell->SetPosition(this->x + 13.0f, this->y + 5.0f);
+			huggingShell->SetPosition(this->x + 12.0f, this->y + 5.0f);
 		else
-			huggingShell->SetPosition(this->x - 14.0f, this->y + 5.0f);
-		break;
-	case MARIO_LEVEL_RACCOON:
-		if (nx > 0)
-			huggingShell->SetPosition(this->x + 19.0f, this->y + 5.0f);
-		else
-			huggingShell->SetPosition(this->x - 14.0f, this->y + 5.0f);
-		break;
-	case MARIO_LEVEL_FIRE:
-		if (nx > 0)
-			huggingShell->SetPosition(this->x + 13.0f, this->y + 5.0f);
-		else
-			huggingShell->SetPosition(this->x - 14.0f, this->y + 5.0f);
+			huggingShell->SetPosition(this->x - 12.0f, this->y + 5.0f);
 		break;
 	}
 }
@@ -730,12 +683,10 @@ void CMario::StopHug() {
 	this->isReadyHug = false;
 	if (!hugging) return;
 	if (nx > 0) {
-		huggingShell->SetState(SHELL_STATE_WALKING);
-		huggingShell->SetSpeed(SHELL_WALKING_SPEED, 0);
+		huggingShell->SetState(SHELL_STATE_WALKING_RIGHT);
 	}
 	else {
-		huggingShell->SetState(SHELL_STATE_WALKING);
-		huggingShell->SetSpeed(-SHELL_WALKING_SPEED, 0);
+		huggingShell->SetState(SHELL_STATE_WALKING_LEFT);
 	}
 
 	this->hugging = false;
@@ -832,13 +783,12 @@ void CMario::Fly() {
 	}
 }
 
-void CMario::ShowPoint() {
-	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
-	LPANIMATION_SET ani_set = animation_sets->Get(17);
-	CPoint* point = new CPoint(1);
-	point->SetPosition(x, y - 16.0f);
-	point->SetAnimationSet(ani_set);
-	((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(point);
+void CMario::Jump() {
+	isOnGround = false;
+	if (level == MARIO_LEVEL_SMALL)
+		vy = -MARIO_JUMP_SPEED_Y_WEAK;
+	else
+		vy = -MARIO_JUMP_SPEED_Y_STRONG;
 }
 
 void CMario::BasicCollision(float min_tx, float min_ty, float nx, float ny, float x0, float y0)
@@ -1094,6 +1044,12 @@ void CMario::SetState(int state)
 
 	switch (state)
 	{
+	/*case MARIO_STATE_JUMP:
+		isOnGround = false;
+		if (level == MARIO_LEVEL_SMALL)
+			vy = -MARIO_JUMP_SPEED_Y_WEAK;
+		else
+			vy = -MARIO_JUMP_SPEED_Y_STRONG;*/
 	case MARIO_STATE_RUN_RIGHT:
 		ax = MARIO_ACCELERATION;
 		if (walkingRight == false)
@@ -1134,12 +1090,6 @@ void CMario::SetState(int state)
 		}
 		nx = -1;
 		break;
-	case MARIO_STATE_JUMP:
-		isOnGround = false;
-		if (level == MARIO_LEVEL_SMALL)
-			vy = -MARIO_JUMP_SPEED_Y_WEAK;
-		else
-			vy = -MARIO_JUMP_SPEED_Y_STRONG;
 	case MARIO_STATE_IDLE:
 		walkingLeft = false;
 		walkingRight = false;

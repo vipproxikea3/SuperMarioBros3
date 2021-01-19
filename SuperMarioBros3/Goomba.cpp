@@ -1,10 +1,13 @@
 #include "Goomba.h"
 #include "Block.h"
 #include "Game.h"
+#include "BrickReward.h"
+#include "Mario.h"
+#include "PlayScene.h"
+#include "Utils.h"
 
-CGoomba::CGoomba(float l, float r) {
-	this->SetState(GOOMBA_STATE_WALKING);
-	this->SetActiveArea(l, r);
+CGoomba::CGoomba() {
+	this->SetState(GOOMBA_STATE_WALKING_LEFT);
 }
 
 CGoomba::~CGoomba() {}
@@ -71,20 +74,71 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						this->y = y0 + min_ty * this->dy + ny * 0.4f;
 					}
 				}
+
+				if (dynamic_cast<CBrickReward*>(e->obj)) {
+					CBrickReward* brick = dynamic_cast<CBrickReward*>(e->obj);
+					BasicCollision(min_tx, min_ty, nx, ny, x0, y0);
+					if (brick->nx != 0) {
+						if (this->GetState() == GOOMBA_STATE_WALKING_LEFT)
+							this->SetState(GOOMBA_STATE_WALKING_RIGHT);
+						else if (this->GetState() == GOOMBA_STATE_WALKING_RIGHT)
+							this->SetState(GOOMBA_STATE_WALKING_LEFT);
+					}
+				}
+
+				if (dynamic_cast<CBreakBlock*>(e->obj)) {
+					CBreakBlock* brick = dynamic_cast<CBreakBlock*>(e->obj);
+					BasicCollision(min_tx, min_ty, nx, ny, x0, y0);
+					if (brick->nx != 0) {
+						if (this->GetState() == GOOMBA_STATE_WALKING_LEFT)
+							this->SetState(GOOMBA_STATE_WALKING_RIGHT);
+						else if (this->GetState() == GOOMBA_STATE_WALKING_RIGHT)
+							this->SetState(GOOMBA_STATE_WALKING_LEFT);
+					}
+				}
+
+				if (dynamic_cast<CGoomba*>(e->obj)) {
+					CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+					BasicCollision(min_tx, min_ty, nx, ny, x0, y0);
+					if (goomba->nx != 0) {
+						if (this->GetState() == GOOMBA_STATE_WALKING_LEFT)
+							this->SetState(GOOMBA_STATE_WALKING_RIGHT);
+						else if (this->GetState() == GOOMBA_STATE_WALKING_RIGHT)
+							this->SetState(GOOMBA_STATE_WALKING_LEFT);
+
+						if (goomba->GetState() == GOOMBA_STATE_WALKING_LEFT)
+							goomba->SetState(GOOMBA_STATE_WALKING_RIGHT);
+						else if (goomba->GetState() == GOOMBA_STATE_WALKING_RIGHT)
+							goomba->SetState(GOOMBA_STATE_WALKING_LEFT);
+					}
+				}
 			}
 		}
 
-		if (this->x <= this->lLimit) {
-			this->x = this->lLimit;
-			this->vx = -this->vx;
-		}
-		if (this->x >= this->rLimit - GOOMBA_BBOX_WIDTH) {
-			this->x = this->rLimit - GOOMBA_BBOX_WIDTH;
-			this->vx = -this->vx;
+		if (this->isDisable == false && this->GetState() != GOOMBA_STATE_DIE_X && this->GetState() != GOOMBA_STATE_DIE_Y)
+		{
+			if (this->BeAttackByTail()) {
+				this->SetState(GOOMBA_STATE_DIE_X);
+				ShowPoint();
+			}
 		}
 
 		// clean up collision events
 		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+	}
+}
+
+void CGoomba::BasicCollision(float min_tx, float min_ty, float nx, float ny, float x0, float y0)
+{
+	if (nx != 0)
+	{
+		this->vx = 0;
+		this->x = x0 + min_tx * this->dx + nx * 0.4f;
+	}
+	if (ny != 0)
+	{
+		this->vy = 0;
+		this->y = y0 + min_ty * this->dy + ny * 0.4f;
 	}
 }
 
@@ -109,23 +163,31 @@ void CGoomba::Render()
 }
 
 void CGoomba::ReSet() {
-	float l, t, r, b;
-	this->GetBoundingBox(l, t, r, b);
-	CGame* game = CGame::GetInstance();
-	if (!game->IsInCamera(l, t, r, b)) {
-		this->isDisable = true;
-		this->isReadyReset = false;
-		this->SetPosition(this->x_start, this->y_start);
-		this->SetState(GOOMBA_STATE_WALKING);
-	}
-	if (!game->IsInCamera(this->x_start, this->y_start, this->x_start + r - l, this->y_start + b - t)) {
-		if (this->isDisable) {
-			this->isReadyReset = true;
+	if (this->GetState() != GOOMBA_STATE_DIE_X && this->GetState() != GOOMBA_STATE_DIE_Y) {
+		float l, t, r, b;
+		this->GetBoundingBox(l, t, r, b);
+		CGame* game = CGame::GetInstance();
+		if (!game->IsInCamera(l, t, r, b)) {
+			this->isDisable = true;
+			this->isReadyReset = false;
+			this->SetPosition(this->x_start, this->y_start);
+			CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+			if (mario->x < this->x) {
+				this->SetState(GOOMBA_STATE_WALKING_LEFT);
+			}
+			else {
+				this->SetState(GOOMBA_STATE_WALKING_RIGHT);
+			}
 		}
-	}
-	if (game->IsInCamera(l, t, r, b)) {
-		if (this->isReadyReset)
-			this->isDisable = false;
+		if (!game->IsInCamera(this->x_start, this->y_start, this->x_start + r - l, this->y_start + b - t)) {
+			if (this->isDisable) {
+				this->isReadyReset = true;
+			}
+		}
+		if (game->IsInCamera(l, t, r, b)) {
+			if (this->isReadyReset)
+				this->isDisable = false;
+		}
 	}
 }
 
@@ -144,10 +206,16 @@ void CGoomba::SetState(int state)
 		vy = 0;
 		die_start = GetTickCount64();
 		break;
-	case GOOMBA_STATE_WALKING:
+	case GOOMBA_STATE_WALKING_RIGHT:
+		die_start = NULL;
+		vx = GOOMBA_WALKING_SPEED;
+		vy = 0;
+		break;
+	case GOOMBA_STATE_WALKING_LEFT:
 		die_start = NULL;
 		vx = -GOOMBA_WALKING_SPEED;
 		vy = 0;
+		break;
 	}
 }
 
@@ -155,7 +223,13 @@ void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& botto
 {
 	switch (this->GetState())
 	{
-	case GOOMBA_STATE_WALKING:
+	case GOOMBA_STATE_WALKING_LEFT:
+		left = x;
+		top = y;
+		right = x + GOOMBA_BBOX_WIDTH;
+		bottom = y + GOOMBA_BBOX_HEIGHT;
+		break;
+	case GOOMBA_STATE_WALKING_RIGHT:
 		left = x;
 		top = y;
 		right = x + GOOMBA_BBOX_WIDTH;

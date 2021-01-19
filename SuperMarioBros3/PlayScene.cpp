@@ -241,23 +241,18 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_GOOMBA: 
 	{
-		float limitL = atoi(tokens[4].c_str());
-		float limitR = atoi(tokens[5].c_str());
-		obj = new CGoomba(limitL, limitR);
+		obj = new CGoomba();
 		break;
 	}
 	case OBJECT_TYPE_KOOPA:
 	{
-		float limitL = atoi(tokens[4].c_str());
-		float limitR = atoi(tokens[5].c_str());
-		obj = new CKoopa(limitL, limitR);
+		int type = atoi(tokens[4].c_str());
+		obj = new CKoopa(type);
 		break;		
 	}
 	case OBJECT_TYPE_PARAGOOMBA:
 	{
-		float limitL = atoi(tokens[4].c_str());
-		float limitR = atoi(tokens[5].c_str());
-		obj = new CParaGoomba(limitL, limitR);
+		obj = new CParaGoomba();
 		break;
 	}
 	case OBJECT_TYPE_PARAKOOPA:
@@ -559,12 +554,20 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			switch (KeyCode)
 			{
 			case DIK_S:
-				if (mario->canJump && mario->GetRunSpeedStack() != 7) {
-					mario->SetState(MARIO_STATE_JUMP);
-					mario->canJump = false;
+				if (mario->GetLevel() != MARIO_LEVEL_RACCOON) {
+					if (mario->canJump) {
+						mario->Jump();
+						mario->canJump = false;
+					}
 				}
-				else if (mario->GetLevel() == MARIO_LEVEL_RACCOON) {
-					mario->Fly();
+				else {
+					if (mario->canJump && mario->GetRunSpeedStack() != 7) {
+						mario->Jump();
+						mario->canJump = false;
+					}
+					else if (mario->GetLevel() == MARIO_LEVEL_RACCOON) {
+						mario->Fly();
+					}
 				}
 				break;
 			case DIK_X:
