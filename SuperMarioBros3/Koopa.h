@@ -8,6 +8,7 @@
 #define SHELL_WALKING_SPEED				0.15f 
 #define SHELL_GRAVITY					0.0005f
 #define SHELL_JUMP_DEFLECT_SPEED		0.25f
+#define KOOPA_DIE_DEFLECT_SPEED			0.1f
 
 #define KOOPA_TYPE_GREEN				0
 #define KOOPA_TYPE_RED					1
@@ -19,7 +20,7 @@
 #define SHELL_STATE_WALKING_RIGHT		500
 #define	SHELL_STATE_BEHUG				600
 #define	SHELL_STATE_OVERTURN			700
-#define SHELL_STATE_DIE					800
+#define KOOPA_STATE_DIE					800
 
 #define KOOPA_GREEN_ANI_WALKING_RIGHT	0
 #define KOOPA_GREEN_ANI_WALKING_LEFT	1
@@ -27,12 +28,15 @@
 #define SHELL_GREEN_ANI_WALKING			3
 #define SHELL_GREEN_ANI_BEHUG			4
 #define SHELL_GREEN_ANI_OVERTURN		5
-#define KOOPA_RED_ANI_WALKING_RIGHT		6
-#define KOOPA_RED_ANI_WALKING_LEFT		7
-#define	SHELL_RED_ANI_IDLE				8
-#define SHELL_RED_ANI_WALKING			9
-#define SHELL_RED_ANI_BEHUG				10
-#define SHELL_RED_ANI_OVERTURN			11
+#define KOOPA_GREEN_ANI_DIE				6
+#define KOOPA_RED_ANI_WALKING_RIGHT		7
+#define KOOPA_RED_ANI_WALKING_LEFT		8
+#define	SHELL_RED_ANI_IDLE				9
+#define SHELL_RED_ANI_WALKING			10
+#define SHELL_RED_ANI_BEHUG				11
+#define SHELL_RED_ANI_OVERTURN			12
+#define KOOPA_RED_ANI_DIE				13
+
 
 #define	KOOPA_LEVEL_KOOPA				1
 #define	KOOPA_LEVEL_SHELL				2
@@ -62,6 +66,8 @@ public:
 	void BasicCollision(float min_tx, float min_ty, float nx, float ny, float x0, float y0);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
+	bool CalculateTurningAround(vector<LPGAMEOBJECT>* coObjects);
+	void TurnAround();
 	int GetType() { return this->type; }
 	void ReSet();
 	void SetState(int state);

@@ -72,9 +72,7 @@ void CGameObject::CalcPotentialCollisions(vector<LPGAMEOBJECT>* coObjects, vecto
 		LPGAMEOBJECT object = coObjects->at(i);
 		CScene* s = CGame::GetInstance()->GetCurrentScene();
 		if (dynamic_cast<CPlayScene*>(s)) {
-			float l, t, r, b;
-			this->GetBoundingBox(l, t, r, b);
-			if (!CGame::GetInstance()->IsInCamera(l, t, r, b))
+			if (!this->IsInCamera())
 				continue;
 		}
 
@@ -159,6 +157,7 @@ void CGameObject::FilterCollision(
 		min_ty = min_ty0;
 	if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
 }
+
 
 void CGameObject::ShowPoint() {
 	CAnimationSets* animation_sets = CAnimationSets::GetInstance();

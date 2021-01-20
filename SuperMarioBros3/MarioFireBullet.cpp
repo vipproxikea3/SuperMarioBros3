@@ -2,6 +2,8 @@
 #include "Goomba.h"
 #include "Koopa.h"
 #include "Block.h"
+#include "PiranhaPlant.h"
+#include "VenusFireTrap.h"
 
 void CMarioFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -80,10 +82,9 @@ void CMarioFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 					this->isDisable = true;
 					CParaGoomba* paraGoomba = dynamic_cast<CParaGoomba*>(e->obj);
-					if (paraGoomba->GetLevel() == PARAGOOMBA_LEVEL_WING) {
+					if (paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_X && paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_Y)
+					{
 						paraGoomba->SetLevel(PARAGOOMBA_LEVEL_GOOMBA);
-					}
-					else {
 						paraGoomba->SetState(PARAGOOMBA_STATE_DIE_X);
 					}
 				}
@@ -113,6 +114,7 @@ void CMarioFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				}
 
+				// PARAKOOPA
 				if (dynamic_cast<CParaKoopa*>(e->obj))
 				{
 					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
@@ -125,17 +127,42 @@ void CMarioFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						if (paraKoopa->GetState() == PARAKOOPA_SHELL_STATE_IDLE) {
 							if (e->nx != 0) {
 								if (e->nx < 0) {
-									paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING);
-									paraKoopa->SetSpeed(PARAKOOPA_SHELL_WALKING_SPEED, 0);
+									paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING_RIGHT);
 								}
 								else {
-									paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING);
-									paraKoopa->SetSpeed(-PARAKOOPA_SHELL_WALKING_SPEED, 0);
+									paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING_LEFT);
 								}
 							}
 						}
 					}
 				}
+
+				// PIRANHAPLANT
+				if (dynamic_cast<CPiranhaPlant*>(e->obj))
+				{
+					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+					this->isDisable = true;
+					CPiranhaPlant* plant = dynamic_cast<CPiranhaPlant*>(e->obj);
+					if (plant->isDisable == false && plant->GetState() != PIRANHAPLANT_STATE_IDLE && plant->GetState() != PIRANHAPLANT_STATE_DIE)
+					{
+						plant->SetState(PIRANHAPLANT_STATE_DIE);
+						ShowPoint();
+					}
+				}
+
+				// VENUSFIRETRAP
+				if (dynamic_cast<CVenusFireTrap*>(e->obj))
+				{
+					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+					this->isDisable = true;
+					CVenusFireTrap* trap = dynamic_cast<CVenusFireTrap*>(e->obj);
+					if (trap->isDisable == false && trap->GetState() != VENUSFIRETRAP_STATE_IDLE && trap->GetState() != VENUSFIRETRAP_STATE_DIE)
+					{
+						trap->SetState(VENUSFIRETRAP_STATE_DIE);
+						ShowPoint();
+					}
+				}
+
 			}
 		}
 
@@ -171,10 +198,7 @@ void CMarioFireBullet::Render()
 }
 
 void CMarioFireBullet::ReSet() {
-	float l, t, r, b;
-	this->GetBoundingBox(l, t, r, b);
-	CGame* game = CGame::GetInstance();
-	if (!game->IsInCamera(l, t, r, b)) {
+	if (!this->IsInCamera()) {
 		this->isDisable = true;
 	}
 }

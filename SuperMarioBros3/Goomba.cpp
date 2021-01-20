@@ -55,12 +55,12 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					CBlock* block = dynamic_cast<CBlock*>(e->obj);
 
 					if (e->nx == -1 && block->isBlockLeft()) {
-						this->vx = -vx;
+						this->SetState(GOOMBA_STATE_WALKING_LEFT);
 						this->x = x0 + min_tx * this->dx + nx * 0.4f;
 					}
 
 					if (e->nx == 1 && block->isBlockRight()) {
-						this->vx = -vx;
+						this->SetState(GOOMBA_STATE_WALKING_RIGHT);
 						this->x = x0 + min_tx * this->dx + nx * 0.4f;
 					}
 
@@ -77,8 +77,8 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				if (dynamic_cast<CBrickReward*>(e->obj)) {
 					CBrickReward* brick = dynamic_cast<CBrickReward*>(e->obj);
-					BasicCollision(min_tx, min_ty, nx, ny, x0, y0);
-					if (brick->nx != 0) {
+					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+					if (e->nx != 0) {
 						if (this->GetState() == GOOMBA_STATE_WALKING_LEFT)
 							this->SetState(GOOMBA_STATE_WALKING_RIGHT);
 						else if (this->GetState() == GOOMBA_STATE_WALKING_RIGHT)
@@ -88,8 +88,8 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				if (dynamic_cast<CBreakBlock*>(e->obj)) {
 					CBreakBlock* brick = dynamic_cast<CBreakBlock*>(e->obj);
-					BasicCollision(min_tx, min_ty, nx, ny, x0, y0);
-					if (brick->nx != 0) {
+					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+					if (e->nx != 0) {
 						if (this->GetState() == GOOMBA_STATE_WALKING_LEFT)
 							this->SetState(GOOMBA_STATE_WALKING_RIGHT);
 						else if (this->GetState() == GOOMBA_STATE_WALKING_RIGHT)
@@ -99,8 +99,8 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				if (dynamic_cast<CGoomba*>(e->obj)) {
 					CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-					BasicCollision(min_tx, min_ty, nx, ny, x0, y0);
-					if (goomba->nx != 0) {
+					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+					if (e->nx != 0) {
 						if (this->GetState() == GOOMBA_STATE_WALKING_LEFT)
 							this->SetState(GOOMBA_STATE_WALKING_RIGHT);
 						else if (this->GetState() == GOOMBA_STATE_WALKING_RIGHT)
@@ -167,7 +167,7 @@ void CGoomba::ReSet() {
 		float l, t, r, b;
 		this->GetBoundingBox(l, t, r, b);
 		CGame* game = CGame::GetInstance();
-		if (!game->IsInCamera(l, t, r, b)) {
+		if (!this->IsInCamera()) {
 			this->isDisable = true;
 			this->isReadyReset = false;
 			this->SetPosition(this->x_start, this->y_start);
@@ -184,7 +184,7 @@ void CGoomba::ReSet() {
 				this->isReadyReset = true;
 			}
 		}
-		if (game->IsInCamera(l, t, r, b)) {
+		if (this->IsInCamera()) {
 			if (this->isReadyReset)
 				this->isDisable = false;
 		}

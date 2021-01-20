@@ -150,63 +150,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				isOnGround = true;
 			}
 
-			// BLOCK
-			if (dynamic_cast<CBlock*>(e->obj)) {
-				if (pipeWalking) return;
-				CBlock* block = dynamic_cast<CBlock*>(e->obj);
-
-				if (e->ny == -1 && block->isBlockTop()) {
-					this->vy = 0;
-					this->y = y0 + min_ty * this->dy + ny * 0.4f;
-				}
-
-				if (e->ny == 1 && block->isBlockBottom()) {
-					this->vy = 0;
-					this->y = y0 + min_ty * this->dy + ny * 0.4f;
-
-					flyIng = false;
-				}
-
-				float height = 27.0f;
-				if (level == MARIO_LEVEL_SMALL) height = 13.0f;
-
-				if (e->nx == -1 && block->isBlockLeft()) {
-					if (this->y + height > block->y)
-					{
-						this->vx = 0;
-						this->x = x0 + min_tx * this->dx + nx * 0.4f;
-					}
-				}
-
-				if (e->nx == 1 && block->isBlockRight()) {
-					if (this->y + height > block->y)
-					{
-						this->vx = 0;
-						this->x = x0 + min_tx * this->dx + nx * 0.4f;
-					}
-				}
-			}
-
-			// BREAKBLOCK
-			if (dynamic_cast<CBreakBlock*>(e->obj)) {
-				CBreakBlock* breakBlock = dynamic_cast<CBreakBlock*>(e->obj);
-				BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
-
-				if (e->ny == 1 && breakBlock->GetState() == BREAKBLOCK_STATE_IDLE) {
-					breakBlock->ShowReward();
-				}
-			}
-
-			// SWITCHBLOCK
-			if (dynamic_cast<CSwitchBlock*>(e->obj)) {
-				CSwitchBlock* switchBlock = dynamic_cast<CSwitchBlock*>(e->obj);
-				BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
-				if (e->ny == -1 && switchBlock->GetState() == SWITCHBLOCK_STATE_IDLE) {
-					switchBlock->Switch();
-					vy = -MARIO_JUMP_DEFLECT_SPEED;
-				}
-			}
-
 			// PIRANHA PLANT
 			if (dynamic_cast<CPiranhaPlant*>(e->obj))
 			{
@@ -331,9 +274,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 
 				if (e->nx != 0) {
-					vx = 0;
-					x = x0 + min_tx * dx + e->nx * 0.4f;
-
 					if (untouchable == 0)
 					{
 						if (paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_Y && paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_X)
@@ -351,37 +291,27 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				if (koopa->GetLevel() == KOOPA_LEVEL_KOOPA) {
 					if (e->ny != 0) {
-						vy = 0;
-						y = y0 + min_ty * dy + e->ny * 0.4f;
-						if (e->ny < 0)
+						if (e->ny > 0)
 						{
-							koopa->lvlDown();
-							vy = -MARIO_JUMP_DEFLECT_SPEED;
-							ShowPoint();
-						}
-						else {
+							vy = 0;
+							y = y0 + min_ty * dy + e->ny * 0.4f;
 							flyIng = false;
 							if (untouchable == 0)
 							{
 								lvlDown();
 							}
 						}
+						else if (e->ny < 0) {
+							vy = 0;
+							y = y0 + min_ty * dy + e->ny * 0.4f;
+							koopa->lvlDown();
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							ShowPoint();
+						}
 					}
 
 					if (e->nx != 0) {
-						vx = 0;
-						//x = x0 + min_tx * dx + e->nx * 0.4f;
-						// raccoon spin
-						if (spinning) {
-							if (e->nx * this->nx < 0) {
-								koopa->lvlDown();
-								ShowPoint();
-							}
-							else {
-								lvlDown();
-							}
-						}
-						else if (untouchable == 0)
+						if (untouchable == 0)
 						{
 							lvlDown();
 						}
@@ -390,7 +320,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else {
 					switch (koopa->GetState()) {
 					case SHELL_STATE_IDLE:
-						BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 						if (e->nx != 0) {
 							if (isReadyHug) {
 								huggingShell = koopa;
@@ -399,6 +328,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								isReadyHug = false;
 							}
 							else {
+								vx = 0;
+								x = x0 + min_tx * dx + e->nx * 0.4f;
 								if (e->nx < 0) {
 									koopa->SetState(SHELL_STATE_WALKING_RIGHT);
 								}
@@ -407,7 +338,54 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								}
 							}
 						}
-						if (e->ny == -1) {
+						if (e->ny == 1) {
+							vy = 0;
+							y = y0;
+							flyIng = false;
+							if (untouchable == 0)
+							{
+								lvlDown();
+							}							
+						}
+						else if (e->ny == -1) {
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							if (this->x < koopa->x + (SHELL_BBOX_WIDTH / 2)) {
+								koopa->SetState(SHELL_STATE_WALKING_RIGHT);
+							}
+							else {
+								koopa->SetState(SHELL_STATE_WALKING_LEFT);
+							}
+						}
+						break;
+					case SHELL_STATE_OVERTURN:
+						if (e->nx != 0) {
+							if (isReadyHug) {
+								huggingShell = koopa;
+								koopa->SetState(SHELL_STATE_BEHUG);
+								hugging = true;
+								isReadyHug = false;
+							}
+							else {
+								vx = 0;
+								x = x0 + min_tx * dx + e->nx * 0.4f;
+								if (e->nx < 0) {
+									koopa->SetState(SHELL_STATE_WALKING_RIGHT);
+								}
+								else {
+									koopa->SetState(SHELL_STATE_WALKING_LEFT);
+								}
+							}
+						}
+						if (e->ny == 1) {
+							vy = 0;
+							y = y0;
+							flyIng = false;
+							if (untouchable == 0)
+							{
+								lvlDown();
+							}
+						}
+						else if (e->ny == -1) {
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
 							if (this->x < koopa->x + (SHELL_BBOX_WIDTH / 2)) {
 								koopa->SetState(SHELL_STATE_WALKING_RIGHT);
@@ -466,19 +444,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 
 					if (e->nx != 0) {
-						vx = 0;
-						//x = x0 + min_tx * dx + e->nx * 0.4f;
-						// raccoon spin
-						if (spinning) {
-							if (e->nx * this->nx < 0) {
-								paraKoopa->lvlDown();
-								ShowPoint();
-							}
-							else {
-								lvlDown();
-							}
-						}
-						else if (untouchable == 0)
+						if (untouchable == 0)
 						{
 							lvlDown();
 						}
@@ -487,6 +453,44 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else {
 					switch (paraKoopa->GetState()) {
 					case PARAKOOPA_SHELL_STATE_IDLE:
+						if (e->nx != 0) {
+							if (isReadyHug) {
+								huggingShell = paraKoopa;
+								paraKoopa->SetState(PARAKOOPA_SHELL_STATE_BEHUG);
+								hugging = true;
+								isReadyHug = false;
+							}
+							else {
+								vx = 0;
+								x = x0 + min_tx * dx + e->nx * 0.4f;
+								if (e->nx < 0) {
+									paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING_RIGHT);
+								}
+								else {
+									paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING_LEFT);
+								}
+							}
+						}
+						if (e->ny == 1) {
+							vy = 0;
+							y = y0;
+							flyIng = false;
+							if (untouchable == 0)
+							{
+								lvlDown();
+							}
+						}
+						else if (e->ny == -1) {
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							if (this->x < paraKoopa->x + (PARAKOOPA_SHELL_BBOX_WIDTH / 2)) {
+								paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING_RIGHT);
+							}
+							else {
+								paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING_LEFT);
+							}
+						}
+						break;
+					case PARAKOOPA_SHELL_STATE_OVERTURN:
 						BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 						if (e->nx != 0) {
 							if (isReadyHug) {
@@ -497,28 +501,34 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							}
 							else {
 								if (e->nx < 0) {
-									paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING);
-									paraKoopa->SetSpeed(PARAKOOPA_SHELL_WALKING_SPEED, 0);
+									paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING_RIGHT);
 								}
 								else {
-									paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING);
-									paraKoopa->SetSpeed(-PARAKOOPA_SHELL_WALKING_SPEED, 0);
+									paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING_LEFT);
 								}
 							}
 						}
 						if (e->ny == -1) {
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
 							if (this->x < paraKoopa->x + (PARAKOOPA_SHELL_BBOX_WIDTH / 2)) {
-								paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING);
-								paraKoopa->SetSpeed(PARAKOOPA_SHELL_WALKING_SPEED, 0);
+								paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING_RIGHT);
 							}
 							else {
-								paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING);
-								paraKoopa->SetSpeed(-PARAKOOPA_SHELL_WALKING_SPEED, 0);
+								paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING_LEFT);
 							}
 						}
 						break;
-					case PARAKOOPA_SHELL_STATE_WALKING:
+					case PARAKOOPA_SHELL_STATE_WALKING_RIGHT:
+						if (e->ny == -1) {
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							paraKoopa->SetState(PARAKOOPA_SHELL_STATE_IDLE);
+						}
+						else if (untouchable == 0)
+						{
+							lvlDown();
+						}
+						break;
+					case PARAKOOPA_SHELL_STATE_WALKING_LEFT:
 						if (e->ny == -1) {
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
 							paraKoopa->SetState(PARAKOOPA_SHELL_STATE_IDLE);
@@ -546,6 +556,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 
+			// LOTTERY
+			if (dynamic_cast<CLottery*>(e->obj)) {
+				CLottery* lottery = dynamic_cast<CLottery*>(e->obj);
+				CGame* game = CGame::GetInstance();
+				CBackup::GetInstance()->SetLottery(lottery->GetState() + 100);
+				game->SwitchScene(2);
+			}
+
 			// BRICKREWARD
 			if (dynamic_cast<CBrickReward*>(e->obj)) {
 				CBrickReward* brickReward = dynamic_cast<CBrickReward*>(e->obj);
@@ -556,39 +574,61 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 
-			// SUPERMUSHROOM
-			/*if (dynamic_cast<CSuperMushroom*>(e->obj)) {
-				CSuperMushroom* mushroom = dynamic_cast<CSuperMushroom*>(e->obj);
-				mushroom->isDisable = true;
-				if (mushroom->GetType() == SUPERMUSHROOM_TYPE_LEVEL) {
-					this->LvlUp();
-				}
-				if (mushroom->GetType() == SUPERMUSHROOM_TYPE_LIFE) {
-					CAnimationSets* animation_sets = CAnimationSets::GetInstance();
-					LPANIMATION_SET ani_set = animation_sets->Get(17);
-					CPoint* point = new CPoint(0);
-					point->SetPosition(x, y - 16.0f);
-					point->SetAnimationSet(ani_set);
-					((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(point);
-					CGame* game = CGame::GetInstance();
-					game->PushLifeStack();
-				}
-			}*/
+			// BLOCK
+			if (dynamic_cast<CBlock*>(e->obj)) {
+				if (pipeWalking) return;
+				CBlock* block = dynamic_cast<CBlock*>(e->obj);
 
-			// SUPERLEAF
-			/*if (dynamic_cast<CSuperLeaf*>(e->obj)) {
-				CSuperLeaf* leaf = dynamic_cast<CSuperLeaf*>(e->obj);
-				leaf->isDisable = true;
-				if (this->level == MARIO_LEVEL_BIG)
-					this->LvlUp();
-			}*/
+				if (e->ny == -1 && block->isBlockTop()) {
+					this->vy = 0;
+					this->y = y0 + min_ty * this->dy + ny * 0.4f;
+				}
 
-			// LOTTERY
-			if (dynamic_cast<CLottery*>(e->obj)) {
-				CLottery* lottery = dynamic_cast<CLottery*>(e->obj);
-				CGame* game = CGame::GetInstance();
-				CBackup::GetInstance()->SetLottery(lottery->GetState() + 100);
-				game->SwitchScene(2);
+				if (e->ny == 1 && block->isBlockBottom()) {
+					this->vy = 0;
+					this->y = y0 + min_ty * this->dy + ny * 0.4f;
+
+					flyIng = false;
+				}
+
+				float height = 27.0f;
+				if (level == MARIO_LEVEL_SMALL) height = 13.0f;
+
+				if (e->nx == -1 && block->isBlockLeft()) {
+					if (this->y + height > block->y)
+					{
+						this->vx = 0;
+						this->x = x0 + min_tx * this->dx + nx * 0.4f;
+					}
+				}
+
+				if (e->nx == 1 && block->isBlockRight()) {
+					if (this->y + height > block->y)
+					{
+						this->vx = 0;
+						this->x = x0 + min_tx * this->dx + nx * 0.4f;
+					}
+				}
+			}
+
+			// BREAKBLOCK
+			if (dynamic_cast<CBreakBlock*>(e->obj)) {
+				CBreakBlock* breakBlock = dynamic_cast<CBreakBlock*>(e->obj);
+				BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+
+				if (e->ny == 1 && breakBlock->GetState() == BREAKBLOCK_STATE_IDLE) {
+					breakBlock->ShowReward();
+				}
+			}
+
+			// SWITCHBLOCK
+			if (dynamic_cast<CSwitchBlock*>(e->obj)) {
+				CSwitchBlock* switchBlock = dynamic_cast<CSwitchBlock*>(e->obj);
+				BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+				if (e->ny == -1 && switchBlock->GetState() == SWITCHBLOCK_STATE_IDLE) {
+					switchBlock->Switch();
+					vy = -MARIO_JUMP_DEFLECT_SPEED;
+				}
 			}
 		}
 	}
@@ -1044,12 +1084,6 @@ void CMario::SetState(int state)
 
 	switch (state)
 	{
-	/*case MARIO_STATE_JUMP:
-		isOnGround = false;
-		if (level == MARIO_LEVEL_SMALL)
-			vy = -MARIO_JUMP_SPEED_Y_WEAK;
-		else
-			vy = -MARIO_JUMP_SPEED_Y_STRONG;*/
 	case MARIO_STATE_RUN_RIGHT:
 		ax = MARIO_ACCELERATION;
 		if (walkingRight == false)
@@ -1123,13 +1157,6 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	case MARIO_LEVEL_RACCOON:
 		right = x + MARIO_RACCOON_BBOX_WIDTH;
 		bottom = y + MARIO_RACCOON_BBOX_HEIGHT;
-
-		/*if (nx == 1) {
-			left = x + 6.0f;
-			if (this->level == MARIO_LEVEL_RACCOON && vx == MARIO_RUN_SPEED)
-				left = x + 9.0f;
-			right = left + MARIO_RACCOON_BBOX_WIDTH;
-		}*/
 		break;
 	case MARIO_LEVEL_FIRE:
 		right = x + MARIO_FIRE_BBOX_WIDTH;

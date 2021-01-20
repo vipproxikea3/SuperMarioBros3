@@ -197,6 +197,9 @@
 # shell green overturn
 20006	64	64	80	80	50
 
+# koopa green die
+20007	32	48	48	64	50
+
 # KOOPA RED
 # koopa red walking right
 70011	560	53	576	80	150
@@ -219,6 +222,9 @@
 
 # shell red overturn
 20016	160	64	176	80	50
+
+# koopa red die
+20017	128	48	144	64	50
 
 # BLOCK
 # ground block
@@ -559,53 +565,108 @@
 1106	100006	50	100007	50
 
 # KOOPA
-
-# koopa walking right
+# KOOPA GREEN
+# koopa green walking right
 101	70001	100	70002	100
 
-# koopa walking left
+# koopa green walking left
 102	70003	100	70004	100
 
-# shell idle
+# shell green idle
 201	20001	100
 
-# shell walking
+# shell green walking
 202	20001	100	20002	100	20003	100	20004	100
 
-# shell be hug
+# shell green be hug
 203	20005	100
 
-# shell be hug
+# shell green overturn
 204	20006	100
 
-# PARAKOOPA
+# koopa green die
+205	20007	100
 
-# paraKoopa walking right
+# KOOPA RED
+# koopa red walking right
+111	70011	100	70012	100
+
+# koopa red walking left
+112	70013	100	70014	100
+
+# shell red idle
+211	20011	100
+
+# shell red walking
+212	20011	100	20012	100	20013	100	20014	100
+
+# shell red be hug
+213	20015	100
+
+# shell red overturn
+214	20016	100
+
+# koopa red die
+215	20017	100
+
+# PARAKOOPA
+# PARAKOOPA GREEN
+# paraKoopa green walking right
 1200	70001	100	70002	100
 
-# paraKoopa walking left
+# paraKoopa green walking left
 1201	70003	100	70004	100
 
-# paraKoopa shell idle
+# paraKoopa green shell idle
 1202	20001	100
 
-# paraKoopa shell walking
+# paraKoopa green shell walking
 1203	20001	100	20002	100	20003	100	20004	100
 
-# paraKoopa shell be hug
+# paraKoopa green shell be hug
 1204	20005	100
 
+# paraKoopa shell green overturn
+1205	20006	100
+
+# paraKoopa green die
+1206	20007	100
+
+# PARAKOOPA	RED
+# paraKoopa green walking right
+1210	70011	100	70012	100
+
+# paraKoopa green walking left
+1211	70013	100	70014	100
+
+# paraKoopa green shell idle
+1212	20011	100
+
+# paraKoopa green shell walking
+1213	20011	100	20012	100	20013	100	20014	100
+
+# paraKoopa green shell be hug
+1214	20015	100
+
+# paraKoopa shell green overturn
+1215	20016	100
+
+# paraKoopa green die
+1216	20017	100
+
+# PARAKOOPA WING
+
 # paraKoopa wing right walking
-1205	100004	100
+1220	100004	100
 
 # paraKoopa wing right jump
-1206	100004	50	100005	50
+1221	100004	50	100005	50
 
 # paraKoopa wing left walking
-1207	100006	100
+1222	100006	100
 
 # paraKoopa wing left jump
-1208	100006	50	100007	50
+1223	100006	50	100007	50
 
 # COIN
 800	50001	100	50002	100	50003	100	50004	100
@@ -817,13 +878,13 @@
 # GOOMBA
 4	701	702	703
 # KOOPA
-5	101	102	201	202	203	204
+5	101	102	201	202	203	204	205	111	112	211	212	213	214	215
 
 # PARAGOOMBA
 6	1100	1101	1102	1103	1104	1105	1106
 
 # PARAKOOPA
-7	1200	1201	1202	1203	1204	1205	1206	1207	1208
+7	1200	1201	1202	1203	1204	1205	1206	1210	1211	1212	1213	1214	1215	1216	1220	1221	1222	1223
 
 # COIN
 8	800
@@ -1289,10 +1350,6 @@
 
 7	1440	128	9	2
 
-7	1374	400	9	0
-7	1500	400	9	0
-
-
 # BRICKREWARD
 # type	x	y	ani_set_id	type
 
@@ -1307,10 +1364,7 @@
 9	1472	368	11	1
 
 # MARIO
-#0	16	385	1
-0	1472	340	1
-#0	2260	65	1
-#0	2790	376	1
+0	16	385	1
 
 # GOOMBA
 # type	x	y	ani_set_id
@@ -1323,9 +1377,9 @@
 # KOOPA
 # type	x	y	ani_set_id	type
 
-#3	577	357	5	512	607
+3	577	356	5	1
 3	1472	388	5	0
-#3	2096	355	5	2090	2117
+3	2096	356	5	1
 
 
 # PARAGOOMBA
@@ -1334,11 +1388,11 @@
 4	946	382	6
 
 # PARAKOOPA
-# type	x	y	ani_set_id	limitL	limitR
+# type	x	y	ani_set_id	type
 
-#5	1423	290	7	1088	1503
-#5	1376	290	7	1088	1503
-#5	1328	290	7	1088	1503
+5	1423	290	7	0
+5	1376	290	7	0
+5	1328	290	7	0
 
 # COIN
 # type	x	y	ani_set_id

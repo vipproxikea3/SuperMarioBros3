@@ -26,8 +26,14 @@ void CParaKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				mario->lvlDown();
 				mario = NULL;
 			}
-			this->SetLevel(PARAKOOPA_LEVEL_WING);
-			this->SetState(PARAKOOPA_STATE_WALKING);
+			this->SetLevel(PARAKOOPA_LEVEL_KOOPA);
+			CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+			if (mario->x < this->x) {
+				this->SetState(PARAKOOPA_STATE_WALKING_LEFT);
+			}
+			else {
+				this->SetState(PARAKOOPA_STATE_WALKING_RIGHT);
+			}
 			y -= PARAKOOPA_BBOX_HEIGHT - PARAKOOPA_SHELL_BBOX_HEIGHT;
 		}		
 
@@ -65,16 +71,17 @@ void CParaKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				for (UINT i = 0; i < coEventsResult.size(); i++) {
 					LPCOLLISIONEVENT e = coEventsResult[i];
 
+					// BLOCK
 					if (dynamic_cast<CBlock*>(e->obj)) {
 						CBlock* block = dynamic_cast<CBlock*>(e->obj);
 
 						if (e->nx == -1 && block->isBlockLeft()) {
-							this->vx = -vx;
+							this->SetState(PARAKOOPA_STATE_WALKING_LEFT);
 							this->x = x0 + min_tx * this->dx + nx * 0.4f;
 						}
 
 						if (e->nx == 1 && block->isBlockRight()) {
-							this->vx = -vx;
+							this->SetState(PARAKOOPA_STATE_WALKING_RIGHT);
 							this->x = x0 + min_tx * this->dx + nx * 0.4f;
 						}
 
@@ -89,18 +96,47 @@ void CParaKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							this->y = y0 + min_ty * this->dy + ny * 0.4f;
 						}
 					}
+
+					// BREAKBLOCK
+					if (dynamic_cast<CBreakBlock*>(e->obj)) {
+						CBreakBlock* breakBlock = dynamic_cast<CBreakBlock*>(e->obj);
+						BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+
+						if (e->nx == -1) {
+							this->SetState(PARAKOOPA_STATE_WALKING_LEFT);
+						}
+						else if (e->nx == 1) {
+							this->SetState(PARAKOOPA_STATE_WALKING_RIGHT);
+						}
+
+						if (e->ny == -1)
+						{
+							if (this->GetLevel() == PARAKOOPA_LEVEL_WING)
+								this->vy = -PARAKOOPA_JUMP_SPEED;
+						}
+					}
+
+					// BRICKREWARD
+					if (dynamic_cast<CBrickReward*>(e->obj)) {
+						BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+						if (e->nx != 0) {
+							if (e->nx == -1)
+								this->SetState(PARAKOOPA_STATE_WALKING_LEFT);
+							else
+								this->SetState(PARAKOOPA_STATE_WALKING_RIGHT);
+						}
+
+						if (e->ny == -1)
+						{
+							if (this->GetLevel() == PARAKOOPA_LEVEL_WING)
+								this->vy = -PARAKOOPA_JUMP_SPEED;
+						}
+					}
 				}
 			}
 
 			// clean up collision events
 			for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-
-			if (this->x <= this->limitL) {
-				this->vx = PARAKOOPA_WALKING_SPEED;
-			}
-			if (this->x >= this->limitR - PARAKOOPA_BBOX_WIDTH) {
-				this->vx = -PARAKOOPA_WALKING_SPEED;
-			}
 		}
 		else {
 			if (!isHugging) {
@@ -147,12 +183,12 @@ void CParaKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							CBlock* block = dynamic_cast<CBlock*>(e->obj);
 
 							if (e->nx == -1 && block->isBlockLeft()) {
-								this->vx = -vx;
+								this->SetState(SHELL_STATE_WALKING_LEFT);
 								this->x = x0 + min_tx * this->dx + nx * 0.4f;
 							}
 
 							if (e->nx == 1 && block->isBlockRight()) {
-								this->vx = -vx;
+								this->SetState(SHELL_STATE_WALKING_RIGHT);
 								this->x = x0 + min_tx * this->dx + nx * 0.4f;
 							}
 
@@ -167,22 +203,38 @@ void CParaKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							}
 						}
 
+						// BREAKBLOCK
+						if (dynamic_cast<CBreakBlock*>(e->obj)) {
+							BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+
+							if (e->nx == -1) {
+								this->SetState(SHELL_STATE_WALKING_LEFT);
+							}
+							else if (e->nx == 1) {
+								this->SetState(SHELL_STATE_WALKING_RIGHT);
+							}
+
+							CBreakBlock* breakBlock = dynamic_cast<CBreakBlock*>(e->obj);
+							if (e->nx != 0 && breakBlock->GetState() == BREAKBLOCK_STATE_IDLE) {
+								breakBlock->ShowPiece();
+							}
+						}
+
 						// BRICKREWARD
-						/*if (dynamic_cast<CBrickReward*>(e->obj)) {
+						if (dynamic_cast<CBrickReward*>(e->obj)) {
 							BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 							if (e->nx != 0) {
 								if (e->nx == -1)
-									vx = -SHELL_WALKING_SPEED;
+									this->SetState(SHELL_STATE_WALKING_LEFT);
 								else
-									vx = SHELL_WALKING_SPEED;
+									this->SetState(SHELL_STATE_WALKING_RIGHT);
 							}
-
 
 							CBrickReward* brick = dynamic_cast<CBrickReward*>(e->obj);
 							if (e->nx != 0 && brick->GetState() == BRICKREWARD_STATE_IDLE) {
 								brick->SetState(BRICKREWARD_STATE_JUMP);
 							}
-						}*/
+						}
 
 						// GOOMBA
 						if (dynamic_cast<CGoomba*>(e->obj))
@@ -190,6 +242,7 @@ void CParaKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
 							if (goomba->GetState() != GOOMBA_STATE_DIE_X) {
 								goomba->SetState(GOOMBA_STATE_DIE_X);
+								ShowPoint();
 							}
 						}
 
@@ -197,11 +250,45 @@ void CParaKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						if (dynamic_cast<CParaGoomba*>(e->obj))
 						{
 							CParaGoomba* paraGoomba = dynamic_cast<CParaGoomba*>(e->obj);
-							if (paraGoomba->GetLevel() == PARAGOOMBA_LEVEL_WING) {
+							if (paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_X && paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_Y)
+							{
 								paraGoomba->SetLevel(PARAGOOMBA_LEVEL_GOOMBA);
-							}
-							else {
 								paraGoomba->SetState(PARAGOOMBA_STATE_DIE_X);
+								ShowPoint();
+							}
+						}
+
+						//	KOOPA
+						if (dynamic_cast<CKoopa*>(e->obj))
+						{
+							if (this->GetState() == SHELL_STATE_WALKING_LEFT || this->GetState() == SHELL_STATE_WALKING_RIGHT)
+							{
+								CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
+								if (koopa->GetState() != KOOPA_STATE_DIE)
+								{
+									this->SetLevel(PARAKOOPA_LEVEL_SHELL);
+									this->SetState(PARAKOOPA_STATE_DIE);
+									koopa->SetLevel(KOOPA_LEVEL_SHELL);
+									koopa->SetState(KOOPA_STATE_DIE);
+									ShowPoint();
+								}
+							}
+						}
+
+						//	PARAKOOPA
+						if (dynamic_cast<CParaKoopa*>(e->obj))
+						{
+							if (this->GetState() == SHELL_STATE_WALKING_LEFT || this->GetState() == SHELL_STATE_WALKING_RIGHT)
+							{
+								CParaKoopa* paraKoopa = dynamic_cast<CParaKoopa*>(e->obj);
+								if (paraKoopa->GetState() != KOOPA_STATE_DIE)
+								{
+									this->SetLevel(PARAKOOPA_LEVEL_SHELL);
+									this->SetState(PARAKOOPA_STATE_DIE);
+									paraKoopa->SetLevel(PARAKOOPA_LEVEL_SHELL);
+									paraKoopa->SetState(PARAKOOPA_STATE_DIE);
+									ShowPoint();
+								}
 							}
 						}
 					}
@@ -209,6 +296,15 @@ void CParaKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				// clean up collision events
 				for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+			}
+		}
+
+		if (this->isDisable == false && (this->GetState() == PARAKOOPA_STATE_WALKING_LEFT || this->GetState() == PARAKOOPA_STATE_WALKING_RIGHT))
+		{
+			if (this->BeAttackByTail()) {
+				this->SetLevel(PARAKOOPA_LEVEL_SHELL);
+				this->SetState(PARAKOOPA_SHELL_STATE_OVERTURN);
+				ShowPoint();
 			}
 		}
 	}
@@ -230,71 +326,148 @@ void CParaKoopa::BasicCollision(float min_tx, float min_ty, float nx, float ny, 
 
 void CParaKoopa::Render()
 {
-	switch (this->level)
+	if (this->type == PARAKOOPA_TYPE_GREEN)
 	{
-	case PARAKOOPA_LEVEL_WING:
-		if (vx > 0) {
-			animation_set->at(PARAKOOPA_ANI_WALKING_RIGHT)->Render(x, y, 255);
-			if (vy < 0) {
-				animation_set->at(PARAKOOPA_WING_RIGHT_ANI_JUMP)->Render(x, y - 2.0, 255);
+		switch (this->level)
+		{
+		case PARAKOOPA_LEVEL_WING:
+			if (vx > 0) {
+				animation_set->at(PARAKOOPA_GREEN_ANI_WALKING_RIGHT)->Render(x, y, 255);
+				if (vy < 0) {
+					animation_set->at(PARAKOOPA_WING_RIGHT_ANI_JUMP)->Render(x, y - 2.0, 255);
+				}
+				else {
+					animation_set->at(PARAKOOPA_WING_RIGHT_ANI_WALKING)->Render(x, y - 2.0, 255);
+				}
 			}
 			else {
-				animation_set->at(PARAKOOPA_WING_RIGHT_ANI_WALKING)->Render(x, y - 2.0, 255);
+				animation_set->at(PARAKOOPA_GREEN_ANI_WALKING_LEFT)->Render(x, y, 255);
+				if (vy < 0) {
+					animation_set->at(PARAKOOPA_WING_LEFT_ANI_JUMP)->Render(x + 8.0, y - 2.0, 255);
+				}
+				else {
+					animation_set->at(PARAKOOPA_WING_LEFT_ANI_WALKING)->Render(x + 8.0, y - 2.0, 255);
+				}
 			}
-		}
-		else {
-			animation_set->at(PARAKOOPA_ANI_WALKING_LEFT)->Render(x, y, 255);
-			if (vy < 0) {
-				animation_set->at(PARAKOOPA_WING_LEFT_ANI_JUMP)->Render(x + 8.0, y - 2.0, 255);
+			break;
+		case PARAKOOPA_LEVEL_KOOPA:
+			if (vx > 0) {
+				animation_set->at(PARAKOOPA_GREEN_ANI_WALKING_RIGHT)->Render(x, y, 255);
 			}
 			else {
-				animation_set->at(PARAKOOPA_WING_LEFT_ANI_WALKING)->Render(x + 8.0, y - 2.0, 255);
+				animation_set->at(PARAKOOPA_GREEN_ANI_WALKING_LEFT)->Render(x, y, 255);
 			}
-		}
-		break;
-	case PARAKOOPA_LEVEL_KOOPA:
-		if (vx > 0) {
-			animation_set->at(PARAKOOPA_ANI_WALKING_RIGHT)->Render(x, y, 255);
-		}
-		else {
-			animation_set->at(PARAKOOPA_ANI_WALKING_LEFT)->Render(x, y, 255);
-		}
-		break;
-	case PARAKOOPA_LEVEL_SHELL:
-		switch (this->GetState()) {
-		case PARAKOOPA_SHELL_STATE_IDLE:
-			animation_set->at(PARAKOOPA_SHELL_ANI_IDLE)->Render(x, y, 255);
 			break;
-		case PARAKOOPA_SHELL_STATE_WALKING:
-			animation_set->at(PARAKOOPA_SHELL_ANI_WALKING)->Render(x, y, 255);
-			break;
-		case PARAKOOPA_SHELL_STATE_BEHUG:
-			animation_set->at(PARAKOOPA_SHELL_ANI_BEHUG)->Render(x, y, 255);
+		case PARAKOOPA_LEVEL_SHELL:
+			switch (this->GetState()) {
+			case PARAKOOPA_SHELL_STATE_IDLE:
+				animation_set->at(PARAKOOPA_GREEN_SHELL_ANI_IDLE)->Render(x, y, 255);
+				break;
+			case PARAKOOPA_SHELL_STATE_WALKING_LEFT:
+				animation_set->at(PARAKOOPA_GREEN_SHELL_ANI_WALKING)->Render(x, y, 255);
+				break;
+			case PARAKOOPA_SHELL_STATE_WALKING_RIGHT:
+				animation_set->at(PARAKOOPA_GREEN_SHELL_ANI_WALKING)->Render(x, y, 255);
+				break;
+			case PARAKOOPA_SHELL_STATE_BEHUG:
+				animation_set->at(PARAKOOPA_GREEN_SHELL_ANI_BEHUG)->Render(x, y, 255);
+				break;
+			case PARAKOOPA_SHELL_STATE_OVERTURN:
+				animation_set->at(PARAKOOPA_GREEN_SHELL_ANI_OVERTURN)->Render(x, y, 255);
+				break;
+			case PARAKOOPA_STATE_DIE:
+				animation_set->at(PARAKOOPA_GREEN_ANI_DIE)->Render(x, y, 255);
+				break;
+			}
 			break;
 		}
-		break;
+	}
+	else
+	{
+		switch (this->level)
+		{
+		case PARAKOOPA_LEVEL_WING:
+			if (vx > 0) {
+				animation_set->at(PARAKOOPA_RED_ANI_WALKING_RIGHT)->Render(x, y, 255);
+				if (vy < 0) {
+					animation_set->at(PARAKOOPA_WING_RIGHT_ANI_JUMP)->Render(x, y - 2.0, 255);
+				}
+				else {
+					animation_set->at(PARAKOOPA_WING_RIGHT_ANI_WALKING)->Render(x, y - 2.0, 255);
+				}
+			}
+			else {
+				animation_set->at(PARAKOOPA_RED_ANI_WALKING_LEFT)->Render(x, y, 255);
+				if (vy < 0) {
+					animation_set->at(PARAKOOPA_WING_LEFT_ANI_JUMP)->Render(x + 8.0, y - 2.0, 255);
+				}
+				else {
+					animation_set->at(PARAKOOPA_WING_LEFT_ANI_WALKING)->Render(x + 8.0, y - 2.0, 255);
+				}
+			}
+			break;
+		case PARAKOOPA_LEVEL_KOOPA:
+			if (vx > 0) {
+				animation_set->at(PARAKOOPA_RED_ANI_WALKING_RIGHT)->Render(x, y, 255);
+			}
+			else {
+				animation_set->at(PARAKOOPA_RED_ANI_WALKING_LEFT)->Render(x, y, 255);
+			}
+			break;
+		case PARAKOOPA_LEVEL_SHELL:
+			switch (this->GetState()) {
+			case PARAKOOPA_SHELL_STATE_IDLE:
+				animation_set->at(PARAKOOPA_RED_SHELL_ANI_IDLE)->Render(x, y, 255);
+				break;
+			case PARAKOOPA_SHELL_STATE_WALKING_LEFT:
+				animation_set->at(PARAKOOPA_RED_SHELL_ANI_WALKING)->Render(x, y, 255);
+				break;
+			case PARAKOOPA_SHELL_STATE_WALKING_RIGHT:
+				animation_set->at(PARAKOOPA_RED_SHELL_ANI_WALKING)->Render(x, y, 255);
+				break;
+			case PARAKOOPA_SHELL_STATE_BEHUG:
+				animation_set->at(PARAKOOPA_RED_SHELL_ANI_BEHUG)->Render(x, y, 255);
+				break;
+			case PARAKOOPA_SHELL_STATE_OVERTURN:
+				animation_set->at(PARAKOOPA_RED_SHELL_ANI_OVERTURN)->Render(x, y, 255);
+				break;
+			case PARAKOOPA_STATE_DIE:
+				animation_set->at(PARAKOOPA_RED_ANI_DIE)->Render(x, y, 255);
+				break;
+			}
+			break;
+		}
 	}
 }
 
 void CParaKoopa::ReSet() {
-	float l, t, r, b;
-	this->GetBoundingBox(l, t, r, b);
-	CGame* game = CGame::GetInstance();
-	if (!game->IsInCamera(l, t, r, b)) {
-		this->isDisable = true;
-		this->isReadyReset = false;
-		this->SetPosition(this->x_start, this->y_start);
-		this->SetState(PARAKOOPA_STATE_WALKING);
-		this->SetLevel(PARAKOOPA_LEVEL_WING);
-	}
-	if (!game->IsInCamera(this->x_start, this->y_start, this->x_start + r - l, this->y_start + b - t)) {
-		if (this->isDisable) {
-			this->isReadyReset = true;
+	if (this->GetState() != PARAKOOPA_STATE_DIE)
+	{
+		float l, t, r, b;
+		this->GetBoundingBox(l, t, r, b);
+		CGame* game = CGame::GetInstance();
+		if (!this->IsInCamera()) {
+			this->isDisable = true;
+			this->isReadyReset = false;
+			this->SetPosition(this->x_start, this->y_start);
+			CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+			if (mario->x < this->x) {
+				this->SetState(PARAKOOPA_STATE_WALKING_LEFT);
+			}
+			else {
+				this->SetState(PARAKOOPA_STATE_WALKING_RIGHT);
+			}
+			this->SetLevel(PARAKOOPA_LEVEL_WING);
 		}
-	}
-	if (game->IsInCamera(l, t, r, b)) {
-		if (this->isReadyReset)
-			this->isDisable = false;
+		if (!game->IsInCamera(this->x_start, this->y_start, this->x_start + r - l, this->y_start + b - t)) {
+			if (this->isDisable) {
+				this->isReadyReset = true;
+			}
+		}
+		if (this->IsInCamera()) {
+			if (this->isReadyReset)
+				this->isDisable = false;
+		}
 	}
 }
 
@@ -303,9 +476,15 @@ void CParaKoopa::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
-	case PARAKOOPA_STATE_WALKING:
+	case PARAKOOPA_STATE_WALKING_LEFT:
 		isHugging = false;
 		vx = -PARAKOOPA_WALKING_SPEED;
+		vy = 0;
+		nx = -1;
+		break;
+	case PARAKOOPA_STATE_WALKING_RIGHT:
+		isHugging = false;
+		vx = PARAKOOPA_WALKING_SPEED;
 		vy = 0;
 		nx = -1;
 		break;
@@ -315,16 +494,32 @@ void CParaKoopa::SetState(int state)
 		vx = 0;
 		vy = 0;
 		break;
-	case PARAKOOPA_SHELL_STATE_WALKING:
+	case PARAKOOPA_SHELL_STATE_WALKING_RIGHT:
 		isHugging = false;
 		vy = 0;
 		nx = 1;
 		vx = PARAKOOPA_SHELL_WALKING_SPEED;
 		break;
+	case PARAKOOPA_SHELL_STATE_WALKING_LEFT:
+		isHugging = false;
+		vy = 0;
+		nx = 1;
+		vx = -PARAKOOPA_SHELL_WALKING_SPEED;
+		break;
 	case PARAKOOPA_SHELL_STATE_BEHUG:
 		isHugging = true;
 		vx = 0;
 		vy = 0;
+		break;
+	case PARAKOOPA_SHELL_STATE_OVERTURN:
+		isHugging = false;
+		vx = 0;
+		vy = -PARAKOOPA_SHELL_JUMP_DEFLECT_SPEED;
+		shell_start = GetTickCount64();
+		break;
+	case PARAKOOPA_STATE_DIE:
+		isHugging = false;
+		vy = -PARAKOOPA_DIE_DEFLECT_SPEED;
 		break;
 	}
 }
@@ -334,12 +529,19 @@ void CParaKoopa::GetBoundingBox(float& left, float& top, float& right, float& bo
 	left = x;
 	top = y;
 
-	if (level == PARAKOOPA_LEVEL_SHELL) {
-		bottom = top + PARAKOOPA_SHELL_BBOX_HEIGHT;
-		right = left + PARAKOOPA_SHELL_BBOX_WIDTH;
+	if (this->GetState() == PARAKOOPA_STATE_DIE) {
+		bottom = top;
+		right = left;
 	}
-	else {
-		bottom = top + PARAKOOPA_BBOX_HEIGHT;
-		right = left + PARAKOOPA_BBOX_WIDTH;
+	else
+	{
+		if (level == PARAKOOPA_LEVEL_SHELL) {
+			bottom = top + PARAKOOPA_SHELL_BBOX_HEIGHT;
+			right = left + PARAKOOPA_SHELL_BBOX_WIDTH;
+		}
+		else {
+			bottom = top + PARAKOOPA_BBOX_HEIGHT;
+			right = left + PARAKOOPA_BBOX_WIDTH;
+		}
 	}
 }

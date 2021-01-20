@@ -3,10 +3,7 @@
 
 void CVenusFireTrapBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	if (!this->isDisable) {
-		float l, t, r, b;
-		this->GetBoundingBox(l, t, r, b);
-		CGame* game = CGame::GetInstance();
-		if (!game->IsInCamera(l, t, r, b)) {
+		if (!this->IsInCamera()) {
 			this->isDisable = true;
 		}
 

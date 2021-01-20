@@ -92,7 +92,7 @@ void CParaGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (dynamic_cast<CBrickReward*>(e->obj)) {
 					CBrickReward* brick = dynamic_cast<CBrickReward*>(e->obj);
 					BasicCollision(min_tx, min_ty, nx, ny, x0, y0);
-					if (brick->nx != 0) {
+					if (e->nx != 0) {
 						if (this->GetState() == PARAGOOMBA_STATE_WALKING_LEFT)
 							this->SetState(PARAGOOMBA_STATE_WALKING_RIGHT);
 						else if (this->GetState() == PARAGOOMBA_STATE_WALKING_RIGHT)
@@ -103,7 +103,7 @@ void CParaGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (dynamic_cast<CBreakBlock*>(e->obj)) {
 					CBreakBlock* brick = dynamic_cast<CBreakBlock*>(e->obj);
 					BasicCollision(min_tx, min_ty, nx, ny, x0, y0);
-					if (brick->nx != 0) {
+					if (e->nx != 0) {
 						if (this->GetState() == PARAGOOMBA_STATE_WALKING_LEFT)
 							this->SetState(PARAGOOMBA_STATE_WALKING_RIGHT);
 						else if (this->GetState() == PARAGOOMBA_STATE_WALKING_RIGHT)
@@ -172,7 +172,7 @@ void CParaGoomba::ReSet() {
 		float l, t, r, b;
 		this->GetBoundingBox(l, t, r, b);
 		CGame* game = CGame::GetInstance();
-		if (!game->IsInCamera(l, t, r, b)) {
+		if (!this->IsInCamera()) {
 			this->isDisable = true;
 			this->isReadyReset = false;
 			this->SetPosition(this->x_start, this->y_start);
@@ -191,7 +191,7 @@ void CParaGoomba::ReSet() {
 				this->isReadyReset = true;
 			}
 		}
-		if (game->IsInCamera(l, t, r, b)) {
+		if (this->IsInCamera()) {
 			if (this->isReadyReset)
 				this->isDisable = false;
 		}

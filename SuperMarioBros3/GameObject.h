@@ -75,6 +75,20 @@ public:
 	void GetPosition(float& x, float& y) { x = this->x; y = this->y; }
 	void GetSpeed(float& vx, float& vy) { vx = this->vx; vy = this->vy; }
 
+	bool IsInCamera() {
+		CGame* game = CGame::GetInstance();
+		float l, t, r, b;
+		this->GetBoundingBox(l, t, r, b);
+		float camX, camY;
+		float screenWidth, screenHeight;
+		game->GetCamPos(camX, camY);
+		screenWidth = game->GetScreenWidth();
+		screenHeight = game->GetScreenHeight();
+
+		if (r < camX) return false;
+		if (l > camX + screenWidth) return false;
+		return true;
+	}
 	void ReSet();
 	void ShowPoint();
 	bool BeAttackByTail();

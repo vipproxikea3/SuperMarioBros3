@@ -92,11 +92,7 @@ void CVenusFireTrap::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 				y = this->y_start - VENUSFIRETRAP_GREEN_RISE_HEIGHT;
 				start_shot = GetTickCount64();
 				this->SetState(VENUSFIRETRAP_STATE_SHOT);
-
-				float l, t, r, b;
-				this->GetBoundingBox(l, t, r, b);
-				CGame* game = CGame::GetInstance();
-				if (game->IsInCamera(l, t, r, b)) {
+				if (this->IsInCamera()) {
 					Shot();
 				}
 			}
@@ -104,11 +100,7 @@ void CVenusFireTrap::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 				y = this->y_start - VENUSFIRETRAP_RED_RISE_HEIGHT;
 				start_shot = GetTickCount64();
 				this->SetState(VENUSFIRETRAP_STATE_SHOT);
-				
-				float l, t, r, b;
-				this->GetBoundingBox(l, t, r, b);
-				CGame* game = CGame::GetInstance();
-				if (game->IsInCamera(l, t, r, b)) {
+				if (this->IsInCamera()) {
 					Shot();
 				}
 			}

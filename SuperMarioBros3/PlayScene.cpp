@@ -257,9 +257,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_PARAKOOPA:
 	{
-		float limitL = atoi(tokens[4].c_str());
-		float limitR = atoi(tokens[5].c_str());
-		obj = new CParaKoopa(limitL, limitR);
+		int type = atoi(tokens[4].c_str());
+		obj = new CParaKoopa(type);
 		break;
 	}
 	case OBJECT_TYPE_COIN:
@@ -498,13 +497,12 @@ void CPlayScene::Render()
 	if (map)
 		map->Render();
 	
-	CGame* game = CGame::GetInstance();
-	float l, t, r, b;
+	/*CGame* game = CGame::GetInstance();
+	float l, t, r, b;*/
 
 	for (int i = 0; i < objects.size(); i++)
 	{
-		objects[i]->GetBoundingBox(l, t, r, b);
-		if (!objects[i]->isDisable && game->IsInCamera(l, t, r, b))
+		if (!objects[i]->isDisable && objects[i]->IsInCamera())
 			objects[i]->Render();
 	}
 

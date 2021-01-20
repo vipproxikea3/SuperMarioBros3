@@ -16,7 +16,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	ReSet();
 	if (!this->isDisable) {
 
-		if ((this->GetState() == SHELL_STATE_IDLE || this->GetState() == SHELL_STATE_BEHUG) && GetTickCount64() - shell_start > SHELL_TIME) {	
+		if ((this->GetState() == SHELL_STATE_IDLE || this->GetState() == SHELL_STATE_BEHUG || this->GetState() == SHELL_STATE_OVERTURN) && GetTickCount64() - shell_start > SHELL_TIME) {
 			if (this->isHugging == true) {
 				isHugging = false;
 				CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
@@ -25,7 +25,13 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				mario = NULL;
 			}
 			this->SetLevel(KOOPA_LEVEL_KOOPA);
-			this->SetState(KOOPA_STATE_WALKING_LEFT);
+			CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+			if (mario->x < this->x) {
+				this->SetState(KOOPA_STATE_WALKING_LEFT);
+			}
+			else {
+				this->SetState(KOOPA_STATE_WALKING_RIGHT);
+			}
 			y -= KOOPA_BBOX_HEIGHT - SHELL_BBOX_HEIGHT;
 		}
 
@@ -61,16 +67,17 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				for (UINT i = 0; i < coEventsResult.size(); i++) {
 					LPCOLLISIONEVENT e = coEventsResult[i];
 
+					// BLOCK
 					if (dynamic_cast<CBlock*>(e->obj)) {
 						CBlock* block = dynamic_cast<CBlock*>(e->obj);
 
 						if (e->nx == -1 && block->isBlockLeft()) {
-							this->vx = -vx;
+							this->SetState(KOOPA_STATE_WALKING_LEFT);
 							this->x = x0 + min_tx * this->dx + nx * 0.4f;
 						}
 
 						if (e->nx == 1 && block->isBlockRight()) {
-							this->vx = -vx;
+							this->SetState(KOOPA_STATE_WALKING_RIGHT);
 							this->x = x0 + min_tx * this->dx + nx * 0.4f;
 						}
 
@@ -85,10 +92,11 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 
+					// BRICK REWARD
 					if (dynamic_cast<CBrickReward*>(e->obj)) {
 						CBrickReward* brick = dynamic_cast<CBrickReward*>(e->obj);
-						BasicCollision(min_tx, min_ty, nx, ny, x0, y0);
-						if (brick->nx != 0) {
+						BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+						if (e->nx != 0) {
 							if (this->GetState() == KOOPA_STATE_WALKING_LEFT)
 								this->SetState(KOOPA_STATE_WALKING_RIGHT);
 							else if (this->GetState() == KOOPA_STATE_WALKING_RIGHT)
@@ -96,14 +104,15 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 
+					// BREAK BLOCK
 					if (dynamic_cast<CBreakBlock*>(e->obj)) {
 						CBreakBlock* brick = dynamic_cast<CBreakBlock*>(e->obj);
-						BasicCollision(min_tx, min_ty, nx, ny, x0, y0);
-						if (brick->nx != 0) {
-							if (this->GetState() == KOOPA_STATE_WALKING_LEFT)
-								this->SetState(KOOPA_STATE_WALKING_RIGHT);
-							else if (this->GetState() == KOOPA_STATE_WALKING_RIGHT)
-								this->SetState(KOOPA_STATE_WALKING_LEFT);
+						BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+						if (e->nx == 1.0) {
+							this->SetState(KOOPA_STATE_WALKING_RIGHT);
+						}
+						if (e->nx == -1.0) {
+							this->SetState(KOOPA_STATE_WALKING_LEFT);
 						}
 					}
 				}
@@ -128,7 +137,12 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CalcPotentialCollisions(coObjects, coEvents);
 
 				// No collision occured, proceed normally
-				if (coEvents.size() == 0)
+				if (this->GetState() == KOOPA_STATE_DIE)
+				{
+					x += dx;
+					y += dy;
+				}
+				else if (coEvents.size() == 0)
 				{
 					x += dx;
 					y += dy;
@@ -157,12 +171,12 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							CBlock* block = dynamic_cast<CBlock*>(e->obj);
 
 							if (e->nx == -1 && block->isBlockLeft()) {
-								this->vx = -vx;
+								this->SetState(SHELL_STATE_WALKING_LEFT);
 								this->x = x0 + min_tx * this->dx + nx * 0.4f;
 							}
 
 							if (e->nx == 1 && block->isBlockRight()) {
-								this->vx = -vx;
+								this->SetState(SHELL_STATE_WALKING_RIGHT);
 								this->x = x0 + min_tx * this->dx + nx * 0.4f;
 							}
 
@@ -179,19 +193,17 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 						// BREAKBLOCK
 						if (dynamic_cast<CBreakBlock*>(e->obj)) {
-							CBreakBlock* breakBlock = dynamic_cast<CBreakBlock*>(e->obj);
 							BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 
-							if (e->nx == 1) {
-								this->vx = SHELL_WALKING_SPEED;
-								breakBlock->isDisable = true;
+							if (e->nx == -1) {
+								this->SetState(SHELL_STATE_WALKING_LEFT);
 							}
-							else if (e->nx == -1) {
-								this->vx = -SHELL_WALKING_SPEED;
-								breakBlock->isDisable = true;
+							else if (e->nx == 1) {
+								this->SetState(SHELL_STATE_WALKING_RIGHT);
 							}
 
-							if (e->nx != 0) {
+							CBreakBlock* breakBlock = dynamic_cast<CBreakBlock*>(e->obj);
+							if (e->nx != 0 && breakBlock->GetState() == BREAKBLOCK_STATE_IDLE) {
 								breakBlock->ShowPiece();
 							}
 						}
@@ -201,11 +213,10 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 							if (e->nx != 0) {
 								if (e->nx == -1)
-									vx = -SHELL_WALKING_SPEED;
+									this->SetState(SHELL_STATE_WALKING_LEFT);
 								else
-									vx = SHELL_WALKING_SPEED;
+									this->SetState(SHELL_STATE_WALKING_RIGHT);
 							}
-
 
 							CBrickReward* brick = dynamic_cast<CBrickReward*>(e->obj);
 							if (e->nx != 0 && brick->GetState() == BRICKREWARD_STATE_IDLE) {
@@ -219,12 +230,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
 							if (goomba->GetState() != GOOMBA_STATE_DIE_X) {
 								goomba->SetState(GOOMBA_STATE_DIE_X);
-								CAnimationSets* animation_sets = CAnimationSets::GetInstance();
-								LPANIMATION_SET ani_set = animation_sets->Get(17);
-								CPoint* point = new CPoint(1);
-								point->SetPosition(x, y - 16.0f);
-								point->SetAnimationSet(ani_set);
-								((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(point);
+								ShowPoint();
 							}
 						}
 
@@ -239,6 +245,40 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								ShowPoint();
 							}
 						}
+
+						//	KOOPA
+						if (dynamic_cast<CKoopa*>(e->obj))
+						{
+							if (this->GetState() == SHELL_STATE_WALKING_LEFT || this->GetState() == SHELL_STATE_WALKING_RIGHT)
+							{
+								CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
+								if (koopa->GetState() != KOOPA_STATE_DIE)
+								{
+									this->SetLevel(KOOPA_LEVEL_SHELL);
+									this->SetState(KOOPA_STATE_DIE);
+									koopa->SetLevel(KOOPA_LEVEL_SHELL);
+									koopa->SetState(KOOPA_STATE_DIE);
+									ShowPoint();
+								}
+							}
+						}
+
+						//	PARAKOOPA
+						if (dynamic_cast<CParaKoopa*>(e->obj))
+						{
+							if (this->GetState() == SHELL_STATE_WALKING_LEFT || this->GetState() == SHELL_STATE_WALKING_RIGHT)
+							{
+								CParaKoopa* paraKoopa = dynamic_cast<CParaKoopa*>(e->obj);
+								if (paraKoopa->GetState() != KOOPA_STATE_DIE)
+								{
+									this->SetLevel(KOOPA_LEVEL_SHELL);
+									this->SetState(KOOPA_STATE_DIE);
+									paraKoopa->SetLevel(PARAKOOPA_LEVEL_SHELL);
+									paraKoopa->SetState(PARAKOOPA_STATE_DIE);
+									ShowPoint();
+								}
+							}
+						}
 					}
 				}
 
@@ -247,13 +287,15 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 		}
 
+		if (CalculateTurningAround(coObjects))
+			TurnAround();
+
 		if (this->isDisable == false && (this->GetState() == KOOPA_STATE_WALKING_LEFT || this->GetState() == KOOPA_STATE_WALKING_RIGHT))
 		{
 			if (this->BeAttackByTail()) {
 				this->SetLevel(KOOPA_LEVEL_SHELL);
 				this->SetState(SHELL_STATE_OVERTURN);
 				ShowPoint();
-				DebugOut(L"[INFO] Kick\n");
 			}
 		}
 	}
@@ -271,6 +313,60 @@ void CKoopa::BasicCollision(float min_tx, float min_ty, float nx, float ny, floa
 		this->vy = 0;
 		this->y = y0 + min_ty * this->dy + ny * 0.1f;
 	}
+}
+
+bool CKoopa::CalculateTurningAround(vector<LPGAMEOBJECT>* coObjects)
+{
+	bool onGround = false;
+	if (type != KOOPA_TYPE_RED)
+		return false;
+	if (this->GetState() != KOOPA_STATE_WALKING_LEFT && this->GetState() != KOOPA_STATE_WALKING_RIGHT)
+		return false;
+	if (this->level != KOOPA_LEVEL_KOOPA)
+		return false;
+	float kl, kt, kr, kb;
+	GetBoundingBox(kl, kt, kr, kb);
+	for (UINT i = 0; i < coObjects->size(); i++)
+	{
+		LPGAMEOBJECT object = coObjects->at(i);
+		if (!object->IsInCamera())
+			continue;
+
+		if (!dynamic_cast<CBlock*>(object) && !dynamic_cast<CBrickReward*>(object) && !dynamic_cast<CBreakBlock*>(object))
+			continue;
+
+		//object is Break or RBox
+		float ol, ot, or , ob;
+		object->GetBoundingBox(ol, ot, or , ob);
+
+		if (kb > ot - 2 && kb < ot && ((kl >= ol && kl <= or) || (kr >= ol && kr <= or)))
+			onGround = true;
+
+		if (kb > ot - 2 && kb < ot)
+		{
+			if (state == KOOPA_STATE_WALKING_LEFT)
+			{
+				if ((kl + 4 > ol && kl + 8 < or ) || (kl + 4 <= or && kl + 8 >= or))
+					return false;
+			}
+			else if (state == KOOPA_STATE_WALKING_RIGHT)
+			{
+				if ((kr - 8 > ol && kr - 4 < or ) || (kr - 8 <= ol && kr - 4 >= ol))
+					return false;
+			}
+		}
+
+	}
+	if (!onGround) return false;
+	return true;
+}
+
+void CKoopa::TurnAround()
+{
+	if (this->GetState() == KOOPA_STATE_WALKING_LEFT)
+		this->SetState(KOOPA_STATE_WALKING_RIGHT);
+	else if (this->GetState() == KOOPA_STATE_WALKING_RIGHT)
+		this->SetState(KOOPA_STATE_WALKING_LEFT);
 }
 
 void CKoopa::Render()
@@ -300,36 +396,75 @@ void CKoopa::Render()
 			case SHELL_STATE_OVERTURN:
 				ani = SHELL_GREEN_ANI_OVERTURN;
 				break;
+			case KOOPA_STATE_DIE:
+				ani = KOOPA_GREEN_ANI_DIE;
+				break;
 			}
 		}
 	}
 	else
 	{
-
+		if (this->level == KOOPA_LEVEL_KOOPA) {
+			if (vx > 0)
+				ani = KOOPA_RED_ANI_WALKING_RIGHT;
+			else
+				ani = KOOPA_RED_ANI_WALKING_LEFT;
+		}
+		else {
+			switch (this->GetState()) {
+			case SHELL_STATE_IDLE:
+				ani = SHELL_RED_ANI_IDLE;
+				break;
+			case SHELL_STATE_WALKING_LEFT:
+				ani = SHELL_RED_ANI_WALKING;
+				break;
+			case SHELL_STATE_WALKING_RIGHT:
+				ani = SHELL_RED_ANI_WALKING;
+				break;
+			case SHELL_STATE_BEHUG:
+				ani = SHELL_RED_ANI_BEHUG;
+				break;
+			case SHELL_STATE_OVERTURN:
+				ani = SHELL_RED_ANI_OVERTURN;
+				break;
+			case KOOPA_STATE_DIE:
+				ani = KOOPA_RED_ANI_DIE;
+				break;
+			}
+		}
 	}
 	
 	animation_set->at(ani)->Render(x, y, 255);
 }
 
 void CKoopa::ReSet() {
-	float l, t, r, b;
-	this->GetBoundingBox(l, t, r, b);
-	CGame* game = CGame::GetInstance();
-	if (!game->IsInCamera(l, t, r, b)) {
-		this->isDisable = true;
-		this->isReadyReset = false;
-		this->SetPosition(this->x_start, this->y_start);
-		this->SetState(KOOPA_STATE_WALKING_LEFT);
-		this->SetLevel(KOOPA_LEVEL_KOOPA);
-	}
-	if (!game->IsInCamera(this->x_start, this->y_start, this->x_start + r - l, this->y_start + b - t)) {
-		if (this->isDisable) {
-			this->isReadyReset = true;
+	if (this->GetState() != KOOPA_STATE_DIE)
+	{
+		float l, t, r, b;
+		this->GetBoundingBox(l, t, r, b);
+		CGame* game = CGame::GetInstance();
+		if (!this->IsInCamera()) {
+			this->isDisable = true;
+			this->isReadyReset = false;
+			this->SetPosition(this->x_start, this->y_start);
+			CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+			if (mario->x < this->x) {
+				this->SetState(KOOPA_STATE_WALKING_LEFT);
+			}
+			else {
+				this->SetState(KOOPA_STATE_WALKING_RIGHT);
+			}
+			this->SetLevel(KOOPA_LEVEL_KOOPA);
 		}
-	}
-	if (game->IsInCamera(l, t, r, b)) {
-		if (this->isReadyReset)
-			this->isDisable = false;
+		if (!game->IsInCamera(this->x_start, this->y_start, this->x_start + r - l, this->y_start + b - t)) {
+			if (this->isDisable) {
+				this->isReadyReset = true;
+			}
+		}
+		if (this->IsInCamera()) {
+			if (this->isReadyReset)
+				this->isDisable = false;
+		}
 	}
 }
 
@@ -377,21 +512,34 @@ void CKoopa::SetState(int state)
 		isHugging = false;
 		vx = 0;
 		vy = -SHELL_JUMP_DEFLECT_SPEED;
+		shell_start = GetTickCount64();
+		break;
+	case KOOPA_STATE_DIE:
+		isHugging = false;
+		vy = -KOOPA_DIE_DEFLECT_SPEED;
 		break;
 	}
+
+	DebugOut(L"[STATE] %d\n", state);
 }
 
 void CKoopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x;
 	top = y;
-	
-	if (level == KOOPA_LEVEL_SHELL) {
-		bottom = top + SHELL_BBOX_HEIGHT;
-		right = left + SHELL_BBOX_WIDTH;
+
+	if (this->GetState() == KOOPA_STATE_DIE) {
+		bottom = top;
+		right = left;
 	}
 	else {
-		bottom = top + KOOPA_BBOX_HEIGHT;
-		right = left + KOOPA_BBOX_WIDTH;
+		if (level == KOOPA_LEVEL_SHELL) {
+			bottom = top + SHELL_BBOX_HEIGHT;
+			right = left + SHELL_BBOX_WIDTH;
+		}
+		else {
+			bottom = top + KOOPA_BBOX_HEIGHT;
+			right = left + KOOPA_BBOX_WIDTH;
+		}
 	}
 }

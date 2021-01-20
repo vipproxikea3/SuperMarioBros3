@@ -5,8 +5,9 @@
 #define SUPERMUSHROOM_WALKING_SPEED		0.02f 
 #define SUPERMUSHROOM_GRAVITY			0.0008f
 
-#define SUPERMUSHROOM_STATE_IDLE		0
-#define SUPERMUSHROOM_STATE_WALKING		100
+#define SUPERMUSHROOM_STATE_IDLE			0
+#define SUPERMUSHROOM_STATE_WALKING_LEFT	100
+#define SUPERMUSHROOM_STATE_WALKING_RIGHT	200
 
 #define SUPERMUSHROOM_TYPE_LEVEL		0
 #define SUPERMUSHROOM_TYPE_LIFE			1
@@ -24,7 +25,7 @@ class CSuperMushroom : public CGameObject
 public:
 	CSuperMushroom(int type) : CGameObject()
 	{
-		this->SetState(SUPERMUSHROOM_STATE_WALKING);
+		this->SetState(SUPERMUSHROOM_STATE_WALKING_LEFT);
 		this->type = type;
 	}
 	~CSuperMushroom() {}
