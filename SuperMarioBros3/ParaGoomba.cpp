@@ -119,6 +119,7 @@ void CParaGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				this->SetLevel(PARAGOOMBA_LEVEL_GOOMBA);
 				this->SetState(PARAGOOMBA_STATE_DIE_X);
 				ShowPoint();
+				ShowTailAttackEffect();
 			}
 		}
 

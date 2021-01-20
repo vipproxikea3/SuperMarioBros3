@@ -15,6 +15,8 @@
 #include "Point.h"
 #include "PiranhaPlant.h"
 #include "VenusFireTrap.h"
+#include "MarioTransformEffect.h"
+#include "EndSceneTitle.h"
 
 void CMario::CalVx(DWORD dt) {
 	vx += ax * dt;
@@ -73,8 +75,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// Stop spingning
 	if (GetTickCount64() - spin_start >= MARIO_SPIN_TIME && spinning) {
 		spinning = false;
-		//spin_start = NULL;
+		spin_start = NULL;
 	}
+
+	// Stop transform
+	if (GetTickCount64() - start_transform >= MARIO_TRANSFORM_TIME && transforming)
+		StopTransform();
 
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
@@ -98,7 +104,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	PipeWalking();
 
 	// Calculate vx
-	CalVx(dt);
+	if (canControl)
+		CalVx(dt);
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -491,7 +498,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 						break;
 					case PARAKOOPA_SHELL_STATE_OVERTURN:
-						BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
 						if (e->nx != 0) {
 							if (isReadyHug) {
 								huggingShell = paraKoopa;
@@ -500,6 +506,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								isReadyHug = false;
 							}
 							else {
+								vx = 0;
+								x = x0 + min_tx * dx + e->nx * 0.4f;
 								if (e->nx < 0) {
 									paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING_RIGHT);
 								}
@@ -508,7 +516,16 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								}
 							}
 						}
-						if (e->ny == -1) {
+						if (e->ny == 1) {
+							vy = 0;
+							y = y0;
+							flyIng = false;
+							if (untouchable == 0)
+							{
+								lvlDown();
+							}
+						}
+						else if (e->ny == -1) {
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
 							if (this->x < paraKoopa->x + (PARAKOOPA_SHELL_BBOX_WIDTH / 2)) {
 								paraKoopa->SetState(PARAKOOPA_SHELL_STATE_WALKING_RIGHT);
@@ -558,10 +575,19 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			// LOTTERY
 			if (dynamic_cast<CLottery*>(e->obj)) {
+				this->canControl = false;
 				CLottery* lottery = dynamic_cast<CLottery*>(e->obj);
+				lottery->StopChange();
+				lottery->Fly();
+				ShowEndSceneTitle(lottery->GetState());
 				CGame* game = CGame::GetInstance();
 				CBackup::GetInstance()->SetLottery(lottery->GetState() + 100);
-				game->SwitchScene(2);
+				this->SetState(MARIO_STATE_IDLE);
+				SetStopFly();
+				SetStopFall();
+				this->vx = 0;
+				this->vy = 0;
+				//game->SwitchScene(2);
 			}
 
 			// BRICKREWARD
@@ -591,23 +617,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					flyIng = false;
 				}
 
-				float height = 27.0f;
-				if (level == MARIO_LEVEL_SMALL) height = 13.0f;
-
 				if (e->nx == -1 && block->isBlockLeft()) {
-					if (this->y + height > block->y)
-					{
-						this->vx = 0;
-						this->x = x0 + min_tx * this->dx + nx * 0.4f;
-					}
+					this->vx = 0;
+					this->x = x0 + min_tx * this->dx + nx * 0.4f;
 				}
 
 				if (e->nx == 1 && block->isBlockRight()) {
-					if (this->y + height > block->y)
-					{
-						this->vx = 0;
-						this->x = x0 + min_tx * this->dx + nx * 0.4f;
-					}
+					this->vx = 0;
+					this->x = x0 + min_tx * this->dx + nx * 0.4f;
 				}
 			}
 
@@ -663,7 +680,7 @@ void CMario::PipeWalking() {
 		if (typePipeWalking == 1) {
 			if (y <= y_pipeWalking_start) {
 				this->SetState(MARIO_STATE_IDLE);
-				this->x = x_pipeWalking_start - 7.0f;
+				this->x = x_pipeWalking_start;
 				canControl = false;
 				vx = 0;
 				vy = MARIO_PIPE_WALKING_SPEED;
@@ -700,6 +717,31 @@ void CMario::PipeWalking() {
 	}
 }
 
+void CMario::ShowMarioTransformEffect() {
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+	LPANIMATION_SET ani_set = animation_sets->Get(28);
+	CMarioTransformEffect* effect = new CMarioTransformEffect();
+	effect->SetPosition(x, y);
+	effect->SetAnimationSet(ani_set);
+	((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(effect);
+}
+
+void CMario::ShowEndSceneTitle(int type) {
+	float cx, cy;
+	float screenWidth, screenHeight;
+	CGame* game = CGame::GetInstance();
+	game->GetCamPos(cx, cy);
+	screenWidth = game->GetScreenWidth();
+	screenHeight = game->GetScreenHeight();
+
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+	LPANIMATION_SET ani_set = animation_sets->Get(29);
+	CEndSceneTitle* title = new CEndSceneTitle(type);
+	title->SetPosition(cx + (screenWidth - ENDSCENETITLE_BBOX_WIDTH) * 0.5, cy + (screenHeight - ENDSCENETITLE_BBOX_HEIGHT) * 0.25);
+	title->SetAnimationSet(ani_set);
+	((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(title);
+}
+
 void CMario::UpdateHuggingShellPosition() {
 	if (huggingShell == NULL) return;
 	switch (this->level)
@@ -733,6 +775,23 @@ void CMario::StopHug() {
 	this->huggingShell = NULL;
 }
 
+void CMario::SitDown() {
+	if (level == MARIO_LEVEL_SMALL)
+		return;
+	this->vx = 0;
+	this->ax = 0;
+	this->vy = 0;
+	sitting = true;
+	y += MARIO_BIG_BBOX_HEIGHT - MARIO_SITTING_BBOX_HEIGHT;
+}
+
+void CMario::StandUp() {
+	if (level == MARIO_LEVEL_SMALL)
+		return;
+	sitting = false;
+	y -= MARIO_BIG_BBOX_HEIGHT - MARIO_SITTING_BBOX_HEIGHT;
+}
+
 void CMario::LvlUp() {
 	switch (this->level) {
 	case MARIO_LEVEL_SMALL:
@@ -749,9 +808,12 @@ void CMario::LvlUp() {
 		y -= 2.0f;
 		break;
 	}
+	ShowMarioTransformEffect();
+	StartTransform();
 }
 
 void CMario::lvlDown() {
+	StandUp();
 	switch (level) {
 	case MARIO_LEVEL_SMALL:
 	{
@@ -852,6 +914,9 @@ void CMario::Render()
 			bullets[i]->Render();
 	}
 
+	if (transforming)
+		return;
+
 	int alpha = 255;
 	if (untouchable) alpha = 128;
 
@@ -864,76 +929,113 @@ void CMario::Render()
 	{
 		switch (level) {
 		case MARIO_LEVEL_SMALL:
-			if (vy < 0) {
-				if (nx > 0)
-					ani = MARIO_ANI_SMALL_JUMP_RIGHT;
-				else
-					ani = MARIO_ANI_SMALL_JUMP_LEFT;
-			}
-			else {
-				if (vx == 0)
-				{
-					if (nx > 0) ani = MARIO_ANI_SMALL_IDLE_RIGHT;
-					else ani = MARIO_ANI_SMALL_IDLE_LEFT;
-				}
-				else if (vx > 0)
-					ani = MARIO_ANI_SMALL_WALKING_RIGHT;
-				else ani = MARIO_ANI_SMALL_WALKING_LEFT;
-			}
-			animation_set->at(ani)->Render(x, y, alpha);
-			break;
-		case MARIO_LEVEL_BIG:
-			if (vy < 0) {
-				if (nx > 0)
-					ani = MARIO_ANI_BIG_JUMP_RIGHT;
-				else
-					ani = MARIO_ANI_BIG_JUMP_LEFT;
+			if (pipeWalking) {
+				ani = MARIO_ANI_SMALL_PIPE_WALKING;
 				animation_set->at(ani)->Render(x, y, alpha);
 			}
-			else {
-				if (vx == 0)
-				{
-					if (nx > 0) ani = MARIO_ANI_BIG_IDLE_RIGHT;
-					else ani = MARIO_ANI_BIG_IDLE_LEFT;
-					animation_set->at(ani)->Render(x, y, alpha);
-				}
-				else if (vx > 0) {
-					if (nx < 0) {
-						ani = MARIO_ANI_BIG_DRIFF_RIGHT;
-						animation_set->at(ani)->Render(x, y, alpha);
-					}
-					else {
-						if (vx == MARIO_RUN_SPEED) {
-							ani = MARIO_ANI_BIG_RUN_RIGHT;
-							animation_set->at(ani)->Render(x - 3.0f, y, alpha);
-						}
-						else {
-							ani = MARIO_ANI_BIG_WALKING_RIGHT;
-							animation_set->at(ani)->Render(x, y, alpha);
-						}
-					}
+			else
+			{
+				if (vy < 0) {
+					if (nx > 0)
+						ani = MARIO_ANI_SMALL_JUMP_RIGHT;
+					else
+						ani = MARIO_ANI_SMALL_JUMP_LEFT;
 				}
 				else {
-					if (nx > 0) {
-						ani = MARIO_ANI_BIG_DRIFF_LEFT;
+					if (vx == 0)
+					{
+						if (nx > 0) ani = MARIO_ANI_SMALL_IDLE_RIGHT;
+						else ani = MARIO_ANI_SMALL_IDLE_LEFT;
+					}
+					else if (vx > 0)
+						ani = MARIO_ANI_SMALL_WALKING_RIGHT;
+					else ani = MARIO_ANI_SMALL_WALKING_LEFT;
+				}
+				animation_set->at(ani)->Render(x, y, alpha);
+			}
+			break;
+		case MARIO_LEVEL_BIG:
+			if (pipeWalking) {
+				ani = MARIO_ANI_BIG_PIPE_WALKING;
+				animation_set->at(ani)->Render(x, y, alpha);
+			}
+			else if (sitting) {
+				if (nx > 0) {
+					ani = MARIO_ANI_BIG_SIT_RIGHT;
+					animation_set->at(ani)->Render(x, y, alpha);
+				}
+				else {
+					ani = MARIO_ANI_BIG_SIT_LEFT;
+					animation_set->at(ani)->Render(x, y, alpha);
+				}
+			}
+			else
+			{
+				if (vy < 0) {
+					if (nx > 0)
+						ani = MARIO_ANI_BIG_JUMP_RIGHT;
+					else
+						ani = MARIO_ANI_BIG_JUMP_LEFT;
+					animation_set->at(ani)->Render(x, y, alpha);
+				}
+				else {
+					if (vx == 0)
+					{
+						if (nx > 0) ani = MARIO_ANI_BIG_IDLE_RIGHT;
+						else ani = MARIO_ANI_BIG_IDLE_LEFT;
 						animation_set->at(ani)->Render(x, y, alpha);
 					}
-					else {
-						if (vx == -MARIO_RUN_SPEED) {
-							ani = MARIO_ANI_BIG_RUN_LEFT;
+					else if (vx > 0) {
+						if (nx < 0) {
+							ani = MARIO_ANI_BIG_DRIFF_RIGHT;
 							animation_set->at(ani)->Render(x, y, alpha);
 						}
 						else {
-							ani = MARIO_ANI_BIG_WALKING_LEFT;
+							if (vx == MARIO_RUN_SPEED) {
+								ani = MARIO_ANI_BIG_RUN_RIGHT;
+								animation_set->at(ani)->Render(x - 3.0f, y, alpha);
+							}
+							else {
+								ani = MARIO_ANI_BIG_WALKING_RIGHT;
+								animation_set->at(ani)->Render(x, y, alpha);
+							}
+						}
+					}
+					else {
+						if (nx > 0) {
+							ani = MARIO_ANI_BIG_DRIFF_LEFT;
 							animation_set->at(ani)->Render(x, y, alpha);
+						}
+						else {
+							if (vx == -MARIO_RUN_SPEED) {
+								ani = MARIO_ANI_BIG_RUN_LEFT;
+								animation_set->at(ani)->Render(x, y, alpha);
+							}
+							else {
+								ani = MARIO_ANI_BIG_WALKING_LEFT;
+								animation_set->at(ani)->Render(x, y, alpha);
+							}
 						}
 					}
 				}
 			}
 			break;
 		case MARIO_LEVEL_RACCOON:
-
-			if (flyIng || fallIng)
+			if (pipeWalking) {
+				ani = MARIO_ANI_RACCOON_PIPE_WALKING;
+				animation_set->at(ani)->Render(x, y, alpha);
+			}
+			else if (sitting) {
+				if (nx > 0) {
+					ani = MARIO_ANI_RACCOON_SIT_RIGHT;
+					animation_set->at(ani)->Render(x - 7.0f, y, alpha);
+				}
+				else {
+					ani = MARIO_ANI_RACCOON_SIT_LEFT;
+					animation_set->at(ani)->Render(x, y, alpha);
+				}
+			}
+			else if (flyIng)
 			{
 				if (nx > 0) {
 					ani = MARIO_ANI_RACCOON_FLY_RIGHT;
@@ -953,6 +1055,17 @@ void CMario::Render()
 				else {
 					ani = MARIO_ANI_RACCOON_SPIN_LEFT;
 					animation_set->at(ani)->Render(x - 7.0f, y, alpha);
+				}
+			}
+			else if (fallIng)
+			{
+				if (nx > 0) {
+					ani = MARIO_ANI_RACCOON_FALL_RIGHT;
+					animation_set->at(ani)->Render(x - 8.0f, y, alpha);
+				}
+				else {
+					ani = MARIO_ANI_RACCOON_FALL_LEFT;
+					animation_set->at(ani)->Render(x, y, alpha);
 				}
 			}
 			else
@@ -1017,58 +1130,75 @@ void CMario::Render()
 			}
 			break;
 		case MARIO_LEVEL_FIRE:
-			if (vy < 0) {
+			if (pipeWalking) {
+				ani = MARIO_ANI_FIRE_PIPE_WALKING;
+				animation_set->at(ani)->Render(x, y, alpha);
+			}
+			else if (sitting) {
 				if (nx > 0) {
-					ani = MARIO_ANI_FIRE_JUMP_RIGHT;
+					ani = MARIO_ANI_FIRE_SIT_RIGHT;
 					animation_set->at(ani)->Render(x, y, alpha);
 				}
 				else {
-					ani = MARIO_ANI_FIRE_JUMP_LEFT;
+					ani = MARIO_ANI_FIRE_SIT_LEFT;
 					animation_set->at(ani)->Render(x, y, alpha);
 				}
 			}
-			else {
-				if (vx == 0)
-				{
+			else
+			{
+				if (vy < 0) {
 					if (nx > 0) {
-						ani = MARIO_ANI_FIRE_IDLE_RIGHT;
+						ani = MARIO_ANI_FIRE_JUMP_RIGHT;
 						animation_set->at(ani)->Render(x, y, alpha);
 					}
 					else {
-						ani = MARIO_ANI_FIRE_IDLE_LEFT;
+						ani = MARIO_ANI_FIRE_JUMP_LEFT;
 						animation_set->at(ani)->Render(x, y, alpha);
-					}
-				}
-				else if (vx > 0) {
-					if (nx < 0) {
-						ani = MARIO_ANI_FIRE_DRIFF_RIGHT;
-						animation_set->at(ani)->Render(x, y, alpha);
-					}
-					else {
-						if (vx == MARIO_RUN_SPEED) {
-							ani = MARIO_ANI_FIRE_RUN_RIGHT;
-							animation_set->at(ani)->Render(x - 3.0f, y, alpha);
-						}
-						else {
-							ani = MARIO_ANI_FIRE_WALKING_RIGHT;
-							animation_set->at(ani)->Render(x, y, alpha);
-						}
-							
 					}
 				}
 				else {
-					if (nx > 0) {
-						ani = MARIO_ANI_FIRE_DRIFF_LEFT;
-						animation_set->at(ani)->Render(x, y, alpha);
-					}
-					else {
-						if (vx == -MARIO_RUN_SPEED) {
-							ani = MARIO_ANI_FIRE_RUN_LEFT;
+					if (vx == 0)
+					{
+						if (nx > 0) {
+							ani = MARIO_ANI_FIRE_IDLE_RIGHT;
 							animation_set->at(ani)->Render(x, y, alpha);
 						}
 						else {
-							ani = MARIO_ANI_FIRE_WALKING_LEFT;
+							ani = MARIO_ANI_FIRE_IDLE_LEFT;
 							animation_set->at(ani)->Render(x, y, alpha);
+						}
+					}
+					else if (vx > 0) {
+						if (nx < 0) {
+							ani = MARIO_ANI_FIRE_DRIFF_RIGHT;
+							animation_set->at(ani)->Render(x, y, alpha);
+						}
+						else {
+							if (vx == MARIO_RUN_SPEED) {
+								ani = MARIO_ANI_FIRE_RUN_RIGHT;
+								animation_set->at(ani)->Render(x - 3.0f, y, alpha);
+							}
+							else {
+								ani = MARIO_ANI_FIRE_WALKING_RIGHT;
+								animation_set->at(ani)->Render(x, y, alpha);
+							}
+
+						}
+					}
+					else {
+						if (nx > 0) {
+							ani = MARIO_ANI_FIRE_DRIFF_LEFT;
+							animation_set->at(ani)->Render(x, y, alpha);
+						}
+						else {
+							if (vx == -MARIO_RUN_SPEED) {
+								ani = MARIO_ANI_FIRE_RUN_LEFT;
+								animation_set->at(ani)->Render(x, y, alpha);
+							}
+							else {
+								ani = MARIO_ANI_FIRE_WALKING_LEFT;
+								animation_set->at(ani)->Render(x, y, alpha);
+							}
 						}
 					}
 				}
@@ -1153,14 +1283,20 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	case MARIO_LEVEL_BIG:
 		right = x + MARIO_BIG_BBOX_WIDTH;
 		bottom = y + MARIO_BIG_BBOX_HEIGHT;
+		if (sitting)
+			bottom = y + MARIO_SITTING_BBOX_HEIGHT;
 		break;
 	case MARIO_LEVEL_RACCOON:
 		right = x + MARIO_RACCOON_BBOX_WIDTH;
 		bottom = y + MARIO_RACCOON_BBOX_HEIGHT;
+		if (sitting)
+			bottom = y + MARIO_SITTING_BBOX_HEIGHT;
 		break;
 	case MARIO_LEVEL_FIRE:
 		right = x + MARIO_FIRE_BBOX_WIDTH;
 		bottom = y + MARIO_FIRE_BBOX_HEIGHT;
+		if (sitting)
+			bottom = y + MARIO_SITTING_BBOX_HEIGHT;
 		break;
 	}
 }

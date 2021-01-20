@@ -1,5 +1,8 @@
 #pragma once
 #include "GameObject.h"
+#include "Utils.h"
+
+#define LOTTERY_FLY_SPEED		0.075f
 
 #define LOTTERY_ANI_MUSHROOM	0
 #define LOTTERY_ANI_FLOWER		1
@@ -16,13 +19,24 @@
 
 class CLottery : public CGameObject
 {
+	bool flying = false;
+	bool CanChange;
 	DWORD last_change = NULL;
 public:
 	CLottery() : CGameObject()
 	{
+		SetSpeed(0, 0);
+		flying = false;
+		CanChange = true;
 		last_change = GetTickCount64();
 	}
 	~CLottery() {}
+	void Fly() {
+		flying = true;
+		this->SetSpeed(0, -LOTTERY_FLY_SPEED);
+		DebugOut(L"[INFO] fly\n");
+	}
+	void StopChange() { CanChange = false; }
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 	void SetState(int state);

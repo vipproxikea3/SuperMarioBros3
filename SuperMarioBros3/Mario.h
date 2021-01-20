@@ -48,43 +48,56 @@
 #define MARIO_ANI_SMALL_WALKING_LEFT	4
 #define MARIO_ANI_SMALL_JUMP_RIGHT		5
 #define MARIO_ANI_SMALL_JUMP_LEFT		6
+#define MARIO_ANI_SMALL_PIPE_WALKING	7
 
-#define MARIO_ANI_BIG_IDLE_RIGHT		7
-#define MARIO_ANI_BIG_IDLE_LEFT			8
-#define MARIO_ANI_BIG_WALKING_RIGHT		9
-#define MARIO_ANI_BIG_WALKING_LEFT		10
-#define MARIO_ANI_BIG_JUMP_RIGHT		11
-#define MARIO_ANI_BIG_JUMP_LEFT			12
-#define MARIO_ANI_BIG_RUN_RIGHT			13
-#define MARIO_ANI_BIG_RUN_LEFT			14
-#define MARIO_ANI_BIG_DRIFF_RIGHT		15
-#define MARIO_ANI_BIG_DRIFF_LEFT		16
+#define MARIO_ANI_BIG_IDLE_RIGHT		8
+#define MARIO_ANI_BIG_IDLE_LEFT			9
+#define MARIO_ANI_BIG_WALKING_RIGHT		10
+#define MARIO_ANI_BIG_WALKING_LEFT		11
+#define MARIO_ANI_BIG_JUMP_RIGHT		12
+#define MARIO_ANI_BIG_JUMP_LEFT			13
+#define MARIO_ANI_BIG_RUN_RIGHT			14
+#define MARIO_ANI_BIG_RUN_LEFT			15
+#define MARIO_ANI_BIG_DRIFF_RIGHT		16
+#define MARIO_ANI_BIG_DRIFF_LEFT		17
+#define MARIO_ANI_BIG_PIPE_WALKING		18
 
-#define MARIO_ANI_RACCOON_IDLE_RIGHT	17
-#define MARIO_ANI_RACCOON_IDLE_LEFT		18
-#define MARIO_ANI_RACCOON_WALKING_RIGHT	19
-#define MARIO_ANI_RACCOON_WALKING_LEFT	20
-#define MARIO_ANI_RACCOON_JUMP_RIGHT	21
-#define MARIO_ANI_RACCOON_JUMP_LEFT		22
-#define MARIO_ANI_RACCOON_RUN_RIGHT		23
-#define MARIO_ANI_RACCOON_RUN_LEFT		24
-#define MARIO_ANI_RACCOON_DRIFF_RIGHT	25
-#define MARIO_ANI_RACCOON_DRIFF_LEFT	26
-#define MARIO_ANI_RACCOON_FLY_RIGHT		27
-#define MARIO_ANI_RACCOON_FLY_LEFT		28
-#define MARIO_ANI_RACCOON_SPIN_RIGHT	29
-#define MARIO_ANI_RACCOON_SPIN_LEFT		30
+#define MARIO_ANI_RACCOON_IDLE_RIGHT	19
+#define MARIO_ANI_RACCOON_IDLE_LEFT		20
+#define MARIO_ANI_RACCOON_WALKING_RIGHT	21
+#define MARIO_ANI_RACCOON_WALKING_LEFT	22
+#define MARIO_ANI_RACCOON_JUMP_RIGHT	23
+#define MARIO_ANI_RACCOON_JUMP_LEFT		24
+#define MARIO_ANI_RACCOON_RUN_RIGHT		25
+#define MARIO_ANI_RACCOON_RUN_LEFT		26
+#define MARIO_ANI_RACCOON_DRIFF_RIGHT	27
+#define MARIO_ANI_RACCOON_DRIFF_LEFT	28
+#define MARIO_ANI_RACCOON_PIPE_WALKING	29
+#define MARIO_ANI_RACCOON_FLY_RIGHT		30
+#define MARIO_ANI_RACCOON_FLY_LEFT		31
+#define MARIO_ANI_RACCOON_FALL_RIGHT	32
+#define MARIO_ANI_RACCOON_FALL_LEFT		33
+#define MARIO_ANI_RACCOON_SPIN_RIGHT	34
+#define MARIO_ANI_RACCOON_SPIN_LEFT		35
 
-#define MARIO_ANI_FIRE_IDLE_RIGHT		31
-#define MARIO_ANI_FIRE_IDLE_LEFT		32
-#define MARIO_ANI_FIRE_WALKING_RIGHT	33
-#define MARIO_ANI_FIRE_WALKING_LEFT		34
-#define MARIO_ANI_FIRE_JUMP_RIGHT		35
-#define MARIO_ANI_FIRE_JUMP_LEFT		36
-#define MARIO_ANI_FIRE_RUN_RIGHT		37
-#define MARIO_ANI_FIRE_RUN_LEFT			38
-#define MARIO_ANI_FIRE_DRIFF_RIGHT		39
-#define MARIO_ANI_FIRE_DRIFF_LEFT		40
+#define MARIO_ANI_FIRE_IDLE_RIGHT		36
+#define MARIO_ANI_FIRE_IDLE_LEFT		37
+#define MARIO_ANI_FIRE_WALKING_RIGHT	38
+#define MARIO_ANI_FIRE_WALKING_LEFT		39
+#define MARIO_ANI_FIRE_JUMP_RIGHT		40
+#define MARIO_ANI_FIRE_JUMP_LEFT		41
+#define MARIO_ANI_FIRE_RUN_RIGHT		42
+#define MARIO_ANI_FIRE_RUN_LEFT			43
+#define MARIO_ANI_FIRE_DRIFF_RIGHT		44
+#define MARIO_ANI_FIRE_DRIFF_LEFT		45
+#define MARIO_ANI_FIRE_PIPE_WALKING		46
+
+#define MARIO_ANI_BIG_SIT_RIGHT			47
+#define MARIO_ANI_BIG_SIT_LEFT			48
+#define MARIO_ANI_RACCOON_SIT_RIGHT		49
+#define MARIO_ANI_RACCOON_SIT_LEFT		50
+#define MARIO_ANI_FIRE_SIT_RIGHT		51
+#define MARIO_ANI_FIRE_SIT_LEFT			52
 
 #define	MARIO_LEVEL_SMALL				1
 #define	MARIO_LEVEL_BIG					2
@@ -103,11 +116,14 @@
 #define MARIO_SMALL_BBOX_WIDTH			16
 #define MARIO_SMALL_BBOX_HEIGHT			16
 
+#define MARIO_SITTING_BBOX_HEIGHT		18
+
 #define MARIO_UNTOUCHABLE_TIME			5000
 #define MARIO_FLY_TIME					3500
 #define MARIO_SHOT_COOLDOWN_TIME		500
 #define MARIO_SPIN_TIME					300
 #define MARIO_SPIN_COOLDOWN_TIME		50
+#define MARIO_TRANSFORM_TIME			100
 
 
 class CMario : public CGameObject
@@ -149,6 +165,11 @@ class CMario : public CGameObject
 
 	float zoneLeft, zoneRight, zoneBottom;
 
+	DWORD start_transform;
+	bool transforming = false;
+
+	bool sitting;
+
 public:
 	bool canControl = true;
 	bool canJump = 0;
@@ -163,6 +184,8 @@ public:
 		spinning = 0;
 		canControl = true;
 		pipeWalking = false;
+		start_transform = NULL;
+		sitting = false;
 	}
 	void Jump();
 	void CalVx(DWORD dt);
@@ -177,11 +200,24 @@ public:
 	void SetStopFall() { fallIng = false; }
 	void UpdateHuggingShellPosition();
 	void StopHug();
+	void SitDown();
+	void StandUp();
+	bool IsSitting() { return sitting; }
 	void PipeWalking();
+	void ShowMarioTransformEffect();
+	void ShowEndSceneTitle(int type);
 	void SetZone(float l, float r, float b) {
 		zoneLeft = l;
 		zoneRight = r;
 		zoneBottom = b;
+	}
+	void StartTransform() {
+		start_transform = GetTickCount64();
+		transforming = true;
+	}
+	void StopTransform() {
+		start_transform = NULL;
+		transforming = false;
 	}
 	void ReSet() {
 		this->SetPosition(x_start, y_start);

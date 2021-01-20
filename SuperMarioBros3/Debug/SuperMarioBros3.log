@@ -1,7 +1,24 @@
-﻿  MarioFireBullet.cpp
+﻿  Mario.cpp
 D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Game.h(66,34): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
 D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Game.h(67,35): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
-D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Mario.h(198,79): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Mario.h(215,35): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Mario.h(234,79): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\BreakBlockPiece.h(33,29): warning C4244: '=': conversion from 'ULONGLONG' to 'float', possible loss of data
 D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\PiranhaPlant.h(33,29): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
 D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\VenusFireTrap.h(70,29): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Lottery.h(31,31): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\PlayScene.h(77,21): warning C4018: '<': signed/unsigned mismatch
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Point.h(14,1): warning C4005: 'TIME_ALIVE': macro redefinition
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\BreakBlockPiece.h(24): message : see previous definition of 'TIME_ALIVE'
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Point.h(23,29): warning C4244: '=': conversion from 'ULONGLONG' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\MarioTransformEffect.h(17,28): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\EndSceneTitle.h(32,30): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Mario.cpp(66,20): warning C4018: '<': signed/unsigned mismatch
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Mario.cpp(665,20): warning C4018: '<': signed/unsigned mismatch
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Mario.cpp(740,77): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Mario.cpp(740,24): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Mario.cpp(849,30): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Mario.cpp(855,32): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Mario.cpp(877,30): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
+D:\DATA\UIT\Deadline\Game\SuperMarioBros3\SuperMarioBros3\Mario.cpp(912,20): warning C4018: '<': signed/unsigned mismatch
   SuperMarioBros3.vcxproj -> D:\DATA\UIT\Deadline\Game\SuperMarioBros3\Debug\SuperMarioBros3.exe

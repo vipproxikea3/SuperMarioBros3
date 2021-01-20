@@ -496,9 +496,6 @@ void CPlayScene::Render()
 {
 	if (map)
 		map->Render();
-	
-	/*CGame* game = CGame::GetInstance();
-	float l, t, r, b;*/
 
 	for (int i = 0; i < objects.size(); i++)
 	{
@@ -551,7 +548,12 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		if (mario->state != MARIO_STATE_DIE) {
 			switch (KeyCode)
 			{
+			case DIK_DOWN:
+				mario->SitDown();
+				break;
 			case DIK_S:
+				if (mario->IsSitting())
+					return;
 				if (mario->GetLevel() != MARIO_LEVEL_RACCOON) {
 					if (mario->canJump) {
 						mario->Jump();
@@ -568,13 +570,19 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 					}
 				}
 				break;
-			case DIK_X:
-				mario->LvlUp();
-				break;
 			case DIK_A:
+				if (mario->IsSitting())
+					return;
 				mario->Shot();
 				mario->Spin();
 				mario->isReadyHug = true;
+				break;
+			case DIK_X:
+				mario->LvlUp();
+				break;
+			
+			case DIK_1:
+				mario->SetPosition(2264, 60);
 				break;
 			}
 		}
@@ -651,6 +659,9 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 		if (mario->state != MARIO_STATE_DIE) {
 			switch (KeyCode)
 			{
+			case DIK_DOWN:
+				mario->StandUp();
+				break;
 			case DIK_S:
 				mario->SetStopFly();
 				mario->SetStopFall();
@@ -673,8 +684,8 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		if (!mario->canControl) return;
 
 		if (mario->state != MARIO_STATE_DIE) {
-			// disable control key when Mario die 
-			if (mario->GetState() == MARIO_STATE_DIE) return;
+			if (mario->IsSitting())
+				return;
 			if (game->IsKeyDown(DIK_RIGHT)) {
 				mario->SetState(MARIO_STATE_WALKING_RIGHT);
 				if (game->IsKeyDown(DIK_A))

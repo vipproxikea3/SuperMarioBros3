@@ -120,6 +120,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (this->BeAttackByTail()) {
 				this->SetState(GOOMBA_STATE_DIE_X);
 				ShowPoint();
+				ShowTailAttackEffect();
 			}
 		}
 

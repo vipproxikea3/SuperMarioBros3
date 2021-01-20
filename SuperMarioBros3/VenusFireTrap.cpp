@@ -33,13 +33,12 @@ void CVenusFireTrap::SetSide() {
 }
 
 void CVenusFireTrap::Shot() {
-	DebugOut(L"[SHOT] Bullets: %d\n", bullets.size());
 
 	CVenusFireTrapBullet* bullet = new CVenusFireTrapBullet();
 	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 	bullet->SetAnimationSet(animation_sets->Get(VENUSFIRETRAP_BULLET_ANI_SET_ID));
 	bullet->SetPosition(x + 4.0f, y + 4.0f);
-
+	
 	switch (side)
 	{
 	case VENUSFIRETRAP_SIDE_BOTTOM_LEFT:
@@ -55,28 +54,11 @@ void CVenusFireTrap::Shot() {
 		bullet->SetSpeed(VENUSFIRETRAP_BULLET_SPEED_X, VENUSFIRETRAP_BULLET_SPEED_Y);
 		break;
 	}
-
-	bullets.push_back(bullet);
+	((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(bullet);
 }
 
 void CVenusFireTrap::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	if (!this->isDisable) {
-		
-		// Update bullets
-		for (int i = 0; i < bullets.size(); i++) {
-			if (!bullets[i]->isDisable)
-				bullets[i]->Update(dt, coObjects);
-		}
-
-		// clean bullets
-		for (int i = 0; i < bullets.size(); i++) {
-			if (bullets[i]->isDisable) {
-				CGameObject* p = bullets[i];
-				bullets.erase(bullets.begin() + i);
-				delete p;
-			}
-		}
-
 		// Calculate dx, dy 
 		CGameObject::Update(dt);
 		y += dy;
@@ -120,6 +102,7 @@ void CVenusFireTrap::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 			if (this->BeAttackByTail()) {
 				this->SetState(VENUSFIRETRAP_STATE_DIE);
 				ShowPoint();
+				ShowTailAttackEffect();
 			}
 		}
 	}
@@ -127,12 +110,6 @@ void CVenusFireTrap::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 
 void CVenusFireTrap::Render()
 {
-	// Render bullets
-	for (int i = 0; i < bullets.size(); i++) {
-		if (!bullets[i]->isDisable)
-			bullets[i]->Render();
-	}
-
 	int ani;
 
 	if (type == VENUSFIRETRAP_TYPE_GREEN)

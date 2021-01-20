@@ -91,6 +91,7 @@ public:
 	}
 	void ReSet();
 	void ShowPoint();
+	void ShowTailAttackEffect();
 	bool BeAttackByTail();
 
 	int GetState() { return this->state; }

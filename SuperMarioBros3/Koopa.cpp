@@ -205,6 +205,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							CBreakBlock* breakBlock = dynamic_cast<CBreakBlock*>(e->obj);
 							if (e->nx != 0 && breakBlock->GetState() == BREAKBLOCK_STATE_IDLE) {
 								breakBlock->ShowPiece();
+								breakBlock->isDisable = true;
 							}
 						}
 
@@ -296,6 +297,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				this->SetLevel(KOOPA_LEVEL_SHELL);
 				this->SetState(SHELL_STATE_OVERTURN);
 				ShowPoint();
+				ShowTailAttackEffect();
 			}
 		}
 	}
@@ -519,8 +521,6 @@ void CKoopa::SetState(int state)
 		vy = -KOOPA_DIE_DEFLECT_SPEED;
 		break;
 	}
-
-	DebugOut(L"[STATE] %d\n", state);
 }
 
 void CKoopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)

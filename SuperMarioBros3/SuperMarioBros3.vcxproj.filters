@@ -132,6 +132,15 @@
     <ClInclude Include="Backup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TailAttackEffect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MarioTransformEffect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EndSceneTitle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -252,6 +261,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Backup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TailAttackEffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MarioTransformEffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EndSceneTitle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

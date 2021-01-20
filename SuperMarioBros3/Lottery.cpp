@@ -2,7 +2,7 @@
 
 void CLottery::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	if (!this->isDisable) {
-		if (GetTickCount64() - last_change >= LOTTERY_TIME_CHANGE) {
+		if (GetTickCount64() - last_change >= LOTTERY_TIME_CHANGE && CanChange) {
 			switch (state)
 			{
 			case LOTTERY_STATE_MUSHROOM:
@@ -16,6 +16,11 @@ void CLottery::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 				break;
 			}
 		}
+
+		// Calculate dx, dy 
+		CGameObject::Update(dt);
+		if (flying)
+			y += dy;
 	}
 }
 

@@ -9,6 +9,7 @@
 #include "Sprites.h"
 #include "PlayScene.h"
 #include "Point.h"
+#include "TailAttackEffect.h"
 
 CGameObject::CGameObject()
 {
@@ -166,6 +167,15 @@ void CGameObject::ShowPoint() {
 	point->SetPosition(x, y - 16.0f);
 	point->SetAnimationSet(ani_set);
 	((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(point);
+}
+
+void CGameObject::ShowTailAttackEffect() {
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+	LPANIMATION_SET ani_set = animation_sets->Get(27);
+	CTailAttackEffect* effect = new CTailAttackEffect();
+	effect->SetPosition(x, y);
+	effect->SetAnimationSet(ani_set);
+	((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(effect);
 }
 
 bool CGameObject::BeAttackByTail() {

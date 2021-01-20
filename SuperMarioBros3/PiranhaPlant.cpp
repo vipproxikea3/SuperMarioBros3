@@ -40,6 +40,7 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 			if (this->BeAttackByTail()) {
 				this->SetState(PIRANHAPLANT_STATE_DIE);
 				ShowPoint();
+				ShowTailAttackEffect();
 			}
 		}
 	}

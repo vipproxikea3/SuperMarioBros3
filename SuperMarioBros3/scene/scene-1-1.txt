@@ -13,6 +13,7 @@
 130	textures\mario-1-left.png	68	145	190
 140	textures\mario-1-right.png	68	145	190
 150	textures\enemies-3-right.png	41	88	124
+160	textures\endSceneTitle.png	0	0	0
 
 [MAP]
 # PosX	PosY	TotalRowsOfMap	TotalColumnsOfMap	TotalRowsOfTileSet		TotalColumnsOfTileSet	TileSetID	MapMatrixPath
@@ -43,7 +44,7 @@
 10005	360	92	379	120	140
 10006	386	92	405	120	140
 10007	412	92	431	120	140
-# big driff tight
+# big driff right
 10008	311	92	327	120	140
 # big idle left
 10011	1	92	17	120	130
@@ -58,6 +59,8 @@
 10017	143	92	162	120	130
 # big driff left
 10018	195	92	211	120	130
+#big pipewalking
+10019	213	92	229	120	130
 
 # MARIO SMALL
 # small idle right
@@ -74,6 +77,8 @@
 10033	73	16	89	32	130
 #small jump left
 10034	37	16	53	32	130
+#small pipe walking
+10035	127	16	143	32	130
 
 # MARIO RACCOON
 # raccoon idle right
@@ -98,6 +103,9 @@
 10205	185	350	209	378	140
 10206	211	350	235	378	140
 10207	237	350	261s	378	140
+# raccoon fall right
+10208	341	350	365	378	140
+10209	367	350	391	378	140
 # raccoon idle left
 10051	1	350	24	378	130
 # raccoon walk left
@@ -111,10 +119,15 @@
 10057	235	350	259	378	130
 # raccoon driff left
 10058	339	350	355	378	130
+# raccoon pipe walking
+10059	364	350	380	378	130
 # raccoon fly left
 10215	261	350	285	378	130
 10216	287	350	311	378	130
 10217	313	350	337	378	130
+# raccoon fall left
+10218	131	350	155	378	130
+10219	157	350	181	378	130
 # raccoon spin left
 10211	455	350	485	378	130
 10212	422	350	452	378	130
@@ -148,6 +161,21 @@
 10077	143	264	162	292	130
 # fire driff left
 10078	195	264	211	292	130
+# fire pipe walking
+10079	213	264	229	292	130
+
+# big sit right
+10301	451	102	467	120	140
+# big sit left
+10311	55	102	71	120	130
+# raccoon sit right
+10321	421	360	443	378	140
+# raccoon sit left
+10331	79	360	101	378	130
+# fire sit right
+10341	451	274	467	292	140
+# fire sit left
+10351	55	274	71	292	130
 
 # MARIO FIRE BULLET
 # mario fire bullet right
@@ -429,6 +457,22 @@
 25002	174	359	190	375	60
 25003	194	359	210	375	60
 
+# TAIL ATTACK EFFECT
+28001	379	1	395	17	130
+28002	397	1	413	17	130
+28003	379	19	395	35	130
+28004	397	19	413	35	130
+
+# MARIO TRANSFORM EFFECT
+29001	469	1	485	17	130
+29002	451	1	467	17	130
+29003	433	1	449	17	130
+29004	415	1	431	17	130
+
+# END SCENE TITLE
+# end scene title background
+31001	0	0	146	44	160
+
 [ANIMATIONS]
 # ani_id sprite_1_id time_1 sprite_2_id time_2 ...
 
@@ -523,6 +567,33 @@
 640	10201	75	10202	75	10203	75	10204	75
 # raccoon spin left
 641	10211	75	10212	75	10213	75	10214	75
+
+# big pipe walking
+650	10019	100
+# small pipe walking
+651	10035	100
+# raccoon pipe walking
+652	10059	100
+# fire pipe walking
+653	10079	100
+
+# raccoon fall right
+660	10208	50	10209	50
+# raccoon fall left
+661	10218	50	10219	50
+
+# big sit right
+670	10301	100
+# big sit left
+671	10311	100
+# raccoon sit right
+680	10321	100
+# raccoon sit left
+681	10331	100
+# fire sit right
+690	10341	100
+# fire sit left
+691	10351	100
 
 # MARIO FIRE BULLET
 
@@ -798,6 +869,15 @@
 2601	25002	100
 2602	25003	100
 
+# TAIL ATTACK EFFECT
+2900	28001	50	28002	50	28003	50	28004	50
+
+# MARIO TRANSFORM EFFECT
+3000	29001	25	29002	25	29003	25	29004	25
+
+# END SCENE TITLE
+3100	31001	100
+
 # BLOCK
 
 # ground block left
@@ -864,10 +944,10 @@
 
 [ANIMATION_SETS]
 # ani_set_id    ani_1   ani_2   ani_3   ...
-# 1 = Mario | 2 = Block | 3 = MarioFireBullet | 4 = Goomba | 5 = Koopa | 6 = ParaGoomba | 7 = ParaKoopa | 8 = Coin | 9 = BreakBlock | 10 = SwitchBlock | 11 = BrickReward | 12 = SuperMushroom | 13 = SuperLeaf | 14 = Gate | 15 = HUD | 16 = BreakBlockPiece | 17 = Point | 18 = Piranha Plant | 19 = Venus Fire Trap | 20 = Venus Fire Trap Bullet | 21 = Bush | 22 = Mario World Map | 23 = Station | 24 = Lottery
+# 1 = Mario | 2 = Block | 3 = MarioFireBullet | 4 = Goomba | 5 = Koopa | 6 = ParaGoomba | 7 = ParaKoopa | 8 = Coin | 9 = BreakBlock | 10 = SwitchBlock | 11 = BrickReward | 12 = SuperMushroom | 13 = SuperLeaf | 14 = Gate | 15 = HUD | 16 = BreakBlockPiece | 17 = Point | 18 = Piranha Plant | 19 = Venus Fire Trap | 20 = Venus Fire Trap Bullet | 21 = Bush | 22 = Mario World Map | 23 = Station | 24 = Lottery | 27 = Tail Attack Effect | 28 = Mario Transform Effect | 29 = End Scene Title
 
 # MARIO
-1	599	402	403	502	503	602	603	400	401	500	501	600	601	610	611	620	621	404	405	504	505	604	605	612	613	622	623	630	631	640	641	406	407	506	507	606	607	614	615	624	625
+1	599	402	403	502	503	602	603	651	400	401	500	501	600	601	610	611	620	621	650	404	405	504	505	604	605	612	613	622	623	652	630	631	660	661	640	641	406	407	506	507	606	607	614	615	624	625	653	670	671	680	681	690	691
 
 # BLOCK
 2	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21	22	23	24	25
@@ -927,6 +1007,15 @@
 
 # LOTTERY
 24	2600	2601	2602
+
+# TAIL ATTACK EFFECT
+27	2900
+
+# MARIO TRANSFORM EFFECT
+28	3000
+
+# END SCENE TITLE
+29	3100	2600	2601	2602
 
 [HUD]
 # x	y	ani_set_id
@@ -1443,7 +1532,7 @@
 # type	x	y	ani_set_id	targetX	targetY	targetZone	type
 
 12	2264	111	14	2952	40	2	1
-12	3176	17	14	2320	384	1	-1
+12	3176	17	14	2328	384	1	-1
 
 # PIRANHAPLANT
 # type	x	y	ani_set_id

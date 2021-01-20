@@ -18,7 +18,7 @@ void CParaKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	ReSet();
 	if (!this->isDisable) {
-		if ((this->GetState() == PARAKOOPA_SHELL_STATE_IDLE || this->GetState() == PARAKOOPA_SHELL_STATE_BEHUG) && GetTickCount64() - shell_start > PARAKOOPA_SHELL_TIME) {
+		if ((this->GetState() == PARAKOOPA_SHELL_STATE_IDLE || this->GetState() == PARAKOOPA_SHELL_STATE_BEHUG || this->GetState() == PARAKOOPA_SHELL_STATE_OVERTURN) && GetTickCount64() - shell_start > PARAKOOPA_SHELL_TIME) {
 			if (this->isHugging == true) {
 				isHugging = false;
 				CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
@@ -87,7 +87,13 @@ void CParaKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 						if (e->ny == -1 && block->isBlockTop()) {
 							if (this->GetLevel() == PARAKOOPA_LEVEL_WING)
+							{
 								this->vy = -PARAKOOPA_JUMP_SPEED;
+							}
+							else
+							{
+								this->vy = 0;
+							}
 							this->y = y0 + min_ty * this->dy + ny * 0.4f;
 						}
 
@@ -305,6 +311,7 @@ void CParaKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				this->SetLevel(PARAKOOPA_LEVEL_SHELL);
 				this->SetState(PARAKOOPA_SHELL_STATE_OVERTURN);
 				ShowPoint();
+				ShowTailAttackEffect();
 			}
 		}
 	}

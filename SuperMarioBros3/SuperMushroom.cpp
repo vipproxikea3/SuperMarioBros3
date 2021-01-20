@@ -104,7 +104,12 @@ void CSuperMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						mario->LvlUp();
 					}
 					if (this->GetType() == SUPERMUSHROOM_TYPE_LIFE) {
-						ShowPoint();
+						CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+						LPANIMATION_SET ani_set = animation_sets->Get(17);
+						CPoint* point = new CPoint(0);
+						point->SetPosition(x, y - 16.0f);
+						point->SetAnimationSet(ani_set);
+						((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(point);
 						CBackup::GetInstance()->PushLifeStack();
 					}
 				}

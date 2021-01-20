@@ -4,6 +4,7 @@
 #include "Block.h"
 #include "PiranhaPlant.h"
 #include "VenusFireTrap.h"
+#include "BrickReward.h"
 
 void CMarioFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -65,6 +66,28 @@ void CMarioFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						this->vy = 0;
 						this->y = y0 + min_ty * this->dy + ny * 0.4f;
 						this->isDisable = true;
+					}
+				}
+
+				// BREAKBLOCK
+				if (dynamic_cast<CBreakBlock*>(e->obj)) {
+					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+					if (e->nx != 0) {
+						this->isDisable = true;
+					}
+					if (e->ny == -1) {
+						this->vy = -BULLET_JUMP_DEFLECT_SPEED;
+					}
+				}
+
+				// BRICKREWARD
+				if (dynamic_cast<CBrickReward*>(e->obj)) {
+					BasicCollision(min_tx, min_ty, e->nx, e->ny, x0, y0);
+					if (e->nx != 0) {
+						this->isDisable = true;
+					}
+					if (e->ny == -1) {
+						this->vy = -BULLET_JUMP_DEFLECT_SPEED;
 					}
 				}
 
