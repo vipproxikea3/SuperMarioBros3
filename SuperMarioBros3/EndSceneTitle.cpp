@@ -1,9 +1,15 @@
 #include "EndSceneTitle.h"
+#include "Mario.h"
+#include "PlayScene.h"
 
 void CEndSceneTitle::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	if (!this->isDisable) {
 		if (GetTickCount64() - start_show > ENDSCENETITLE_TIME_SHOW) {
 			showing = true;
+		}
+		CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+		if (mario && !mario->IsReadyOutScene()) {
+			mario->ReadyOutScene();
 		}
 	}
 }

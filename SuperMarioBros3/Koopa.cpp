@@ -33,6 +33,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				this->SetState(KOOPA_STATE_WALKING_RIGHT);
 			}
 			y -= KOOPA_BBOX_HEIGHT - SHELL_BBOX_HEIGHT;
+			this->vy = -KOOPA_DIE_DEFLECT_SPEED;
 		}
 
 		if (this->level == KOOPA_LEVEL_KOOPA) {
@@ -204,8 +205,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 							CBreakBlock* breakBlock = dynamic_cast<CBreakBlock*>(e->obj);
 							if (e->nx != 0 && breakBlock->GetState() == BREAKBLOCK_STATE_IDLE) {
-								breakBlock->ShowPiece();
-								breakBlock->isDisable = true;
+								breakBlock->ShowReward();
 							}
 						}
 
@@ -229,7 +229,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						if (dynamic_cast<CGoomba*>(e->obj))
 						{
 							CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-							if (goomba->GetState() != GOOMBA_STATE_DIE_X) {
+							if (goomba->GetState() != GOOMBA_STATE_DIE_X && goomba->GetState() != GOOMBA_STATE_DIE_Y) {
 								goomba->SetState(GOOMBA_STATE_DIE_X);
 								ShowPoint();
 							}
@@ -255,8 +255,6 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
 								if (koopa->GetState() != KOOPA_STATE_DIE)
 								{
-									this->SetLevel(KOOPA_LEVEL_SHELL);
-									this->SetState(KOOPA_STATE_DIE);
 									koopa->SetLevel(KOOPA_LEVEL_SHELL);
 									koopa->SetState(KOOPA_STATE_DIE);
 									ShowPoint();
@@ -272,11 +270,117 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								CParaKoopa* paraKoopa = dynamic_cast<CParaKoopa*>(e->obj);
 								if (paraKoopa->GetState() != KOOPA_STATE_DIE)
 								{
-									this->SetLevel(KOOPA_LEVEL_SHELL);
-									this->SetState(KOOPA_STATE_DIE);
 									paraKoopa->SetLevel(PARAKOOPA_LEVEL_SHELL);
 									paraKoopa->SetState(PARAKOOPA_STATE_DIE);
 									ShowPoint();
+								}
+							}
+						}
+					}
+				}
+
+				// clean up collision events
+				for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+			}
+			else
+			{
+				// Calculate dx, dy 
+				CGameObject::Update(dt);
+
+				vector<LPCOLLISIONEVENT> coEvents;
+				vector<LPCOLLISIONEVENT> coEventsResult;
+
+				coEvents.clear();
+
+				CalcPotentialCollisions(coObjects, coEvents);
+
+				if (coEvents.size() == 0)
+				{
+				}
+				else
+				{
+					float min_tx, min_ty, nx = 0, ny;
+					float rdx = 0;
+					float rdy = 0;
+
+					FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+
+					float x0 = x;
+					float y0 = y;
+
+					x = x0 + dx;
+					y = y0 + dy;
+
+					CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+
+					for (UINT i = 0; i < coEventsResult.size(); i++)
+					{
+						LPCOLLISIONEVENT e = coEventsResult[i];
+
+						// GOOMBA
+						if (dynamic_cast<CGoomba*>(e->obj))
+						{
+							CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+							if (goomba->GetState() != GOOMBA_STATE_DIE_X && goomba->GetState() != GOOMBA_STATE_DIE_Y) {
+								goomba->SetState(GOOMBA_STATE_DIE_X);
+								ShowPoint();
+								isHugging = false;
+								mario->StopHug();
+								this->SetLevel(KOOPA_LEVEL_SHELL);
+								this->SetState(KOOPA_STATE_DIE);
+							}
+						}
+
+						// PARAGOOMBA
+						if (dynamic_cast<CParaGoomba*>(e->obj))
+						{
+							CParaGoomba* paraGoomba = dynamic_cast<CParaGoomba*>(e->obj);
+							if (paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_X && paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_Y)
+							{
+								paraGoomba->SetLevel(PARAGOOMBA_LEVEL_GOOMBA);
+								paraGoomba->SetState(PARAGOOMBA_STATE_DIE_X);
+								ShowPoint();
+								isHugging = false;
+								mario->StopHug();
+								this->SetLevel(KOOPA_LEVEL_SHELL);
+								this->SetState(KOOPA_STATE_DIE);
+							}
+						}
+
+						//	KOOPA
+						if (dynamic_cast<CKoopa*>(e->obj))
+						{
+							if (this->GetState() != KOOPA_STATE_DIE)
+							{
+								CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
+								if (koopa->GetState() != KOOPA_STATE_DIE)
+								{
+									koopa->SetLevel(KOOPA_LEVEL_SHELL);
+									koopa->SetState(KOOPA_STATE_DIE);
+									ShowPoint();
+									isHugging = false;
+									mario->StopHug();
+									this->SetLevel(KOOPA_LEVEL_SHELL);
+									this->SetState(KOOPA_STATE_DIE);
+								}
+							}
+						}
+
+						//	PARAKOOPA
+						if (dynamic_cast<CParaKoopa*>(e->obj))
+						{
+							if (this->GetState() != KOOPA_STATE_DIE)
+							{
+								CParaKoopa* paraKoopa = dynamic_cast<CParaKoopa*>(e->obj);
+								if (paraKoopa->GetState() != PARAKOOPA_STATE_DIE)
+								{
+									paraKoopa->SetLevel(PARAKOOPA_LEVEL_SHELL);
+									paraKoopa->SetState(PARAKOOPA_STATE_DIE);
+									ShowPoint();
+									isHugging = false;
+									mario->StopHug();
+									this->SetLevel(KOOPA_LEVEL_SHELL);
+									this->SetState(KOOPA_STATE_DIE);
 								}
 							}
 						}
@@ -291,7 +395,17 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (CalculateTurningAround(coObjects))
 			TurnAround();
 
-		if (this->isDisable == false && (this->GetState() == KOOPA_STATE_WALKING_LEFT || this->GetState() == KOOPA_STATE_WALKING_RIGHT))
+		if (BeThrownAwayByBreakBlock(coObjects))
+		{
+			if (this->GetState() == GOOMBA_STATE_WALKING_LEFT || this->GetState() == GOOMBA_STATE_WALKING_RIGHT)
+			{
+				this->SetLevel(KOOPA_LEVEL_SHELL);
+				this->SetState(SHELL_STATE_OVERTURN);
+				ShowPoint();
+			}
+		}
+
+		if (this->isDisable == false && (this->GetState() == KOOPA_STATE_WALKING_LEFT || this->GetState() == KOOPA_STATE_WALKING_RIGHT || this->GetState() == SHELL_STATE_IDLE || this->GetState() == SHELL_STATE_OVERTURN))
 		{
 			if (this->BeAttackByTail()) {
 				this->SetLevel(KOOPA_LEVEL_SHELL);
@@ -529,6 +643,10 @@ void CKoopa::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	top = y;
 
 	if (this->GetState() == KOOPA_STATE_DIE) {
+		float cx, cy;
+		CGame::GetInstance()->GetCamPos(cx, cy);
+		left = cx + 16.0f;
+		top = cy + 16.0f;
 		bottom = top;
 		right = left;
 	}

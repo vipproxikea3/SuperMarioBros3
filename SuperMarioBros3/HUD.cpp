@@ -83,6 +83,9 @@ void CHUD::RenderCoin() {
 	case 9:
 		ani_tens = HUD_ANI_NUMBER_9;
 		break;
+	default:
+		ani_tens = HUD_ANI_NUMBER_0;
+		break;
 	}
 	animation_set->at(ani_tens)->Render(x + COIN_POS_X, y + COIN_POS_Y, 255);
 
@@ -116,6 +119,9 @@ void CHUD::RenderCoin() {
 		break;
 	case 9:
 		ani_units = HUD_ANI_NUMBER_9;
+		break;
+	default:
+		ani_units = HUD_ANI_NUMBER_0;
 		break;
 	}
 	animation_set->at(ani_units)->Render(x + COIN_POS_X + 8.0f, y + COIN_POS_Y, 255);
@@ -211,6 +217,9 @@ void CHUD::RenderRemainingTime() {
 	case 9:
 		ani_tens = HUD_ANI_NUMBER_9;
 		break;
+	default:
+		ani_tens = HUD_ANI_NUMBER_0;
+		break;
 	}
 	animation_set->at(ani_tens)->Render(x + TIME_POS_X + 8.0f, y + TIME_POS_Y, 255);
 
@@ -244,6 +253,9 @@ void CHUD::RenderRemainingTime() {
 		break;
 	case 9:
 		ani_units = HUD_ANI_NUMBER_9;
+		break;
+	default:
+		ani_units = HUD_ANI_NUMBER_0;
 		break;
 	}
 	animation_set->at(ani_units)->Render(x + TIME_POS_X + 16.0f, y + TIME_POS_Y, 255);
@@ -290,6 +302,9 @@ void CHUD::RenderLifeStack() {
 	case 9:
 		ani_tens = HUD_ANI_NUMBER_9;
 		break;
+	default:
+		ani_tens = HUD_ANI_NUMBER_0;
+		break;
 	}
 	animation_set->at(ani_tens)->Render(x + LIFE_POS_X, y + LIFE_POS_Y, 255);
 
@@ -323,6 +338,9 @@ void CHUD::RenderLifeStack() {
 		break;
 	case 9:
 		ani_units = HUD_ANI_NUMBER_9;
+		break;
+	default:
+		ani_units = HUD_ANI_NUMBER_0;
 		break;
 	}
 	animation_set->at(ani_units)->Render(x + LIFE_POS_X + 8.0f, y + LIFE_POS_Y, 255);
@@ -366,6 +384,9 @@ void CHUD::RenderPoint() {
 			break;
 		case 9:
 			ani = HUD_ANI_NUMBER_9;
+			break;
+		default:
+			ani = HUD_ANI_NUMBER_0;
 			break;
 		}
 		animation_set->at(ani)->Render(x + pos_x, y + POINT_POS_Y, 255);

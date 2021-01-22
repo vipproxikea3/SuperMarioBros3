@@ -93,6 +93,7 @@ public:
 	void ShowPoint();
 	void ShowTailAttackEffect();
 	bool BeAttackByTail();
+	bool BeThrownAwayByBreakBlock(vector<LPGAMEOBJECT>* coObjects);
 
 	int GetState() { return this->state; }
 

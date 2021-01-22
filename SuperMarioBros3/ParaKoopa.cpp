@@ -40,7 +40,30 @@ void CParaKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (this->level == PARAKOOPA_LEVEL_KOOPA || this->level == PARAKOOPA_LEVEL_WING) {
 
 			CGameObject::Update(dt, coObjects);
-			vy += PARAKOOPA_GRAVITY * dt;
+			if (this->type != PARAKOOPA_TYPE_RED)
+			{
+				vy += PARAKOOPA_GRAVITY * dt;
+			}
+			else {
+				if (this->level == PARAKOOPA_LEVEL_WING)
+				{
+					y += dy;
+					if (y < y_start - PARAKOOPA_RED_FLY_ZONE)
+					{
+						y = y_start - PARAKOOPA_RED_FLY_ZONE;
+						vy = -vy;
+					}
+					if (y > y_start + PARAKOOPA_RED_FLY_ZONE)
+					{
+						y = y_start + PARAKOOPA_RED_FLY_ZONE;
+						vy = -vy;
+					}
+				}
+				else {
+					vy += PARAKOOPA_GRAVITY * dt;
+				}
+				
+			}
 
 			vector<LPCOLLISIONEVENT> coEvents;
 			vector<LPCOLLISIONEVENT> coEventsResult;
@@ -222,7 +245,7 @@ void CParaKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 							CBreakBlock* breakBlock = dynamic_cast<CBreakBlock*>(e->obj);
 							if (e->nx != 0 && breakBlock->GetState() == BREAKBLOCK_STATE_IDLE) {
-								breakBlock->ShowPiece();
+								breakBlock->ShowReward();
 							}
 						}
 
@@ -272,8 +295,6 @@ void CParaKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
 								if (koopa->GetState() != KOOPA_STATE_DIE)
 								{
-									this->SetLevel(PARAKOOPA_LEVEL_SHELL);
-									this->SetState(PARAKOOPA_STATE_DIE);
 									koopa->SetLevel(KOOPA_LEVEL_SHELL);
 									koopa->SetState(KOOPA_STATE_DIE);
 									ShowPoint();
@@ -289,8 +310,6 @@ void CParaKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								CParaKoopa* paraKoopa = dynamic_cast<CParaKoopa*>(e->obj);
 								if (paraKoopa->GetState() != KOOPA_STATE_DIE)
 								{
-									this->SetLevel(PARAKOOPA_LEVEL_SHELL);
-									this->SetState(PARAKOOPA_STATE_DIE);
 									paraKoopa->SetLevel(PARAKOOPA_LEVEL_SHELL);
 									paraKoopa->SetState(PARAKOOPA_STATE_DIE);
 									ShowPoint();
@@ -303,9 +322,117 @@ void CParaKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				// clean up collision events
 				for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 			}
+			else
+			{
+				// Calculate dx, dy 
+				CGameObject::Update(dt);
+
+				vector<LPCOLLISIONEVENT> coEvents;
+				vector<LPCOLLISIONEVENT> coEventsResult;
+
+				coEvents.clear();
+
+				CalcPotentialCollisions(coObjects, coEvents);
+
+				if (coEvents.size() == 0)
+				{
+				}
+				else
+				{
+					float min_tx, min_ty, nx = 0, ny;
+					float rdx = 0;
+					float rdy = 0;
+
+					FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+
+					float x0 = x;
+					float y0 = y;
+
+					x = x0 + dx;
+					y = y0 + dy;
+
+					CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+
+					for (UINT i = 0; i < coEventsResult.size(); i++)
+					{
+						LPCOLLISIONEVENT e = coEventsResult[i];
+
+						// GOOMBA
+						if (dynamic_cast<CGoomba*>(e->obj))
+						{
+							CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+							if (goomba->GetState() != GOOMBA_STATE_DIE_X && goomba->GetState() != GOOMBA_STATE_DIE_Y) {
+								goomba->SetState(GOOMBA_STATE_DIE_X);
+								ShowPoint();
+								isHugging = false;
+								mario->StopHug();
+								this->SetLevel(PARAKOOPA_LEVEL_SHELL);
+								this->SetState(PARAKOOPA_STATE_DIE);
+							}
+						}
+
+						// PARAGOOMBA
+						if (dynamic_cast<CParaGoomba*>(e->obj))
+						{
+							CParaGoomba* paraGoomba = dynamic_cast<CParaGoomba*>(e->obj);
+							if (paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_X && paraGoomba->GetState() != PARAGOOMBA_STATE_DIE_Y)
+							{
+								paraGoomba->SetLevel(PARAGOOMBA_LEVEL_GOOMBA);
+								paraGoomba->SetState(PARAGOOMBA_STATE_DIE_X);
+								ShowPoint();
+								isHugging = false;
+								mario->StopHug();
+								this->SetLevel(PARAKOOPA_LEVEL_SHELL);
+								this->SetState(PARAKOOPA_STATE_DIE);
+							}
+						}
+
+						//	KOOPA
+						if (dynamic_cast<CKoopa*>(e->obj))
+						{
+							if (this->GetState() != PARAKOOPA_STATE_DIE)
+							{
+								CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
+								if (koopa->GetState() != KOOPA_STATE_DIE)
+								{
+									koopa->SetLevel(KOOPA_LEVEL_SHELL);
+									koopa->SetState(KOOPA_STATE_DIE);
+									ShowPoint();
+									isHugging = false;
+									mario->StopHug();
+									this->SetLevel(PARAKOOPA_LEVEL_SHELL);
+									this->SetState(PARAKOOPA_STATE_DIE);
+								}
+							}
+						}
+
+						//	PARAKOOPA
+						if (dynamic_cast<CParaKoopa*>(e->obj))
+						{
+							if (this->GetState() != PARAKOOPA_STATE_DIE)
+							{
+								CParaKoopa* paraKoopa = dynamic_cast<CParaKoopa*>(e->obj);
+								if (paraKoopa->GetState() != PARAKOOPA_STATE_DIE)
+								{
+									paraKoopa->SetLevel(PARAKOOPA_LEVEL_SHELL);
+									paraKoopa->SetState(PARAKOOPA_STATE_DIE);
+									ShowPoint();
+									isHugging = false;
+									mario->StopHug();
+									this->SetLevel(PARAKOOPA_LEVEL_SHELL);
+									this->SetState(PARAKOOPA_STATE_DIE);
+								}
+							}
+						}
+					}
+				}
+
+				// clean up collision events
+				for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+			}
 		}
 
-		if (this->isDisable == false && (this->GetState() == PARAKOOPA_STATE_WALKING_LEFT || this->GetState() == PARAKOOPA_STATE_WALKING_RIGHT))
+		if (this->isDisable == false && (this->GetState() == PARAKOOPA_STATE_WALKING_LEFT || this->GetState() == PARAKOOPA_STATE_WALKING_RIGHT || this->GetState() == PARAKOOPA_SHELL_STATE_IDLE || this->GetState() == PARAKOOPA_SHELL_STATE_OVERTURN))
 		{
 			if (this->BeAttackByTail()) {
 				this->SetLevel(PARAKOOPA_LEVEL_SHELL);
@@ -487,13 +614,22 @@ void CParaKoopa::SetState(int state)
 		isHugging = false;
 		vx = -PARAKOOPA_WALKING_SPEED;
 		vy = 0;
+		if (this->type == PARAKOOPA_TYPE_RED) {
+			vx = 0;
+			vy = -PARAKOOPA_RED_FLY_SPEED;
+		}
 		nx = -1;
 		break;
 	case PARAKOOPA_STATE_WALKING_RIGHT:
 		isHugging = false;
 		vx = PARAKOOPA_WALKING_SPEED;
 		vy = 0;
-		nx = -1;
+		if (this->type == PARAKOOPA_TYPE_RED)
+		{
+			vx = 0;
+			vy = -PARAKOOPA_RED_FLY_SPEED;
+		}
+		nx = 1;
 		break;
 	case PARAKOOPA_SHELL_STATE_IDLE:
 		isHugging = false;
@@ -537,6 +673,10 @@ void CParaKoopa::GetBoundingBox(float& left, float& top, float& right, float& bo
 	top = y;
 
 	if (this->GetState() == PARAKOOPA_STATE_DIE) {
+		float cx, cy;
+		CGame::GetInstance()->GetCamPos(cx, cy);
+		left = cx + 16.0f;
+		top = cy + 16.0f;
 		bottom = top;
 		right = left;
 	}

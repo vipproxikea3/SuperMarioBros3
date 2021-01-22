@@ -68,6 +68,21 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			bullets[i]->Update(dt, coObjects);
 	}
 
+	// clean bullets
+	for (int i = 0; i < bullets.size(); i++) {
+		if (bullets[i]->isDisable) {
+			CGameObject* p = bullets[i];
+			bullets.erase(bullets.begin() + i);
+			delete p;
+		}
+	}
+
+
+	// Check Out Scene
+	if (GetTickCount64() - start_out_scene >= MARIO_TIME_OUT_SCENE && readyOutScene) {
+		outScene = true;
+	}
+
 	// Update hugging shell Position
 	if (hugging)
 		UpdateHuggingShellPosition();
@@ -76,6 +91,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (GetTickCount64() - spin_start >= MARIO_SPIN_TIME && spinning) {
 		spinning = false;
 		spin_start = NULL;
+		TailAttacked = false;
 	}
 
 	// Stop transform
@@ -151,7 +167,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
-			if (e->ny == -1) {
+			if (e->ny == -1 && !dynamic_cast<CCoin*>(e->obj) && !dynamic_cast<CSuperMushroom*>(e->obj) && !dynamic_cast<CSuperLeaf*>(e->obj)) {
 				canJump = 1;
 				fallIng = false;
 				isOnGround = true;
@@ -303,7 +319,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							vy = 0;
 							y = y0 + min_ty * dy + e->ny * 0.4f;
 							flyIng = false;
-							if (untouchable == 0)
+							if (untouchable == 0 && !pipeWalking)
 							{
 								lvlDown();
 							}
@@ -318,7 +334,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 
 					if (e->nx != 0) {
-						if (untouchable == 0)
+						if (untouchable == 0 && !pipeWalking)
 						{
 							lvlDown();
 						}
@@ -580,14 +596,13 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				lottery->StopChange();
 				lottery->Fly();
 				ShowEndSceneTitle(lottery->GetState());
-				CGame* game = CGame::GetInstance();
 				CBackup::GetInstance()->SetLottery(lottery->GetState() + 100);
 				this->SetState(MARIO_STATE_IDLE);
 				SetStopFly();
 				SetStopFall();
 				this->vx = 0;
+				this->ax = 0;
 				this->vy = 0;
-				//game->SwitchScene(2);
 			}
 
 			// BRICKREWARD
@@ -647,6 +662,27 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					vy = -MARIO_JUMP_DEFLECT_SPEED;
 				}
 			}
+
+			// FLY BLOCK
+			if (dynamic_cast<CFlyBlock*>(e->obj)) {
+				CFlyBlock* block = dynamic_cast<CFlyBlock*>(e->obj);
+				if (e->ny == -1 && block->GetState() == FLYBLOCK_STATE_WALKING)
+				{
+					block->SetState(FLYBLOCK_STATE_FALL);
+				}
+				if (e->ny == -1) {
+					this->vy = block->vy * 0.75;
+					this->y = y0 + min_ty * this->dy + ny * 0.4f;
+				}
+				if (e->ny == 1) {
+					this->vy = 0;
+					this->y = y0 + min_ty * this->dy + ny * 2.5f;
+				}
+				if (e->nx != 0) {
+					this->vx = 0;
+					this->x = x0 + min_tx * this->dx + nx * 2.5f;
+				}
+			}
 		}
 	}
 
@@ -654,21 +690,25 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (x < zoneLeft) x = zoneLeft;
 	if (x + MARIO_BIG_BBOX_WIDTH > zoneRight) x = zoneRight - MARIO_BIG_BBOX_WIDTH;
 	if (y > zoneBottom) {
-		lvlDown();
-		ReSet();
+		if (this->GetState() != MARIO_STATE_DIE)
+		{
+			this->SetLevel(MARIO_LEVEL_SMALL);
+			this->SetState(MARIO_STATE_DIE);
+		}
 	}
+
+	// Check out Camera with CameraMan
+	CCameraMan* cameraMan = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetCameraMan();
+	if (cameraMan) {
+		if (x < cameraMan->x)
+			x = cameraMan->x;
+		if (x + 16.0f > cameraMan->x + CGame::GetInstance()->GetScreenWidth())
+			x = cameraMan->x + CGame::GetInstance()->GetScreenWidth() - 16.0f;
+	}
+
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-
-	// clean bullets
-	for (int i = 0; i < bullets.size(); i++) {
-		if (bullets[i]->isDisable) {
-			CGameObject* p = bullets[i];
-			bullets.erase(bullets.begin() + i);
-			delete p;
-		}
-	}
 }
 
 void CMario::PipeWalking() {
@@ -686,6 +726,9 @@ void CMario::PipeWalking() {
 				vy = MARIO_PIPE_WALKING_SPEED;
 			}
 			else {
+				CCameraMan* cameraMan = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetCameraMan();
+				if (cameraMan)
+					cameraMan->x += targetX - this->x;
 				this->SetPosition(targetX, targetY);
 				((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->SwitchZone(targetZone);
 				this->canControl = true;
@@ -696,6 +739,9 @@ void CMario::PipeWalking() {
 		}
 		else if (typePipeWalking == -1) {
 			if (!teleported) {
+				CCameraMan* cameraMan = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetCameraMan();
+				if (cameraMan)
+					cameraMan->x += targetX - this->x;
 				this->SetPosition(targetX, targetY);
 				((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->SwitchZone(targetZone);
 				teleported = true;
@@ -786,10 +832,13 @@ void CMario::SitDown() {
 }
 
 void CMario::StandUp() {
+	if (sitting == false)
+		return;
 	if (level == MARIO_LEVEL_SMALL)
 		return;
 	sitting = false;
 	y -= MARIO_BIG_BBOX_HEIGHT - MARIO_SITTING_BBOX_HEIGHT;
+	y -= 1.0f;
 }
 
 void CMario::LvlUp() {
@@ -808,6 +857,7 @@ void CMario::LvlUp() {
 		y -= 2.0f;
 		break;
 	}
+	CBackup::GetInstance()->SetMarioLevel(level);
 	ShowMarioTransformEffect();
 	StartTransform();
 }
@@ -817,30 +867,28 @@ void CMario::lvlDown() {
 	switch (level) {
 	case MARIO_LEVEL_SMALL:
 	{
-		CBackup* backup = CBackup::GetInstance();
-		backup->PopLifeStack();
-		int life = backup->GetLifeStack();
-		if (life <= 0) {
-			SetState(MARIO_STATE_DIE);
-		}
-		else {
-			ReSet();
-		}
-		break;
+		this->SetState(MARIO_STATE_DIE);
 	}
 	case MARIO_LEVEL_BIG:
 		SetLevel(MARIO_LEVEL_SMALL);
 		StartUntouchable();
+		ShowMarioTransformEffect();
+		StartTransform();
 		break;
 	case MARIO_LEVEL_RACCOON:
 		SetLevel(MARIO_LEVEL_BIG);
 		StartUntouchable();
+		ShowMarioTransformEffect();
+		StartTransform();
 		break;
 	case MARIO_LEVEL_FIRE:
 		SetLevel(MARIO_LEVEL_BIG);
 		StartUntouchable();
+		ShowMarioTransformEffect();
+		StartTransform();
 		break;
 	}
+	CBackup::GetInstance()->SetMarioLevel(level);
 }
 
 void CMario::Spin() {
@@ -1265,7 +1313,18 @@ void CMario::SetState(int state)
 			else ax = 0;
 		break;
 	case MARIO_STATE_DIE:
+		this->SetLevel(MARIO_LEVEL_SMALL);
+		CBackup::GetInstance()->PopLifeStack();
+		CBackup* backup = CBackup::GetInstance();
+		backup->SetMarioLevel(level);
+		backup->SetCurPos(backup->GetmWlastPosX(), backup->GetmWlastPosY());
+		backup->SetCurControl(backup->GetmWlastCanLeft(), backup->GetmWlastCanTop(), backup->GetmWlastCanRight(), backup->GetmWlastCanBot());
+		vx = 0;
+		ax = 0;
 		vy = -MARIO_DIE_DEFLECT_SPEED;
+		flyIng = false;
+		fallIng = false;
+		ReadyOutScene();
 		break;
 	}
 }

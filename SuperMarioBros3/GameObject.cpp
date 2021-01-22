@@ -96,7 +96,7 @@ void CGameObject::CalcPotentialCollisions(vector<LPGAMEOBJECT>* coObjects, vecto
 					continue;
 				}
 			}
-			else if (e->ny != 0)
+			if (e->ny != 0)
 			{
 				if (ceil(mleft) == oright || floor(mright) == oleft)
 					continue;
@@ -186,6 +186,9 @@ bool CGameObject::BeAttackByTail() {
 	if (!mario) return false;
 	if (!mario->IsSpinning()) return false;
 
+	if (mario->IsTailAttacked())
+		return false;
+
 	mario->GetBoundingBox(ml, mt, mr, mb);
 	this->GetBoundingBox(ol, ot, or, ob);
 	mt += 14.0f;
@@ -196,7 +199,35 @@ bool CGameObject::BeAttackByTail() {
 
 	if (ol > mr || or < ml || ot > mb || ob < mt)
 		return false;
+	mario->SetTailAttacked(true);
 	return true;
+}
+
+bool CGameObject::BeThrownAwayByBreakBlock(vector<LPGAMEOBJECT>* coObjects) {
+	float kl, kt, kr, kb;
+	GetBoundingBox(kl, kt, kr, kb);
+	for (UINT i = 0; i < coObjects->size(); i++)
+	{
+		LPGAMEOBJECT object = coObjects->at(i);
+		if (!object->IsInCamera())
+			continue;
+
+		if (!dynamic_cast<CBreakBlock*>(object))
+			continue;
+
+		if (!dynamic_cast<CBreakBlock*>(object)->IsDamaging())
+			continue;
+
+		float ol, ot, or , ob;
+		object->GetBoundingBox(ol, ot, or , ob);
+
+		if (kb > ot - 2 && kb < ot)
+		{
+			if ((kl >= ol && kl <= or ) || (kr >= ol && kr <= or))
+				return true;
+		}
+	}
+	return false;
 }
 
 void CGameObject::RenderBoundingBox()

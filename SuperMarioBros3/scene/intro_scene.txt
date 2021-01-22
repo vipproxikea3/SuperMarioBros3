@@ -27,6 +27,9 @@
 27001	30	307	142	331	120
 27002	155	307	267	331	120
 
+# CURTAIN
+35001	0	0	256	182	120
+
 [ANIMATIONS]
 # ani_id sprite_1_id time_1 sprite_2_id time_2 ...
 
@@ -37,9 +40,12 @@
 2800	27001	100
 2801	27002	100
 
+# CURTAIN
+3500	35001	100
+
 [ANIMATION_SETS]
 # ani_set_id    ani_1   ani_2   ani_3   ...
-15 = HUD | 21 = Bush | 22 = Mario World Map | 23 = Station | 25 = Logo | 26 = Menu
+15 = HUD | 21 = Bush | 22 = Mario World Map | 23 = Station | 25 = Logo | 26 = Menu | 33 = Curtain
 
 # LOGO
 25	2700
@@ -47,12 +53,18 @@
 # MENU
 26	2800	2801
 
+# CURTAIN
+33	3500
+
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings
-# type: 0 = Mario | 1 = Block | 2 = Goomba | 3 = Koopa | 4 = ParaGoomba | 5 = ParaKoopa | 6 = Coin | 7 = BreakBlock | 8 = SwitchBlock | 9 = BrickReward | 10 = SuperMushroom | 11 = SuperLeaf | 12 = Gate | 13 = HUD | 14 = PiranhaPlant | 15 = VenusFireTrap | 16 = Bush | 17 = Mario World Map | 18 = Station | 20 = Logo | 21 = Menu
+# type: 0 = Mario | 1 = Block | 2 = Goomba | 3 = Koopa | 4 = ParaGoomba | 5 = ParaKoopa | 6 = Coin | 7 = BreakBlock | 8 = SwitchBlock | 9 = BrickReward | 10 = SuperMushroom | 11 = SuperLeaf | 12 = Gate | 13 = HUD | 14 = PiranhaPlant | 15 = VenusFireTrap | 16 = Bush | 17 = Mario World Map | 18 = Station | 20 = Logo | 21 = Menu | 25 = Curtain
 
 # LOGO
 20	137	95	25
 
 # MENU
 21	97	143	26
+
+# CURTAIN
+25	25	15	33

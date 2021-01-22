@@ -93,6 +93,36 @@ void CBlock::SetBlockSideByTypeBlock(int typeBlock) {
 	case 25:
 		SetBlockSide(1, 1, 1, 1);
 		break;
+	case 26:
+		SetBlockSide(1, 1, 1, 1);
+		break;
+	case 27:
+		SetBlockSide(1, 1, 1, 1);
+		break;
+	case 28:
+		SetBlockSide(1, 1, 1, 1);
+		break;
+	case 29:
+		SetBlockSide(1, 1, 1, 1);
+		break;
+	case 30:
+		SetBlockSide(1, 1, 1, 1);
+		break;
+	case 31:
+		SetBlockSide(1, 1, 1, 1);
+		break;
+	case 32:
+		SetBlockSide(1, 1, 1, 1);
+		break;
+	case 33:
+		SetBlockSide(1, 1, 1, 1);
+		break;
+	case 34:
+		SetBlockSide(1, 1, 1, 1);
+		break;
+	case 35:
+		SetBlockSide(1, 1, 1, 1);
+		break;
 	}
 }
 

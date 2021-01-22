@@ -1,6 +1,7 @@
 #include "MarioWorldMap.h"
 #include "Station.h"
 #include "Utils.h"
+#include "Backup.h"
 
 void CMarioWorldMap::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	// Calculate dx, dy 
@@ -93,13 +94,31 @@ void CMarioWorldMap::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 		}
 	}
 
+	CBackup* backup = CBackup::GetInstance();
+	backup->SetCurPos(x, y);
+	backup->SetCurControl(canLeft, canUp, canRight, canDown);
+
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
 
 void CMarioWorldMap::Render()
 {
-	animation_set->at(MARIOWORLDMAP_ANI_IDLE)->Render(x, y, 255);
+	switch (level)
+	{
+	case MARIOWORLDMAP_LEVEL_BIG:
+		animation_set->at(MARIOWORLDMAP_ANI_BIG)->Render(x, y - 8.0f, 255);
+		break;
+	case MARIOWORLDMAP_LEVEL_RACCOON:
+		animation_set->at(MARIOWORLDMAP_ANI_RACCOON)->Render(x, y - 8.0f, 255);
+		break;
+	case MARIOWORLDMAP_LEVEL_FIRE:
+		animation_set->at(MARIOWORLDMAP_ANI_FIRE)->Render(x, y - 8.0f, 255);
+		break;
+	default:
+		animation_set->at(MARIOWORLDMAP_ANI_SMALL)->Render(x, y, 255);
+		break;
+	}
 }
 
 void CMarioWorldMap::SetState(int state)

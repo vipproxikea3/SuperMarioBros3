@@ -237,10 +237,12 @@ void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& botto
 		bottom = y + GOOMBA_BBOX_HEIGHT;
 		break;
 	default:
-		top = y;
-		left = x;
-		bottom = y;
-		right = x;
+		float cx, cy;
+		CGame::GetInstance()->GetCamPos(cx, cy);
+		left = cx + 16.0f;
+		top = cy + 16.0f;
+		bottom = top;
+		right = left;
 		break;
 	}
 }

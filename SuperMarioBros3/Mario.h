@@ -12,7 +12,7 @@
 #define MARIO_RUN_SPEED					0.145f
 #define MARIO_ACCELERATION				0.00005f
 #define MARIO_WALKING_FRICTION			0.00025f
-#define MARIO_PIPE_WALKING_SPEED		0.01f;
+#define MARIO_PIPE_WALKING_SPEED		0.02f;
 
 #define MARRIO_RUN_SPEED_STACK_1		0.075
 #define MARRIO_RUN_SPEED_STACK_2		0.085
@@ -121,13 +121,18 @@
 #define MARIO_UNTOUCHABLE_TIME			5000
 #define MARIO_FLY_TIME					3500
 #define MARIO_SHOT_COOLDOWN_TIME		500
-#define MARIO_SPIN_TIME					300
+#define MARIO_SPIN_TIME					200
 #define MARIO_SPIN_COOLDOWN_TIME		50
 #define MARIO_TRANSFORM_TIME			100
+#define MARIO_TIME_OUT_SCENE			2000
 
 
 class CMario : public CGameObject
 {
+	DWORD start_out_scene;
+	bool outScene = false;
+	bool readyOutScene = false;
+
 	bool walkingRight = false;
 	bool walkingLeft = false;
 	bool isOnGround = true;
@@ -137,6 +142,7 @@ class CMario : public CGameObject
 	bool fallIng = false;
 	DWORD fly_start;
 
+	bool TailAttacked = false;
 	bool spinning;
 	DWORD spin_start;
 
@@ -186,13 +192,19 @@ public:
 		pipeWalking = false;
 		start_transform = NULL;
 		sitting = false;
+		start_out_scene = NULL;
+		readyOutScene = false;
+		outScene = false;
 	}
+	~CMario() {}
 	void Jump();
 	void CalVx(DWORD dt);
 	void UpdateRunSpeedStack();
 	void LvlUp();
 	void lvlDown();
 	void Spin();
+	bool IsTailAttacked() { return TailAttacked; }
+	void SetTailAttacked(bool IsTailAttacked) { TailAttacked = IsTailAttacked; }
 	bool IsSpinning() { return spinning; }
 	void Shot();
 	void Fly();
@@ -219,6 +231,12 @@ public:
 		start_transform = NULL;
 		transforming = false;
 	}
+	void ReadyOutScene() {
+		start_out_scene = GetTickCount64();
+		readyOutScene = true;
+	}
+	bool IsReadyOutScene() { return readyOutScene; }
+	bool IsOutScene() { return outScene; }
 	void ReSet() {
 		this->SetPosition(x_start, y_start);
 		this->SetState(MARIO_STATE_IDLE);

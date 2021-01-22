@@ -53,6 +53,10 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_LOTTERY				19
 #define OBJECT_TYPE_LOGO				20
 #define OBJECT_TYPE_MENU				21
+#define OBJECT_TYPE_FLYBLOCK			22
+#define OBJECT_TYPE_CAMERAMAN			23
+#define OBJECT_TYPE_BOOMERANGBROTHER	24
+#define OBJECT_TYPE_CURTAIN				25
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -230,6 +234,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		obj = new CMario();
 		player = (CMario*)obj;
+		player->SetLevel(CBackup::GetInstance()->GetMarioLevel());
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
@@ -329,6 +334,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CMarioWorldMap();
 		marioWorldMap = (CMarioWorldMap*)obj;
 
+		CBackup* backup = CBackup::GetInstance();
+
+		marioWorldMap->level = backup->GetMarioLevel();
+		marioWorldMap->SetControl(backup->GetmWcurCanLeft(), backup->GetmWcurCanTop(), backup->GetmWcurCanRight(), backup->GetmWcurCanBot());
+
 		DebugOut(L"[INFO] Mario World Map object created!\n");
 		break;
 	}
@@ -360,6 +370,29 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[INFO] Intro Menu object created!\n");
 		break;
 	}
+	case OBJECT_TYPE_FLYBLOCK:
+	{
+		obj = new CFlyBlock();
+		break;
+	}
+	case OBJECT_TYPE_CAMERAMAN:
+	{
+		obj = new CCameraMan();
+		cameraMan = (CCameraMan*)obj;
+
+		DebugOut(L"[INFO] CameraMan object created!\n");
+		break;
+	}
+	case OBJECT_TYPE_BOOMERANGBROTHER:
+	{
+		obj = new CBoomerangBrother();
+		break;
+	}
+	case OBJECT_TYPE_CURTAIN:
+	{
+		obj = new CCurtain();
+		break;
+	}
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -367,8 +400,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	// General object setup
 	obj->SetPosition(x, y);
+	if (marioWorldMap)
+		marioWorldMap->SetPosition(CBackup::GetInstance()->GetmWcurPosX(), CBackup::GetInstance()->GetmWcurPosY());
 	obj->SetDefaultPosition(x, y);
-
 	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 
 	obj->SetAnimationSet(ani_set);
@@ -377,6 +411,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 void CPlayScene::Load()
 {
+	currentZone = 1;
+
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
 	ifstream f;
@@ -453,6 +489,26 @@ void CPlayScene::Update(DWORD dt)
 	}
 
 	UpdateCameraPos();
+
+	if (player && player->IsOutScene())
+	{
+		CBackup* backup = CBackup::GetInstance();
+		int life = backup->GetLifeStack();
+		if (life < 0)
+		{
+			backup->SetCoin(0);
+			backup->SetLifeStack(4);
+			backup->SetPoint(0);
+			backup->SetLottery(0);
+			backup->SetMarioLevel(1);
+			CGame::GetInstance()->SwitchScene(1);
+		}
+		else
+		{
+			CGame::GetInstance()->SwitchScene(2);
+		}
+
+	}
 }
 
 void CPlayScene::UpdateCameraPos() {
@@ -469,27 +525,25 @@ void CPlayScene::UpdateCameraPos() {
 	player->GetPosition(cx, cy);
 
 	cx -= game->GetScreenWidth() / 2;
+	if (cameraMan)
+	{
+		cx = cameraMan->x;
+	}
 	cy -= (game->GetScreenHeight() - 40) / 2;
 	if (cx < zoneLeft) cx = zoneLeft;
 	if (cx > zoneRight - game->GetScreenWidth()) cx = zoneRight - game->GetScreenWidth();
 	if (cy - 40 > zoneBottom - game->GetScreenHeight()) cy = zoneBottom + 40 - game->GetScreenHeight();
 	if (cy < zoneTop) cy = zoneTop;
 
+	if (cameraMan)
+	{
+		cameraMan->SetPosition(cx, cy);
+	}
+
 	CGame::GetInstance()->SetCamPos(cx, cy);
 
 	if (hud)
 		hud->SetPosition(cx, cy + game->GetScreenHeight() - 40);
-
-	int life = CBackup::GetInstance()->GetLifeStack();
-	if (life <= 0) {
-		CGame* game = CGame::GetInstance();
-		CBackup* backup = CBackup::GetInstance();
-		backup->SetLifeStack(4);
-		backup->SetCoin(0);
-		backup->SetPoint(0);
-		game->SwitchScene(2);
-		return;
-	}
 }
 
 void CPlayScene::Render()
@@ -522,7 +576,7 @@ void CPlayScene::Unload()
 
 	zones.clear();
 
-	player = NULL;
+	player = nullptr;
 	marioWorldMap = nullptr;
 	introMenu = nullptr;
 
@@ -532,6 +586,12 @@ void CPlayScene::Unload()
 	delete hud;
 	hud = nullptr;
 
+	if (cameraMan)
+	{
+		//delete cameraMan;
+		cameraMan = nullptr;
+	}
+
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
 
@@ -540,7 +600,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 	CGame* game = CGame::GetInstance();
 
-	if (game->GetCurrentSceneId() == 3) {
+	if (game->GetCurrentSceneId() == 3 || game->GetCurrentSceneId() == 4) {
 		CMario* mario = ((CPlayScene*)scene)->GetPlayer();
 		if (!mario) return;
 		if (!mario->canControl) return;
@@ -582,8 +642,43 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 				break;
 			
 			case DIK_1:
-				mario->SetPosition(2264, 60);
-				break;
+				{
+					CCameraMan* cameraMan = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetCameraMan();
+					if (cameraMan)
+						cameraMan->SetPosition(2232, 28);
+					mario->SetPosition(2264, 60);
+					break;
+				}				
+			case DIK_2:
+				{
+					CCameraMan* cameraMan = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetCameraMan();
+					if (cameraMan)
+						cameraMan->SetPosition(1472, 128);
+					mario->SetPosition(1504, 160);
+					break;
+				}
+			case DIK_3:
+				{
+					CCameraMan* cameraMan = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetCameraMan();
+					if (cameraMan)
+						cameraMan->SetPosition(1912, 274);
+					mario->SetPosition(1944, 306);
+					break;
+				}
+			case DIK_0:
+				{
+					CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+					LPANIMATION_SET ani_set = animation_sets->Get(31);
+					CBoomerang* boomerang = new CBoomerang();
+					CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+					if (mario)
+					{
+						boomerang->SetPosition(mario->x, mario->y);
+						boomerang->SetDefaultPosition(mario->x, mario->y);
+					}
+					boomerang->SetAnimationSet(ani_set);
+					((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->PushBackObj(boomerang);
+				}
 			}
 		}
 	}
@@ -651,7 +746,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 	CGame* game = CGame::GetInstance();
 
-	if (game->GetCurrentSceneId() == 3) {
+	if (game->GetCurrentSceneId() == 3 || game->GetCurrentSceneId() == 4) {
 		CMario* mario = ((CPlayScene*)scene)->GetPlayer();
 		if (!mario) return;
 		if (!mario->canControl) return;
@@ -678,7 +773,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 {
 	CGame* game = CGame::GetInstance();
 
-	if (game->GetCurrentSceneId() == 3) {
+	if (game->GetCurrentSceneId() == 3 || game->GetCurrentSceneId() == 4) {
 		CMario* mario = ((CPlayScene*)scene)->GetPlayer();
 		if (!mario) return;
 		if (!mario->canControl) return;

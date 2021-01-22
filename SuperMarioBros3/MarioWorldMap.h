@@ -3,7 +3,15 @@
 
 #define MARIOWORLDMAP_WALKING_SPEED			0.075f
 
-#define MARIOWORLDMAP_ANI_IDLE				0
+#define MARIOWORLDMAP_ANI_SMALL				0
+#define MARIOWORLDMAP_ANI_RACCOON			1
+#define MARIOWORLDMAP_ANI_BIG				2
+#define MARIOWORLDMAP_ANI_FIRE				3
+
+#define MARIOWORLDMAP_LEVEL_SMALL			1
+#define MARIOWORLDMAP_LEVEL_RACCOON			2
+#define MARIOWORLDMAP_LEVEL_BIG				3
+#define MARIOWORLDMAP_LEVEL_FIRE			4
 
 #define MARIOWORLDMAP_STATE_IDLE			100
 #define MARIOWORLDMAP_STATE_WALKING_LEFT	200
@@ -16,6 +24,10 @@
 
 class CMarioWorldMap : public CGameObject
 {
+	float lastPosX, lastPosY, curPosX, curPosY;
+	bool lastCanLeft, lastCanTop, lastCanRight, lastCanBot;
+	bool curCanLeft, curCanTop, curCanRight, curCanBot;
+
 	float lLeft = -1000.0f;
 	float lRight = 1000.0f;
 	float lTop = -1000.0f;
@@ -27,8 +39,11 @@ public:
 	bool canRight = false;
 	bool canLeft = false;
 
+	int level;
+
 	CMarioWorldMap() : CGameObject()
 	{
+		level = MARIOWORLDMAP_LEVEL_SMALL;
 		this->SetState(MARIOWORLDMAP_STATE_IDLE);
 		canRight = true;
 	}

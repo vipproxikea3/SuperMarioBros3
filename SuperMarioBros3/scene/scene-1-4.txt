@@ -1,0 +1,1450 @@
+[TEXTURES]
+# id	file_path	red green	blue
+
+170	Map\map1-4_bank.png	255	0	0
+0	Map\map1-1_bank.png	255	0	0
+10	textures\mario.png	255	255	255
+20	textures\enemies.png	3	26	110
+30	textures\enemies-2.png	0	128	128
+40	textures\misc.png	176	224	248
+50	textures\enemies-3-left.png	41	88	124
+60	textures\misc-1.png	166	185	255
+70	textures\HUD-BG.png	255	0	0
+80	textures\HUD.png	0	224	142
+130	textures\mario-1-left.png	68	145	190
+140	textures\mario-1-right.png	68	145	190
+150	textures\enemies-3-right.png	41	88	124
+160	textures\endSceneTitle.png	0	0	0
+
+[MAP]
+# PosX	PosY	TotalRowsOfMap	TotalColumnsOfMap	TotalRowsOfTileSet		TotalColumnsOfTileSet	TileSetID	MapMatrixPath
+
+0	0	27	161	7	11	170	Map\map1-4.txt
+
+[ZONE]
+# id	left	top	right	bottom
+
+1	0	0	2048	432
+2	2064	0	2576	432
+
+[SPRITES]
+# ID left top right bottom texID
+
+# MARIO DIE
+10099	307	16	323	32	130
+
+# MARIO BIG
+# big idle right
+10001	505	92	521	120	140
+# big walk right
+10002	469	92	485	120	140
+10003	487	92	503	120	140
+# big jump right
+10004	433	92	449	120	140
+# big run right
+10005	360	92	379	120	140
+10006	386	92	405	120	140
+10007	412	92	431	120	140
+# big driff right
+10008	311	92	327	120	140
+# big idle left
+10011	1	92	17	120	130
+# big walk left
+10012	19	92	35	120	130
+10013	37	92	53	120	130
+# big jump left
+10014	73	92	89	120	130
+# big run left
+10015	91	92	110	120	130
+10016	117	92	136	120	130
+10017	143	92	162	120	130
+# big driff left
+10018	195	92	211	120	130
+#big pipewalking
+10019	213	92	229	120	130
+
+# MARIO SMALL
+# small idle right
+10021	505	16	521	32	140
+# small walk right
+10022	433	16	449	32	140
+10023	451	16	467	32	140
+# small jump right
+10024	469	16	485	32	140
+# small idle left
+10031	1	16	17	32	130
+# small walk left
+10032	55	16	71	32	130
+10033	73	16	89	32	130
+#small jump left
+10034	37	16	53	32	130
+#small pipe walking
+10035	127	16	143	32	130
+
+# MARIO RACCOON
+# raccoon idle right
+10041	498	350	521	378	140
+# raccoon walk right
+10042	472	350	495	378	140
+10043	446	350	469	378	140
+# raccoon jump right
+10044	394	350	417	378	140
+# raccoon run right
+10045	263	350	287	378	140
+10046	289	350	313	378	140
+10047	315	350	339	378	140
+# raccoon driff right
+10048	167	350	183	378	140
+# raccoon spin right
+10201	37	350	67	378	140
+10202	70	350	100	378	140
+10203	103	350	133	378	140
+10204	135	350	165	378	140
+# raccoon fly right
+10205	185	350	209	378	140
+10206	211	350	235	378	140
+10207	237	350	261s	378	140
+# raccoon fall right
+10208	341	350	365	378	140
+10209	367	350	391	378	140
+# raccoon idle left
+10051	1	350	24	378	130
+# raccoon walk left
+10052	27	350	50	378	130
+10053	53	350	76	378	130
+# raccoon jump left
+10054	105	350	128	378	130
+# raccoon run left
+10055	183	350	207	378	130
+10056	209	350	233	378	130
+10057	235	350	259	378	130
+# raccoon driff left
+10058	339	350	355	378	130
+# raccoon pipe walking
+10059	364	350	380	378	130
+# raccoon fly left
+10215	261	350	285	378	130
+10216	287	350	311	378	130
+10217	313	350	337	378	130
+# raccoon fall left
+10218	131	350	155	378	130
+10219	157	350	181	378	130
+# raccoon spin left
+10211	455	350	485	378	130
+10212	422	350	452	378	130
+10213	389	350	419	378	130
+10214	357	350	387	378	130
+
+# MARIO FIRE
+# fire idle right
+10061	505	264	521	292	140
+# fire walk right
+10062	487	264	503	292	140
+10063	469	264	485	292	140
+# fire jump right
+10064	433	264	449	292	140
+# fire run right
+10065	360	264	379	292	140
+10066	386	264	405	292	140
+10067	412	264	431	292	140
+# fire driff right
+10068	311	264	327	292	140
+# fire idle left
+10071	1	264	17	292	130
+# fire walk left
+10072	19	264	35	292	130
+10073	37	264	53	292	130
+# fire jump left
+10074	73	264	89	292	130
+# fire run left
+10075	91	264	110	292	130
+10076	117	264	136	292	130
+10077	143	264	162	292	130
+# fire driff left
+10078	195	264	211	292	130
+# fire pipe walking
+10079	213	264	229	292	130
+
+# big sit right
+10301	451	102	467	120	140
+# big sit left
+10311	55	102	71	120	130
+# raccoon sit right
+10321	421	360	443	378	140
+# raccoon sit left
+10331	79	360	101	378	130
+# fire sit right
+10341	451	274	467	292	140
+# fire sit left
+10351	55	274	71	292	130
+
+# MARIO FIRE BULLET
+# mario fire bullet right
+10101	240	554	248	562	10
+10102	258	554	266	562	10
+10103	258	574	266	582	10
+10104	240	573	248	581	10
+
+# mario fire bullet left
+10111	198	554	206	562	10
+10112	180	554	188	562	10
+10113	180	574	188	582	10
+10114	198	573	206	581	10
+
+# GOOMBA
+# goomba walk
+30001	0	0	16	16	50
+30002	16	0	32	16	50
+
+# goomba die y
+30003	32	7	48	16	50
+
+# goomba die x
+30004	287	0	303	16	50
+
+# KOOPA
+# KOOPA GREEN
+# koopa green walking right
+70001	656	53	672	80	150
+70002	672	53	688	80	150
+
+# koopa green walking left
+70003	0	53	16	80	50
+70004	16	53	32	80	50
+
+# shell green idle
+20001	32	48	48	64	50
+
+# shell green walking
+20002	48	48	64	64	50
+20003	64	48	80	64	50
+20004	80	48	96	64	50
+
+# shell green be hug
+20005	32	48	48	64	50
+
+# shell green overturn
+20006	64	64	80	80	50
+
+# koopa green die
+20007	32	48	48	64	50
+
+# KOOPA RED
+# koopa red walking right
+70011	560	53	576	80	150
+70012	576	53	592	80	150
+
+# koopa red walking left
+70013	96	53	112	80	50
+70014	112	53	128	80	50
+
+# shell red idle
+20011	128	48	144	64	50
+
+# shell red walking
+20012	144	48	160	64	50
+20013	160	48	176	64	50
+20014	176	48	192	64	50
+
+# shell red be hug
+20015	128	48	144	64	50
+
+# shell red overturn
+20016	160	64	176	80	50
+
+# koopa red die
+20017	128	48	144	64	50
+
+# BLOCK
+# ground block
+0	48	176	64	192	0
+1	64	176	80	192	0
+2	80	176	96	192	0
+
+# box block
+3	144	64	160	80	0
+
+# pipe block
+4	64	16	80	32	0
+5	80	16	96	32	0
+6	112	16	128	32	0
+7	128	16	144	32	0
+
+# cloud block
+8	144	32	160	48	0
+
+# green block
+9	80	48	96	60	0
+10	96	48	112	60	0
+11	112	48	128	60	0
+
+# pink block
+12	144	16	160	32	0
+13	160	16	176	32	0
+14	0	32	16	48	0
+
+# blue block
+15	64	80	80	96	0
+16	80	80	96	96	0
+17	96	80	112	96	0
+
+# white block
+18	80	64	96	80	0
+19	96	64	112	80	0
+20	112	64	128	80	0
+
+# cave block
+21	64	0	80	16	0
+
+# black pipe block
+22	80	0	96	16	0
+23	96	0	112	16	0
+24	144	0	160	16	0
+25	160	0	176	16	0
+
+# ground green top left
+26	80	48	96	64	170
+# ground green top mid
+27	96	48	112	64	170
+# ground green top right
+28	112	48	128	64	170
+# ground green right mid
+29	80	64	96	80	170
+
+# ground brown top letf
+30	0	80	16	96	170
+# ground brown top mid
+31	16	80	32	96	170
+# ground brown top right
+32	32	80	48	96	170
+# ground brown bot left
+33	112	80	128	96	170
+# ground brown bot mid
+34	128	80	144	96	170
+# ground brown bot right
+35	144	80	160	96	170
+
+
+# PARAGOOMBA
+# paragoomba walk
+100000	88	0	104	16	50
+100001	104	0	120	16	50
+# paragoomba die x
+100002	271	0	287	16	50
+# paragoomba die y
+100003	120	7	136	16	50
+# paragoomba wing right
+100004	144	2	152	15	50
+100005	136	2	144	15	50
+
+# paragoomba wing left
+100006	256	2	264	15	50
+100007	264	2	272	15	50
+
+# COIN
+50001	333	100	349	116	60
+50002	290	100	306	116	60
+50003	352	100	368	116	60
+50004	369	100	385	116	60
+
+# BREAK BLOCK
+# break block idle
+11001	274	188	290	204	60
+11002	293	188	309	204	60
+11003	312	188	328	204	60
+11004	331	188	347	204	60
+#break block lock
+11005	235	188	251	204	60
+
+# SWITCHBLOCK
+# switch block idle
+12001	156	144	172	160	60
+12002	178	144	194	160	60
+# switch block actived
+12003	200	153	216	160	60
+
+# BRICK REWARD
+# brick reward idle
+60001	157	188	173	204	60
+60002	176	188	192	204	60
+60003	196	188	212	204	60
+60004	215	188	231	204	60
+
+# brick reward lock
+60005	235	188	251	204	60
+
+# SUPERMUSHROOM
+# supermushroom level
+40001	156	121	172	137	60
+
+# supermushroom life
+40002	286	121	302	137	60
+
+# SUPERLEAF
+13001	180	123	196	137	60
+
+# GATE
+14001	400	167	416	183	60
+
+# HUD
+# hud background
+15001	0	0	310	40	70
+
+# hud run stack normal
+15011	64	162	72	169	80
+# hud run stack max
+15012	73	162	88	169	80
+
+# hud number
+15020	77	31	85	38	80
+15021	87	31	95	38	80
+15022	97	31	105	38	80
+15023	107	31	115	38	80
+15024	117	31	125	38	80
+15025	127	31	135	38	80
+15026	137	31	145	38	80
+15027	147	31	155	38	80
+15028	157	31	165	38	80
+15029	167	31	175	38	80
+
+# hud lottery mushroom
+15031	184	159	208	187	80
+
+# hud lottery flower
+15032	208	159	232	187	80
+
+# hud lottery star
+15033	232	159	256	187	80
+
+# BREAK BLOCK PIECE
+16001	386	144	394	152	60
+16002	395	144	403	162	60
+
+# POINT
+# point lvlup
+17001	195	89	211	97	80
+
+#point 100
+17002	60	89	72	97	80
+
+# PIRANHA PLANT
+18001	0	144	16	176	50
+18002	16	144	32	176	50
+
+# VENUS FIRE TRAP
+
+# VENUS FIRE TRAP GREEN
+
+# green bottom left
+19001	32	144	48	176	50
+19002	48	144	64	176	50
+
+# green top left
+19003	64	144	80	176	50
+19004	80	144	96	176	50
+
+# green top right
+19005	32	208	48	240	50
+19006	48	208	64	240	50
+
+# green bottom right
+19007	64	208	80	240	50
+19008	80	208	96	240	50
+
+# VENUS FIRE TRAP RED
+
+# red bottom left
+19011	128	144	144	176	50
+19012	144	144	160	176	50
+
+# red top left
+19013	160	144	176	176	50
+19014	176	144	192	176	50
+
+# red top right
+19015	128	208	144	240	50
+19016	144	208	160	240	50
+
+# red bottom right
+19017	160	208	176	240	50
+19018	176	208	192	240	50
+
+# VENUS FIRE TRAP BULLET
+21001	164	180	172	188	50
+21002	180	180	188	188	50
+21003	180	196	188	204	50
+21004	164	196	172	204	50
+
+
+# LOTTERY
+25001	154	359	170	375	60
+25002	174	359	190	375	60
+25003	194	359	210	375	60
+
+# TAIL ATTACK EFFECT
+28001	379	1	395	17	130
+28002	397	1	413	17	130
+28003	379	19	395	35	130
+28004	397	19	413	35	130
+
+# MARIO TRANSFORM EFFECT
+29001	469	1	485	17	130
+29002	451	1	467	17	130
+29003	433	1	449	17	130
+29004	415	1	431	17	130
+
+# END SCENE TITLE
+# end scene title background
+31001	0	0	146	44	160
+
+# FLY BLOCK
+32001	352	167	400	183	60
+
+# BOOMERANG
+# boomerang walking left
+33001	64	528	80	544	50
+33002	80	528	96	544	50
+33003	96	528	112	544	50
+33004	112	528	128	544	50
+
+# boomerang walking right
+33011	608	528	624	544	150
+33012	592	528	608	544	150
+33013	576	528	592	544	150
+33014	560	528	576	544	150
+
+# BOOMERANG BROTHER
+# boomerang brother ready left
+34001	64	432	80	456	50
+34002	80	432	96	456	50
+
+# boomerang brother attack left
+34003	96	432	112	456	50
+34004	112	432	128	456	50
+
+# boomerang brother ready right
+34011	608	432	624	456	150
+34012	592	432	608	456	150
+
+# boomerang brother attack right
+34013	576	432	592	456	150
+34014	560	432	576	456	150
+
+
+[ANIMATIONS]
+# ani_id sprite_1_id time_1 sprite_2_id time_2 ...
+
+# MARIO
+
+# mario die
+599	10099	100
+
+# big idle right
+400	10001 	100
+# big idle left
+401	10011	100
+# small idle right
+402	10021	100
+# small idle left
+403	10031	100
+# raccoon idle right
+404	10041	100
+# raccoon idle left
+405	10051	100
+# fire idle right
+406	10061	100
+# fire idle left
+407	10071	100
+
+# big walk right
+500	10001	100	10002	100	10003	100
+# big walk left
+501	10011	100	10012	100	10013	100
+# small walk right
+502	10021	50	10022	50	10023	50
+# small walk left
+503	10031	50	10032	50	10033	50
+# raccoon walk right
+504	10041	100	10042	100	10043	100
+# raccoon walk left
+505	10051	100	10052	100	10053	100
+# fire walk right
+506	10061	100	10062	100	10063	100
+# fire walk left
+507	10071	100	10072	100	10073	100
+
+# big jump right
+600	10004	100
+# big jump left
+601	10014	100
+# small jump right
+602	10024	100
+# small jump left
+603	10034	100
+# raccoon jump right
+604	10044	100
+# raccoon jump left
+605	10054	100
+# fire jump right
+606	10064	100
+# fire jump left
+607	10074	100
+
+# big run right
+610	10005	25	10006	25	10007	25
+# big run left
+611	10015	25	10016	25	10017	25
+# raccoon run right
+612	10045	25	10046	25	10047	25
+# raccoon run left
+613	10055	25	10056	25	10057	25
+# fire run right
+614	10065	25	10066	25	10067	25
+# fire run left
+615	10075	25	10076	25	10077	25
+
+# big driff right
+620	10008	100
+# big driff left
+621	10018	100
+# raccoon driff right
+622	10048	100
+# raccoon driff left
+623	10058	100
+# fire driff right
+624	10068	100
+# fire driff left
+625	10078	100
+
+# raccoon fly right
+630	10205	50	10206	50	10207	50	10206	50
+# raccoon fly left
+631	10215	50	10216	50	10217	50	10216	50
+
+# raccoon spin right
+640	10201	50	10202	50	10203	50	10204	50
+# raccoon spin left
+641	10211	50	10212	50	10213	50	10214	50
+
+# big pipe walking
+650	10019	100
+# small pipe walking
+651	10035	100
+# raccoon pipe walking
+652	10059	100
+# fire pipe walking
+653	10079	100
+
+# raccoon fall right
+660	10208	50	10209	50
+# raccoon fall left
+661	10218	50	10219	50
+
+# big sit right
+670	10301	100
+# big sit left
+671	10311	100
+# raccoon sit right
+680	10321	100
+# raccoon sit left
+681	10331	100
+# fire sit right
+690	10341	100
+# fire sit left
+691	10351	100
+
+# MARIO FIRE BULLET
+
+# mario fire bullet right
+1000	10101	25	10102	25	10103	25	10104	25
+# mario fire bullet left
+1001	10111	25	10112	25	10113	25	10114	25
+
+# GOOMBA
+
+# goomba walk
+701	30001	100	30002	100
+
+# goomba die y
+702	30003	100
+
+# goomba die x
+703	30004	100
+
+# PARAGOOMBA
+
+# paragoomba walking
+1100	100000	100	100001	100
+
+# paragoomba die x
+1101	100002	100
+
+# paragoomba die y
+1102	100003	100
+# paragoomba wing right walking
+1103	100004	100
+
+# paragoomba wing right jump
+1104	100004	50	100005	50
+
+# paragoomba wing left walking
+1105	100006	100
+
+# paragoomba wing left jump
+1106	100006	50	100007	50
+
+# KOOPA
+# KOOPA GREEN
+# koopa green walking right
+101	70001	100	70002	100
+
+# koopa green walking left
+102	70003	100	70004	100
+
+# shell green idle
+201	20001	100
+
+# shell green walking
+202	20001	100	20002	100	20003	100	20004	100
+
+# shell green be hug
+203	20005	100
+
+# shell green overturn
+204	20006	100
+
+# koopa green die
+205	20007	100
+
+# KOOPA RED
+# koopa red walking right
+111	70011	100	70012	100
+
+# koopa red walking left
+112	70013	100	70014	100
+
+# shell red idle
+211	20011	100
+
+# shell red walking
+212	20011	100	20012	100	20013	100	20014	100
+
+# shell red be hug
+213	20015	100
+
+# shell red overturn
+214	20016	100
+
+# koopa red die
+215	20017	100
+
+# PARAKOOPA
+# PARAKOOPA GREEN
+# paraKoopa green walking right
+1200	70001	100	70002	100
+
+# paraKoopa green walking left
+1201	70003	100	70004	100
+
+# paraKoopa green shell idle
+1202	20001	100
+
+# paraKoopa green shell walking
+1203	20001	100	20002	100	20003	100	20004	100
+
+# paraKoopa green shell be hug
+1204	20005	100
+
+# paraKoopa shell green overturn
+1205	20006	100
+
+# paraKoopa green die
+1206	20007	100
+
+# PARAKOOPA	RED
+# paraKoopa green walking right
+1210	70011	100	70012	100
+
+# paraKoopa green walking left
+1211	70013	100	70014	100
+
+# paraKoopa green shell idle
+1212	20011	100
+
+# paraKoopa green shell walking
+1213	20011	100	20012	100	20013	100	20014	100
+
+# paraKoopa green shell be hug
+1214	20015	100
+
+# paraKoopa shell green overturn
+1215	20016	100
+
+# paraKoopa green die
+1216	20017	100
+
+# PARAKOOPA WING
+
+# paraKoopa wing right walking
+1220	100004	100
+
+# paraKoopa wing right jump
+1221	100004	50	100005	50
+
+# paraKoopa wing left walking
+1222	100006	100
+
+# paraKoopa wing left jump
+1223	100006	50	100007	50
+
+# COIN
+800	50001	100	50002	100	50003	100	50004	100
+
+# BREAK BLOCK
+
+# breakBlock idle
+1300	11001	50	11002	50	11003	50	11004	50
+
+# breakBlock lock
+1301	11005	100
+
+# SWITCH BLOCK
+
+# switch block idle
+1400	12001	100	12002	100
+
+# switch block actived
+1401	12003	100
+
+# BRICK REWARD
+
+# brick reward idle
+900	60001	1000	60002	100	60003	100	60004	100
+
+# brick reward lock
+901	60005	100
+
+# SUPERMUSHROOM
+# supermushroom level
+300	40001	100
+
+# supermushroom life
+301	40002	100
+
+# SUPERLEAAF
+1500	13001	100
+
+# GATE
+1600	14001	100
+
+# HUD
+# hud background
+1700	15001	100
+
+# hud run stack normal
+1701	15011	100
+
+# hud run stack max
+1702	15012	100
+
+# hud number
+1710	15020	100
+1711	15021	100
+1712	15022	100
+1713	15023	100
+1714	15024	100
+1715	15025	100
+1716	15026	100
+1717	15027	100
+1718	15028	100
+1719	15029	100
+
+# hud lottery
+17021	15031	100
+17022	15032	100
+17023	15033	100
+
+# BREAK BLOCK PIECE
+1800	16001	100	16002	100
+
+# PONT
+# point lvlup
+1900	17001	100
+
+# point 100
+1901	17002	100
+
+# PIRANHA PLANT
+2000	18001	100	18002	100
+
+# VENUS FIRE TRAP
+
+# venus fire trap green
+
+# green fire bottom left
+2100	19001	100
+# green fire top left
+2101	19003	100
+# green fire top right
+2102	19005	100
+# green fire bottom right
+2103	19007	100
+
+# green idle bottom left
+2104	19001	100	19002	100
+# green idle top left
+2105	19003	100	19004	100
+# green idle top right
+2106	19005	100	19006	100
+# green idle bottom right
+2107	19007	100	19008	100
+
+# venus fire trap red
+
+# red fire bottom left
+2110	19011	100
+# red fire top left
+2111	19013	100
+# red fire top right
+2112	19015	100
+# red fire bottom right
+2113	19017	100
+
+# red idle bottom left
+2114	19011	100	19012	100
+# red idle top left
+2115	19013	100	19014	100
+# red idle top right
+2116	19015	100	19016	100
+# red idle bottom right
+2117	19017	100	19018	100
+
+# VENUS FIRE TRAP BULLET
+2200	21001	50	21002	50	21003	50	21004	50
+
+# LOTTERY
+2600	25001	100
+2601	25002	100
+2602	25003	100
+
+# TAIL ATTACK EFFECT
+2900	28001	50	28002	50	28003	50	28004	50
+
+# MARIO TRANSFORM EFFECT
+3000	29001	25	29002	25	29003	25	29004	25
+
+# END SCENE TITLE
+3100	31001	100
+
+# FLY BLOCK
+3200	32001	100
+
+# BOOMERANG
+# boomerang walking left
+3300	33001	25	33002	25	33003	25	33004	25
+
+# boomerang walking right
+3301	33011	25	33012	25	33013	25	33014	25
+
+# BOOMERANG BROTHER
+# boomerang brother ready left
+3400	34001	50	34002	50
+
+# boomerang brother attack left
+3401	34003	50	34004	50
+
+# boomerang brother ready right
+3410	34011	50	34012	50
+
+# boomerang brother attack right
+3411	34013	50	34014	50
+
+# boomerang brother boomerang left
+3420	33001	100
+
+# boomerang brother boomerang right
+3421	33011	100
+
+# BLOCK
+
+# ground block left
+0	0	100
+# ground block mid
+1	1	100
+# ground block right
+2	2	100
+
+#box block
+3	3	100
+
+# pipe block top left
+4	4	100
+# pipe block top right
+5	5	100
+# pipe block left
+6	6	100
+# pipe block right
+7	7	100
+
+# cloud block
+8	8	100
+
+# green block left
+9	9	100
+# green block mid
+10	10	100
+# green block right
+11	11	100
+
+# pink block left
+12	12	100
+# pink block mid
+13	13	100
+# pink block right
+14	14	100
+
+# blue block left
+15	15	100
+# blue block mid
+16	16	100
+# blue block right
+17	17	100
+
+# white block left
+18	18	100
+# white block mid
+19	19	100
+# white block right
+20	20	100
+
+# cave block
+21	21	100
+
+# black pipe block left
+22	22	100
+# black pipe block right
+23	23	100
+# black pipe block bot left
+24	24	100
+# black pipe block bot right
+25	25	100
+
+# ground green top left
+26	26	100
+# ground green top mid
+27	27	100
+# ground green top right
+28	28	100
+# ground green right mid
+29	29	100
+
+# ground brown top letf
+30	30	100
+# ground brown top mid
+31	31	100
+# ground brown top right
+32	32	100
+# ground brown bot left
+33	33	100
+# ground brown bot mid
+34	34	100
+# ground brown bot right
+35	35	100
+
+[ANIMATION_SETS]
+# ani_set_id    ani_1   ani_2   ani_3   ...
+# 1 = Mario | 2 = Block | 3 = MarioFireBullet | 4 = Goomba | 5 = Koopa | 6 = ParaGoomba | 7 = ParaKoopa | 8 = Coin | 9 = BreakBlock | 10 = SwitchBlock | 11 = BrickReward | 12 = SuperMushroom | 13 = SuperLeaf | 14 = Gate | 15 = HUD | 16 = BreakBlockPiece | 17 = Point | 18 = Piranha Plant | 19 = Venus Fire Trap | 20 = Venus Fire Trap Bullet | 21 = Bush | 22 = Mario World Map | 23 = Station | 24 = Lottery | 27 = Tail Attack Effect | 28 = Mario Transform Effect | 29 = End Scene Title | 30 = Fly Block | 31 = Boomerang | 32 = Boomerang Brother
+
+# MARIO
+1	599	402	403	502	503	602	603	651	400	401	500	501	600	601	610	611	620	621	650	404	405	504	505	604	605	612	613	622	623	652	630	631	660	661	640	641	406	407	506	507	606	607	614	615	624	625	653	670	671	680	681	690	691
+
+# BLOCK
+2	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21	22	23	24	25	26	27	28	29	30	31	32	33	34	35
+
+# MARIO FIRE BULLET
+3	1000	1001
+
+# GOOMBA
+4	701	702	703
+# KOOPA
+5	101	102	201	202	203	204	205	111	112	211	212	213	214	215
+
+# PARAGOOMBA
+6	1100	1101	1102	1103	1104	1105	1106
+
+# PARAKOOPA
+7	1200	1201	1202	1203	1204	1205	1206	1210	1211	1212	1213	1214	1215	1216	1220	1221	1222	1223
+
+# COIN
+8	800
+
+# BREAKBLOCK
+9	1300	1301
+
+# SWITCH BLOCK
+10	1400	1401
+
+# BRICK REWARD
+11	900	901
+
+# SUPERMUSHROOM
+12	300	301
+
+# SUPERLEAF
+13	1500
+
+# GATE
+14	1600
+
+# HUD
+15	1700	1701	1702	1710	1711	1712	1713	1714	1715	1716	1717	1718	1719	17021	17022	17023
+
+# BREAK BLOCK PIECE
+16	1800
+
+# POINT
+17	1900	1901
+
+# PIRANHA PLANT
+18	2000
+
+# VENUS FIRE TRAP
+19	2100	2101	2102	2103	2104	2105	2106	2107	2110	2111	2112	2113	2114	2115	2116	2117
+
+# VENUS FIRE TRAP BULLET
+20	2200
+
+# LOTTERY
+24	2600	2601	2602
+
+# TAIL ATTACK EFFECT
+27	2900
+
+# MARIO TRANSFORM EFFECT
+28	3000
+
+# END SCENE TITLE
+29	3100	2600	2601	2602
+
+# FLY BLOCK
+30	3200
+
+# BOOMERANG
+31	3300	3301
+
+# BOOMERANG BROTHER
+32	3400	3401	3410	3411	3420	3421
+
+[HUD]
+# x	y	ani_set_id
+0	0	15
+
+[OBJECTS]
+# type	x	y	ani_set_id	extra_settings
+# type: 0 = Mario | 1 = Block | 2 = Goomba | 3 = Koopa | 4 = ParaGoomba | 5 = ParaKoopa | 6 = Coin | 7 = BreakBlock | 8 = SwitchBlock | 9 = BrickReward | 10 = SuperMushroom | 11 = SuperLeaf | 12 = Gate | 13 = HUD | 14 = PiranhaPlant | 15 = VenusFireTrap | 19 = Lottery | 22 = FlyBlock | 23 = CameraMan | 24 = Boomerang Brother
+
+# BLOCK
+# ground green top left
+1	0	352	2	26
+
+1	1968	368	2	26
+
+# ground green top mid
+1	16	352	2	27
+1	32	352	2	27
+1	48	352	2	27
+1	64	352	2	27
+1	80	352	2	27
+1	96	352	2	27
+1	112	352	2	27
+1	128	352	2	27
+
+1	1984	368	2	27
+
+# ground green top right
+1	144	352	2	28
+
+1	2000	368	2	28
+
+# ground green top mid
+1	144	368	2	29
+1	144	384	2	29
+1	144	400	2	29
+1	144	416	2	29
+
+1	2000	384	2	29
+
+# ground bown top left
+1	1920	400	2	30
+
+# ground bown top mid
+1	1936	400	2	31
+1	1952	400	2	31
+1	1968	400	2	31
+1	1984	400	2	31
+1	2000	400	2	31
+1	2016	400	2	31
+
+# ground bown top right
+1	2032	400	2	32
+
+# ground bown bot left
+1	1920	416	2	33
+
+# ground bown bot mid
+1	1936	416	2	34
+1	1952	416	2	34
+1	1968	416	2	34
+1	1984	416	2	34
+1	2000	416	2	34
+1	2016	416	2	34
+
+# ground bown bot right
+1	2032	416	2	35
+
+# block box
+1	2032	240	2	3
+1	2032	256	2	3
+1	2032	272	2	3
+1	2032	288	2	3
+1	2032	304	2	3
+1	2032	320	2	3
+1	2032	336	2	3
+1	2032	352	2	3
+1	2032	368	2	3
+1	2032	384	2	3
+
+# ground block left
+1	2064	416	2	0
+
+# ground block mid
+1	2080	416	2	1
+1	2096	416	2	1
+1	2112	416	2	1
+1	2128	416	2	1
+1	2144	416	2	1
+1	2160	416	2	1
+1	2176	416	2	1
+1	2192	416	2	1
+1	2208	416	2	1
+1	2224	416	2	1
+1	2240	416	2	1
+1	2256	416	2	1
+1	2272	416	2	1
+1	2288	416	2	1
+1	2304	416	2	1
+1	2320	416	2	1
+1	2336	416	2	1
+1	2352	416	2	1
+1	2368	416	2	1
+1	2384	416	2	1
+1	2400	416	2	1
+1	2416	416	2	1
+1	2432	416	2	1
+1	2448	416	2	1
+1	2464	416	2	1
+1	2480	416	2	1
+1	2496	416	2	1
+1	2512	416	2	1
+1	2528	416	2	1
+1	2544	416	2	1
+
+# ground block right
+1	2560	416	2	2
+
+# GATE
+# type	x	y	ani_set_id	targetX	targetY	targetZone	type
+
+12	1944	335	14	2200	385	2	1
+12	2200	415	14	2200	384	2	-1
+
+# COIN
+# type	x	y	ani_set_id
+
+6	336	304	8
+6	352	304	8
+6	368	304	8
+
+6	416	272	8
+6	432	272	8
+6	448	272	8
+
+6	768	304	8
+6	784	304	8
+6	800	304	8
+
+6	848	272	8
+6	864	272	8
+6	880	272	8
+
+6	1328	288	8
+6	1344	288	8
+6	1360	288	8
+
+6	1504	272	8
+6	1504	288	8
+#6	1504	304	8
+6	1504	305	8
+6	1504	320	8
+6	1504	336	8
+6	1504	352	8
+6	1504	368	8
+6	1504	384	8
+
+6	1888	304	8
+6	1904	304	8
+6	1920	304	8
+
+# BREAKBLOCK
+# type	x	y	ani_set_id	type
+
+7	224	352	9	0
+7	240	352	9	0
+7	256	352	9	0
+7	272	352	9	0
+
+7	384	336	9	0
+7	400	336	9	0
+7	416	336	9	0
+7	432	336	9	0
+7	448	336	9	0
+
+7	608	288	9	0
+7	624	288	9	0
+7	640	288	9	2
+7	656	288	9	0
+
+7	640	368	9	0
+7	656	368	9	0
+
+7	752	320	9	0
+7	752	336	9	0
+7	752	352	9	0
+7	752	368	9	0
+7	768	368	9	0
+7	784	368	9	0
+7	800	368	9	0
+
+7	864	336	9	0
+7	864	352	9	0
+7	864	368	9	0
+7	864	384	9	0
+7	880	384	9	0
+7	896	384	9	0
+
+7	944	336	9	0
+7	944	352	9	0
+7	960	352	9	4
+
+7	960	416	9	0
+7	976	416	9	0
+7	992	416	9	0
+7	1008	416	9	0
+
+7	1008	352	9	3
+7	1024	352	9	0
+7	1040	352	9	0
+7	1056	352	9	0
+7	1072	352	9	0
+
+7	1152	384	9	0
+7	1168	384	9	0
+7	1184	384	9	0
+7	1200	384	9	0
+7	1216	384	9	0
+
+7	1184	304	9	0
+7	1200	304	9	0
+7	1216	304	9	0
+7	1232	304	9	0
+7	1232	288	9	2
+
+7	1264	368	9	0
+7	1280	368	9	0
+
+7	1392	304	9	0
+7	1408	304	9	0
+7	1424	304	9	0
+
+7	1536	288	9	3
+7	1536	304	9	0
+
+7	1536	368	9	0
+7	1536	384	9	0
+7	1536	400	9	0
+7	1552	400	9	0
+7	1568	400	9	0
+7	1584	400	9	0
+
+7	1728	288	9	0
+7	1728	304	9	0
+7	1728	320	9	0
+
+7	1776	368	9	0
+7	1792	368	9	0
+7	1808	368	9	0
+
+# FLY BLOCK
+# type	x	y	ani_set_id
+
+22	368	320	30
+22	560	352	30
+22	592	304	30
+22	624	400	30
+22	752	336	30
+22	1088	384	30
+22	1200	320	30
+22	1376	352	30
+22	1408	336	30
+22	1552	304	30
+22	1744	384	30
+22	1776	336	30
+22	1792	416	30
+
+# BOOMERANG BROTHER
+24	2096	384	32
+#24	32	320	32
+
+# KOOPA
+# type	x	y	ani_set_id	type
+
+3	1072	320	5	1
+3	1984	336	5	1
+
+# PARAKOOPA
+# type	x	y	ani_set_id	type
+5	1872	288	7	1
+
+# MARIO
+0	48	304	1
+
+# CAMERA MAN
+#23	0	0	-1
+
+# LOTTERY
+19	2448	336	24
+
+# PIPE
+# pipe block left
+1	1936	352	2	6
+1	1936	368	2	6
+1	1936	384	2	6
+
+1	2192	400	2	6
+
+# pipe block right
+1	1952	352	2	7
+1	1952	368	2	7
+1	1952	384	2	7
+
+1	2208	400	2	7
+
+# pipe block top left
+1	1936	336	2	4
+
+1	2192	384	2	4
+
+# pipe block top right
+1	1952	336	2	5
+
+1	2208	384	2	5
